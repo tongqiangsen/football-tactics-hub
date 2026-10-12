@@ -1,0 +1,1497 @@
+# -*- coding: utf-8 -*-
+"""
+Compile football_tactics_deck.html - 20-Slide Interactive Presentation Deck.
+100% Aligned with Tactical Command Hub:
+1. Complete alignment of 20 Passing Weapons (including W17 门将穿透性低平球).
+2. Embedded Base64 GIF Tactical Animations (Doctrines & Formations).
+3. 22 Player Positions 3-Action Guidelines & Roles.
+4. Module 05 Crisis Solver & 8 Matchday Callout Voice Cues.
+5. Soft Eye-Friendly Dark & Light Whiteboard Themes with LocalStorage persistence.
+6. Zero external dependencies, pure standalone single-file deck.
+"""
+
+import os, base64, shutil
+
+gif_dir = r"e:\06_Study\书籍\足球\tactics_animations_gif"
+art_gif_dir = r"C:\Users\Administrator\.gemini\antigravity\brain\030fc641-b9cc-4e72-b4ba-ed21a5a6e35f\tactics_animations_gif"
+os.makedirs(art_gif_dir, exist_ok=True)
+
+def get_gif_b64(name):
+    path = os.path.join(gif_dir, name)
+    if os.path.exists(path):
+        try:
+            shutil.copy2(path, os.path.join(art_gif_dir, name))
+        except Exception:
+            pass
+        with open(path, "rb") as f:
+            return "data:image/gif;base64," + base64.b64encode(f.read()).decode("ascii")
+    return ""
+
+# Load Doctrine GIFs
+b64_d01 = get_gif_b64("anim_01_third_man.gif")
+b64_d02 = get_gif_b64("anim_02_switch_play.gif")
+b64_d03 = get_gif_b64("anim_08_over_the_top.gif")
+b64_d04 = get_gif_b64("anim_09_5s_counter_blitz.gif")
+b64_d05 = get_gif_b64("anim_10_target_man_aerial.gif")
+b64_d06 = get_gif_b64("anim_04_cut_back.gif")
+b64_d07 = get_gif_b64("anim_11_dummy_let_through.gif")
+b64_d08 = get_gif_b64("anim_12_tactical_throwin.gif")
+
+# Load Formation GIFs
+b64_f1231 = get_gif_b64("anim_05_1231_buildup.gif")
+b64_f1321 = get_gif_b64("anim_06_1321_counter.gif")
+b64_f1331 = get_gif_b64("anim_07_1331_overlap.gif")
+
+# Load Key Weapon GIFs
+b64_w01 = get_gif_b64("anim_w01_through_ball.gif")
+b64_w04 = get_gif_b64("anim_w04_driven_cross.gif")
+b64_w17 = get_gif_b64("anim_w_cat5_gk_laser.gif")
+
+deck_html = f"""<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>现代足球传球战术体系与全景实战指南 · 沉浸式演讲Deck (教研室标准版)</title>
+  <style>
+    :root {{
+      --bg-dark: #121915;
+      --bg-card: rgba(26, 38, 32, 0.92);
+      --bg-card-inner: rgba(15, 23, 42, 0.65);
+      --border-color: rgba(34, 197, 94, 0.2);
+      --border-hover: rgba(34, 197, 94, 0.5);
+      --border-sub: rgba(255, 255, 255, 0.08);
+      --pitch-green: #10b981;
+      --accent-gold: #fbbf24;
+      --accent-cyan: #38bdf8;
+      --accent-red: #f87171;
+      --accent-purple: #c084fc;
+      --text-main: #f8fafc;
+      --text-sub: #cbd5e1;
+      --text-muted: #94a3b8;
+      --callout-cyan-text: #e0f2fe;
+      --callout-gold-text: #fef3c7;
+      --callout-green-text: #dcfce7;
+      --callout-red-text: #fee2e2;
+      --callout-purple-text: #f3e8ff;
+    }}
+
+    /* Light Eye-friendly Tactical Whiteboard Theme (战术白板) */
+    body.theme-light {{
+      --bg-dark: #f3f6f4;
+      --bg-card: #ffffff;
+      --bg-card-inner: #f8fafc;
+      --border-color: rgba(16, 185, 129, 0.25);
+      --border-hover: rgba(16, 185, 129, 0.65);
+      --border-sub: rgba(0, 0, 0, 0.08);
+      --pitch-green: #047857;
+      --accent-gold: #b45309;
+      --accent-cyan: #0369a1;
+      --accent-red: #dc2626;
+      --accent-purple: #7e22ce;
+      --text-main: #0f172a;
+      --text-sub: #334155;
+      --text-muted: #64748b;
+      --callout-cyan-text: #0369a1;
+      --callout-gold-text: #92400e;
+      --callout-green-text: #065f46;
+      --callout-red-text: #991b1b;
+      --callout-purple-text: #6b21a8;
+    }}
+    body.theme-light .topbar {{
+      background: rgba(243, 246, 244, 0.96);
+      border-bottom-color: rgba(0, 0, 0, 0.08);
+    }}
+    body.theme-light .card {{
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+      border-color: rgba(16, 185, 129, 0.2);
+    }}
+    body.theme-light .weapon-card {{
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+      border-color: rgba(0, 0, 0, 0.1);
+    }}
+    body.theme-light .matrix-table th {{ background: rgba(16, 185, 129, 0.15); color: #047857; }}
+    body.theme-light .bottombar {{
+      background: rgba(243, 246, 244, 0.96);
+      border-top-color: rgba(0, 0, 0, 0.08);
+    }}
+    body.theme-light .nav-btn {{
+      background: #e2e8f0;
+      color: #1e293b;
+      border-color: #cbd5e1;
+    }}
+    body.theme-light .nav-btn:hover {{
+      background: var(--pitch-green);
+      color: #fff;
+    }}
+
+    /* Warm Sepia Eye-friendly Theme (羊皮纸暖阳护眼) */
+    body.theme-sepia {{
+      --bg-dark: #f6f2e8;
+      --bg-card: #fdfaf3;
+      --bg-card-inner: #f6efe1;
+      --border-color: rgba(180, 145, 90, 0.28);
+      --border-hover: rgba(180, 145, 90, 0.65);
+      --border-sub: rgba(180, 145, 90, 0.18);
+      --pitch-green: #047857;
+      --accent-gold: #b45309;
+      --accent-cyan: #0369a1;
+      --accent-red: #b91c1c;
+      --accent-purple: #6b21a8;
+      --text-main: #1c1917;
+      --text-sub: #44403c;
+      --text-muted: #78716c;
+      --callout-cyan-text: #075985;
+      --callout-gold-text: #78350f;
+      --callout-green-text: #064e3b;
+      --callout-red-text: #991b1b;
+      --callout-purple-text: #581c87;
+    }}
+    body.theme-sepia .topbar {{
+      background: rgba(246, 242, 232, 0.96);
+      border-bottom-color: rgba(0, 0, 0, 0.08);
+    }}
+    body.theme-sepia .card {{
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+      border-color: rgba(180, 145, 90, 0.25);
+    }}
+    body.theme-sepia .weapon-card {{
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+      border-color: rgba(180, 145, 90, 0.25);
+    }}
+    body.theme-sepia .matrix-table th {{ background: rgba(5, 150, 105, 0.15); color: #065f46; }}
+    body.theme-sepia .bottombar {{
+      background: rgba(246, 242, 232, 0.96);
+      border-top-color: rgba(0, 0, 0, 0.08);
+    }}
+    body.theme-sepia .nav-btn {{
+      background: #ebdec9;
+      color: #292524;
+      border-color: #d6c6b0;
+    }}
+    body.theme-sepia .nav-btn:hover {{
+      background: #047857;
+      color: #fff;
+    }}
+    body.theme-sepia .dot {{ background: rgba(0, 0, 0, 0.15); }}
+
+    /* 3-Theme Switcher Palette */
+    .theme-palette-group {{
+      display: inline-flex;
+      align-items: center;
+      background: rgba(0, 0, 0, 0.25);
+      padding: 3px 5px;
+      border-radius: 8px;
+      border: 1px solid var(--border-color);
+      gap: 3px;
+    }}
+    body.theme-light .theme-palette-group,
+    body.theme-sepia .theme-palette-group {{
+      background: rgba(0, 0, 0, 0.05);
+      border-color: rgba(0, 0, 0, 0.1);
+    }}
+    .theme-btn {{
+      background: transparent;
+      border: 1px solid transparent;
+      color: var(--text-muted);
+      padding: 4px 9px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }}
+    .theme-btn:hover {{
+      color: var(--text-main);
+      background: rgba(255, 255, 255, 0.08);
+    }}
+    body.theme-light .theme-btn:hover,
+    body.theme-sepia .theme-btn:hover {{
+      background: rgba(0, 0, 0, 0.06);
+    }}
+    .theme-btn.active {{
+      background: var(--pitch-green);
+      color: #fff;
+      font-weight: 700;
+      box-shadow: 0 0 10px rgba(16, 185, 129, 0.35);
+    }}
+
+    * {{ box-sizing: border-box; margin: 0; padding: 0; }}
+    body {{
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+      background-color: var(--bg-dark);
+      color: var(--text-main);
+      overflow: hidden;
+      height: 100vh;
+      width: 100vw;
+      display: flex;
+      flex-direction: column;
+      transition: background-color 0.25s, color 0.25s;
+    }}
+
+    /* Top Bar */
+    .topbar {{
+      height: 54px;
+      background: rgba(18, 25, 21, 0.95);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--border-color);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 24px;
+      z-index: 100;
+    }}
+    .topbar-title {{
+      font-size: 15px;
+      font-weight: 800;
+      letter-spacing: 0.5px;
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }}
+    .badge {{
+      font-size: 11px;
+      padding: 2px 8px;
+      border-radius: 4px;
+      background: rgba(16, 185, 129, 0.15);
+      color: var(--pitch-green);
+      border: 1px solid var(--pitch-green);
+      font-weight: 700;
+    }}
+    .topbar-controls {{
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }}
+    .nav-btn {{
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid var(--border-color);
+      color: var(--text-main);
+      padding: 6px 13px;
+      border-radius: 6px;
+      font-size: 12.5px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }}
+    .nav-btn:hover {{
+      background: var(--pitch-green);
+      color: #fff;
+      border-color: var(--pitch-green);
+    }}
+
+    /* Deck Container */
+    .deck-container {{
+      flex: 1;
+      position: relative;
+      overflow: hidden;
+    }}
+    .slide {{
+      position: absolute;
+      top: 0; left: 0; width: 100%; height: 100%;
+      opacity: 0;
+      visibility: hidden;
+      transform: scale(0.985) translateY(10px);
+      transition: opacity 0.3s ease, transform 0.3s ease, visibility 0.3s;
+      padding: 22px 36px;
+      display: flex;
+      flex-direction: column;
+      overflow-y: auto;
+    }}
+    .slide.active {{
+      opacity: 1;
+      visibility: visible;
+      transform: scale(1) translateY(0);
+      z-index: 10;
+    }}
+
+    /* Slide Header */
+    .slide-header {{
+      margin-bottom: 16px;
+      border-left: 4px solid var(--pitch-green);
+      padding-left: 14px;
+    }}
+    .slide-subtitle {{
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 1.2px;
+      color: var(--accent-gold);
+      margin-bottom: 4px;
+      font-weight: 700;
+    }}
+    .slide-header h2 {{
+      font-size: 24px;
+      font-weight: 800;
+      color: var(--text-main);
+    }}
+
+    .slide-body {{
+      flex: 1;
+      display: grid;
+      gap: 18px;
+    }}
+    .grid-2 {{ grid-template-columns: 1fr 1fr; }}
+    .grid-2-1 {{ grid-template-columns: 1.15fr 0.85fr; }}
+    .grid-1-2 {{ grid-template-columns: 0.85fr 1.15fr; }}
+    .grid-3 {{ grid-template-columns: repeat(3, 1fr); }}
+    .grid-4 {{ grid-template-columns: repeat(4, 1fr); }}
+
+    /* Cards */
+    .card {{
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 16px 18px;
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.4);
+      display: flex;
+      flex-direction: column;
+    }}
+    .card-title {{
+      font-size: 16.5px;
+      font-weight: 800;
+      color: var(--accent-cyan);
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }}
+    .card-title.gold {{ color: var(--accent-gold); }}
+    .card-title.green {{ color: var(--pitch-green); }}
+    .card-title.red {{ color: var(--accent-red); }}
+    .card-title.purple {{ color: var(--accent-purple); }}
+
+    .card p, .card li {{
+      font-size: 13.5px;
+      line-height: 1.6;
+      color: var(--text-sub);
+    }}
+    .card ul, .card ol {{ padding-left: 18px; margin-top: 6px; }}
+    .card li {{ margin-bottom: 6px; }}
+    .card strong {{ color: var(--text-main); font-weight: 700; }}
+
+    /* Slide Tactical Animation Media Card */
+    .slide-media-card {{
+      background: #000;
+      border-radius: 10px;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }}
+    .slide-media-card img {{
+      width: 100%;
+      height: auto;
+      max-height: 250px;
+      object-fit: contain;
+      display: block;
+    }}
+    .slide-media-caption {{
+      width: 100%;
+      background: rgba(15, 23, 42, 0.88);
+      padding: 6px 10px;
+      font-size: 11.5px;
+      color: #cbd5e1;
+      text-align: center;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      font-weight: 600;
+    }}
+
+    /* Weapon Cards */
+    .weapon-card {{
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 10px;
+      padding: 13px;
+      display: flex;
+      flex-direction: column;
+      transition: all 0.2s;
+    }}
+    .weapon-card:hover {{
+      border-color: var(--accent-gold);
+      transform: translateY(-2px);
+    }}
+    .weapon-num {{
+      font-size: 10.5px;
+      font-weight: 800;
+      padding: 2px 6px;
+      border-radius: 4px;
+      background: var(--accent-gold);
+      color: #000;
+      display: inline-block;
+      margin-bottom: 5px;
+      width: fit-content;
+    }}
+    .weapon-name {{
+      font-size: 14.5px;
+      font-weight: 800;
+      color: var(--text-main);
+      margin-bottom: 6px;
+    }}
+    .weapon-name small {{
+      font-size: 11px;
+      font-weight: normal;
+      color: var(--text-muted);
+      display: block;
+      margin-top: 2px;
+    }}
+    .weapon-desc {{
+      font-size: 12px;
+      color: var(--text-sub);
+      line-height: 1.5;
+    }}
+
+    /* Matrix Table */
+    .matrix-table {{
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+    }}
+    .matrix-table th {{
+      background: rgba(16, 185, 129, 0.2);
+      color: var(--pitch-green);
+      text-align: left;
+      padding: 9px 12px;
+      border: 1px solid var(--border-color);
+      font-weight: 800;
+    }}
+    .matrix-table td {{
+      padding: 9px 12px;
+      border: 1px solid var(--border-sub);
+      color: var(--text-sub);
+      line-height: 1.5;
+    }}
+    .matrix-table tr:nth-child(even) {{
+      background: var(--bg-card-inner);
+    }}
+
+    /* Callout Box */
+    .callout {{
+      background: rgba(56, 189, 248, 0.1);
+      border-left: 3px solid var(--accent-cyan);
+      padding: 9px 12px;
+      border-radius: 0 6px 6px 0;
+      font-size: 12.5px;
+      margin-top: 8px;
+      color: var(--callout-cyan-text);
+      line-height: 1.5;
+    }}
+    .callout.gold {{
+      background: rgba(251, 191, 36, 0.1);
+      border-left-color: var(--accent-gold);
+      color: var(--callout-gold-text);
+    }}
+    .callout.green {{
+      background: rgba(16, 185, 129, 0.1);
+      border-left-color: var(--pitch-green);
+      color: var(--callout-green-text);
+    }}
+    .callout.red {{
+      background: rgba(248, 113, 113, 0.1);
+      border-left-color: var(--accent-red);
+      color: var(--callout-red-text);
+    }}
+    .callout.purple {{
+      background: rgba(192, 132, 252, 0.1);
+      border-left-color: var(--accent-purple);
+      color: var(--callout-purple-text);
+    }}
+    .callout.cyan {{
+      background: rgba(56, 189, 248, 0.1);
+      border-left-color: var(--accent-cyan);
+      color: var(--callout-cyan-text);
+    }}
+
+    /* Bottom Dots */
+    .bottombar {{
+      height: 46px;
+      background: rgba(18, 25, 21, 0.95);
+      border-top: 1px solid var(--border-color);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      padding: 0 20px;
+      z-index: 50;
+    }}
+    .dot {{
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.2);
+      cursor: pointer;
+      transition: all 0.2s;
+    }}
+    .dot.active {{
+      width: 20px;
+      border-radius: 8px;
+      background: var(--pitch-green);
+      box-shadow: 0 0 8px var(--pitch-green);
+    }}
+
+    .hotkey-hint {{
+      position: fixed;
+      bottom: 54px;
+      right: 20px;
+      background: rgba(0,0,0,0.65);
+      border: 1px solid rgba(255,255,255,0.15);
+      padding: 4px 10px;
+      border-radius: 6px;
+      font-size: 11px;
+      color: #e2e8f0;
+      pointer-events: none;
+      z-index: 100;
+    }}
+  </style>
+</head>
+<body>
+
+  <!-- Top Bar -->
+  <div class="topbar">
+    <div class="topbar-title">
+      <span>⚽ 现代足球传球战术体系与全景实战指南</span>
+      <span class="badge">教研室标准演讲版 · 7v7 / 8v8</span>
+    </div>
+    <div class="topbar-controls">
+      <span id="slide-counter" style="font-size: 13px; font-weight: 700; color: var(--pitch-green); margin-right: 6px;">01 / 20</span>
+      <button class="nav-btn" onclick="prevSlide()">◀ 上一页 [←]</button>
+      <!-- 3-Theme Palette Switcher -->
+      <div class="theme-palette-group">
+        <button class="theme-btn active" id="btn-theme-dark" onclick="setTheme('dark')" title="深色战术 (温润墨绿)">🌙 战术夜间</button>
+        <button class="theme-btn" id="btn-theme-sepia" onclick="setTheme('sepia')" title="羊皮纸暖色 (柔和护眼)">📖 暖阳护眼</button>
+        <button class="theme-btn" id="btn-theme-light" onclick="setTheme('light')" title="战术白板 (清晰明快)">☀️ 战术白板</button>
+      </div>
+      <button class="nav-btn" onclick="toggleFullScreen()">⛶ 全屏 [F]</button>
+      <a href="football_tactics_hub.html" class="nav-btn" style="color: var(--accent-gold); border-color: rgba(251, 191, 36, 0.4);">🏠 返回战情室</a>
+    </div>
+  </div>
+
+  <!-- Deck Slides Container -->
+  <div class="deck-container" id="deck-container">
+
+    <!-- SLIDE 01: 封面 -->
+    <div class="slide active">
+      <div class="slide-header">
+        <div class="slide-subtitle">TACTICAL PLAYBOOK · 现代传球体系交互中枢</div>
+        <h2>构建球队共同战术语言：从理念基石、进攻流派、武器库到实战落地</h2>
+      </div>
+      <div class="slide-body grid-2">
+        <div class="card" style="justify-content: center;">
+          <div class="card-title gold" style="font-size: 20px;">⚽ 现代足球传球战术教研室 · 更衣室战术大屏</div>
+          <p style="font-size: 14.5px; margin-bottom: 12px;">
+            本教案体系原生转化自德国权威战术著作《足球训练完全图解：德国足球传球战术及训练》（皮特·希巴拉 & 汉斯-迪特·波尔 著），专为全队实战提质升级量身打造。
+          </p>
+          <div class="callout green" style="font-size: 13.5px;">
+            <strong>🎯 核心目标：</strong>彻底消除各自为战的盲目开大脚与单打独斗，建立全队统一的<strong>“空间认知”、“跑位预判”与“呼应暗号”</strong>，在 7人制与 8人制比赛中打出富有穿透力与控制力的现代体系足球。
+          </div>
+          <ul style="margin-top: 14px;">
+            <li><strong>三大战术基石：</strong>传球认知变革 · 16格动态网格 · 三动作微观执行体系</li>
+            <li><strong>八大实战进攻流派：</strong>短传渗透、弱侧转移、越顶打击、5秒快攻、空中轰炸、底线倒三角、空间欺骗、战术界外球</li>
+            <li><strong>二十项传球武器库：</strong>5大维度 20 种出球方式的技术要领、场景与专属动图</li>
+            <li><strong>三大实战阵型落地：</strong>7人制 1-2-3-1、7人制 1-3-2-1、8人制 1-3-3-1 完整 22 球员职责卡</li>
+            <li><strong>临场破局与呼应暗号：</strong>4 大典型被动困境解药与全队 8 大赛场呼应暗号速查</li>
+          </ul>
+        </div>
+        <div class="card" style="background: var(--bg-card-inner); border-color: var(--pitch-green); justify-content: center; text-align: center;">
+          <div style="font-size: 48px; margin-bottom: 10px;">🛡️ ⚡ ⚔️</div>
+          <h3 style="font-size: 20px; color: var(--text-main); margin-bottom: 8px;">德国足球“传球拼图 IQ®”体系</h3>
+          <p style="font-size: 13.5px; color: var(--text-sub); max-width: 440px; margin: 0 auto 16px;">
+            “传球不是孤立的技术炫耀，而是高智商的团队协同解题。只要每个人做出正确的预判跑位，破门得分便水到渠成。”
+          </p>
+          <div style="display: flex; justify-content: center; gap: 10px;">
+            <span class="badge">7人制 1-2-3-1</span>
+            <span class="badge">7人制 1-3-2-1</span>
+            <span class="badge">8人制 1-3-3-1</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SLIDE 02: 理念变革 -->
+    <div class="slide">
+      <div class="slide-header">
+        <div class="slide-subtitle">MODULE 01 · 战术基石与理念革新</div>
+        <h2>传球战术核心理念：从“把球传准”到“调度空间与防线”</h2>
+      </div>
+      <div class="slide-body grid-3">
+        <div class="card">
+          <div class="card-title red">❌ 传统业余误区：盲目传球</div>
+          <ul>
+            <li><strong>误区一：只看脚下。</strong>接到球才抬头看人，防守早已封堵出球路线。</li>
+            <li><strong>误区二：静态站立等球。</strong>站在原地伸脚要球，被防守从身后轻松切断。</li>
+            <li><strong>误区三：单打独斗盲目推进。</strong>陷入 1v2 局部劣势仍死带不传，导致致命丢球。</li>
+            <li><strong>误区四：以少打多扎堆。</strong>强行在中路扎堆硬挤，失误率高达 80%。</li>
+          </ul>
+        </div>
+        <div class="card">
+          <div class="card-title green">✅ 现代德国战术：空间与沟通</div>
+          <ul>
+            <li><strong>真理一：传球即人际语言。</strong>传球速度、旋转与落点是在告诉队友“转身上前”还是“安全回敲”。</li>
+            <li><strong>真理二：球永远比人跑得快。</strong>3脚 1~2 触的传球能在 2 秒内横跨半场调动整条防线。</li>
+            <li><strong>真理三：以多打少是战术目标。</strong>通过三角站位与局部超载（Overload），永远制造 3v2 或 2v1 优势。</li>
+            <li><strong>真理四：传向空当而非脚下。</strong>给队友前插的“提前量”，让队友冲刺接球而非降速接球。</li>
+          </ul>
+        </div>
+        <div class="card">
+          <div class="card-title gold">⚡ 全队三大铁律 (Golden Rules)</div>
+          <div class="callout gold" style="margin-bottom: 8px;">
+            <strong>1. 绝不盲目横传：</strong>后场中路严禁横传，横传一旦被断即直接面对空门！
+          </div>
+          <div class="callout cyan" style="margin-bottom: 8px;">
+            <strong>2. 保持开放身位：</strong>永远半侧身面向前场，视野兼顾皮球与前插队友。
+          </div>
+          <div class="callout green">
+            <strong>3. 0.5秒接球前扫描：</strong>皮球在空中滑行时完成盲区观察，脑中已定出球方案。
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SLIDE 03: 16区域动态传球网格 -->
+    <div class="slide">
+      <div class="slide-header">
+        <div class="slide-subtitle">MODULE 01 · 空间地图</div>
+        <h2>空间掌控：16 区域动态传球网格与全队站位纪律</h2>
+      </div>
+      <div class="slide-body grid-2">
+        <div class="card">
+          <div class="card-title green">📐 动态传球网格（Passing Grid）的核心法则</div>
+          <p>将球场划分为 16 个战术方格，这是拜仁与德国队掌控球权的核心秘密：</p>
+          <ul style="margin-top: 10px;">
+            <li><strong>同格不站双人法则：</strong>同一横向或纵向方格内，<strong>严禁站两名本方队员</strong>。扎堆只会帮对手降低防守难度。</li>
+            <li><strong>5~10 米黄金呼应间距：</strong>距离太近容易被对手一人防两人，距离太远传球球速慢容易被半途截断。</li>
+            <li><strong>梯次纵深站位：</strong>无论球在何处，持球人身边必须呈“三角形”或“菱形”展开（1个前突接应点 + 1个横向分球点 + 1个后方安全保护点）。</li>
+          </ul>
+          <div class="callout cyan">
+            <strong>💡 实战警示：</strong>当你发现自己离队友不到 3 米时，立即横向或前向移动到相邻方格拉开空间！
+          </div>
+        </div>
+        <div class="card" style="align-items: center; justify-content: center; background: #081d14;">
+          <svg viewBox="0 0 500 320" width="100%" height="100%" style="max-height: 290px;">
+            <rect width="500" height="320" fill="#081d14" rx="8" stroke="#22c55e" stroke-width="2"/>
+            <line x1="125" y1="0" x2="125" y2="320" stroke="#22c55e" stroke-width="1" stroke-dasharray="4,4" stroke-opacity="0.5"/>
+            <line x1="250" y1="0" x2="250" y2="320" stroke="#22c55e" stroke-width="2" stroke-opacity="0.7"/>
+            <line x1="375" y1="0" x2="375" y2="320" stroke="#22c55e" stroke-width="1" stroke-dasharray="4,4" stroke-opacity="0.5"/>
+            <line x1="0" y1="80" x2="500" y2="80" stroke="#22c55e" stroke-width="1" stroke-dasharray="4,4" stroke-opacity="0.5"/>
+            <line x1="0" y1="160" x2="500" y2="160" stroke="#22c55e" stroke-width="1" stroke-dasharray="4,4" stroke-opacity="0.5"/>
+            <line x1="0" y1="240" x2="500" y2="240" stroke="#22c55e" stroke-width="1" stroke-dasharray="4,4" stroke-opacity="0.5"/>
+            <circle cx="250" cy="160" r="40" fill="none" stroke="#22c55e" stroke-width="1.5" stroke-opacity="0.6"/>
+            <text x="62.5" y="44" fill="#94a3b8" font-size="11" text-anchor="middle">左翼前场</text>
+            <text x="187.5" y="44" fill="#fbbf24" font-size="11" text-anchor="middle">左肋前场</text>
+            <text x="312.5" y="44" fill="#fbbf24" font-size="11" text-anchor="middle">右肋前场</text>
+            <text x="437.5" y="44" fill="#94a3b8" font-size="11" text-anchor="middle">右翼前场</text>
+            <text x="250" y="165" fill="#38bdf8" font-size="12" font-weight="bold" text-anchor="middle">中场控制核心区</text>
+            <polygon points="187.5,120 312.5,200 187.5,200" fill="#38bdf8" fill-opacity="0.2" stroke="#38bdf8" stroke-width="2"/>
+            <circle cx="187.5" cy="120" r="8" fill="#fff" stroke="#38bdf8" stroke-width="2"/>
+            <circle cx="312.5" cy="200" r="8" fill="#fff" stroke="#38bdf8" stroke-width="2"/>
+            <circle cx="187.5" cy="200" r="8" fill="#fff" stroke="#38bdf8" stroke-width="2"/>
+          </svg>
+        </div>
+      </div>
+    </div>
+
+    <!-- SLIDE 04: 三动作体系 -->
+    <div class="slide">
+      <div class="slide-header">
+        <div class="slide-subtitle">MODULE 01 · 球员微观行为规范</div>
+        <h2>球员微观决策基石：德国“三动作体系” (Pre-Main-Post Actions)</h2>
+      </div>
+      <div class="slide-body grid-3">
+        <div class="card">
+          <div class="card-title cyan">1. 前动作 (Pre-Action)</div>
+          <div class="slide-subtitle" style="color: var(--text-muted);">接球前 0.5 秒的无球准备</div>
+          <ul>
+            <li><strong>盲区扫描（Scanning）：</strong>接球前快速摆头 2~3 次，看清身后防守队员位置与前场空当。</li>
+            <li><strong>半侧身接球（Open Body）：</strong>绝不背对进攻方向！身体朝向边线或斜前方，同时看到来球与对方球门。</li>
+            <li><strong>反向摆脱（Counter Run）：</strong>先向防守球员靠近半步压住重心，随后突然反向迎球，拉开 1 米安全距离。</li>
+          </ul>
+        </div>
+        <div class="card">
+          <div class="card-title green">2. 主动作 (Main-Action)</div>
+          <div class="slide-subtitle" style="color: var(--text-muted);">触球瞬间的精准执行</div>
+          <ul>
+            <li><strong>远离防守脚停球：</strong>用远离防守队员的外侧脚触球，将身体置于球与防守者之间护球。</li>
+            <li><strong>顺势连停带过：</strong>停球方向直接对准出球路线或下一个攻击方格，一脚触球即完成摆脱。</li>
+            <li><strong>出球精准控速：</strong>穿透球发力给低平快，回做球给软球便于插上队友不停球施射。</li>
+          </ul>
+        </div>
+        <div class="card">
+          <div class="card-title gold">3. 后动作 (Post-Action)</div>
+          <div class="slide-subtitle" style="color: var(--text-muted);">出球后 0.5 秒的二次启动</div>
+          <ul>
+            <li><strong>“传完即动”铁律：</strong>出球后<strong>绝不原地看球</strong>！立即向前插或侧向跑位，做“第三人”。</li>
+            <li><strong>丢球就地反抢：</strong>如果传球被断，最近的队员 0.5 秒内就地合围，执行“5秒反抢法则”。</li>
+            <li><strong>保护阵型平衡：</strong>插上队员失位时，后方后腰或边卫立即横移补位，防止被反击。</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- SLIDE 05: 进攻流派 1 & 2 -->
+    <div class="slide">
+      <div class="slide-header">
+        <div class="slide-subtitle">MODULE 02 · 实战进攻战术流派</div>
+        <h2>进攻流派 ① 短传渗透流 & ② 宽度调度弱侧转移流</h2>
+      </div>
+      <div class="slide-body grid-2">
+        <div class="card">
+          <div class="card-title green">流派 ① · 短传渗透与第三人跑位流</div>
+          <div class="slide-media-card" style="margin-bottom: 10px;">
+            <img src="{b64_d01}" alt="第三人跑位动图">
+            <div class="slide-media-caption">▶ 动图演示：Up-Back-Through 第三人盲区穿透</div>
+          </div>
+          <p><strong>实战配合链：</strong>A 传球给 B（吸引后卫跟防），B 一脚做给 C，C 顺势送出身后球连线高速插上的第三人 D。</p>
+          <div class="callout green"><strong>配套武器库：</strong>W01 直塞穿透球、W05 二过一撞墙配合、W08 第三人导向球</div>
+        </div>
+        <div class="card">
+          <div class="card-title cyan">流派 ② · 宽度调度与弱侧转移流</div>
+          <div class="slide-media-card" style="margin-bottom: 10px;">
+            <img src="{b64_d02}" alt="弱侧转移动图">
+            <div class="slide-media-caption">▶ 动图演示：强侧重兵超载 ➔ 30米对角长传弱侧 1v1</div>
+          </div>
+          <p><strong>实战配合链：</strong>强侧 3 人连续短传倒脚压缩防线，中场突然起 30 米大对角长传，弱侧边锋无人防守单挑门将。</p>
+          <div class="callout cyan"><strong>配套武器库：</strong>W09 大范围对角长传、W10 边线推进球、W12 回传重新组织</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SLIDE 06: 进攻流派 3 & 4 -->
+    <div class="slide">
+      <div class="slide-header">
+        <div class="slide-subtitle">MODULE 02 · 实战进攻战术流派</div>
+        <h2>进攻流派 ③ 纵深突击越顶长传流 & ④ 5秒逼抢反击闪电战</h2>
+      </div>
+      <div class="slide-body grid-2">
+        <div class="card">
+          <div class="card-title gold">流派 ③ · 纵深突击与越顶长传流</div>
+          <div class="slide-media-card" style="margin-bottom: 10px;">
+            <img src="{b64_d03}" alt="越顶长传动图">
+            <div class="slide-media-caption">▶ 动图演示：打对手高位身后 20 米真空区反越位</div>
+          </div>
+          <p><strong>实战配合链：</strong>利用对手防线全线压上的身后空当，中后卫或后腰不停球直接送半高球越顶长传，前锋反越位超车单刀。</p>
+          <div class="callout gold"><strong>配套武器库：</strong>W02 肋部挑传空当、W18 反击越顶快攻长传</div>
+        </div>
+        <div class="card">
+          <div class="card-title red">流派 ④ · 5秒高位反抢与反击闪电战流</div>
+          <div class="slide-media-card" style="margin-bottom: 10px;">
+            <img src="{b64_d04}" alt="5秒反击动图">
+            <div class="slide-media-caption">▶ 动图演示：前场丢球 0.5s 就地合围 ➔ 5秒3脚闪击破门</div>
+          </div>
+          <p><strong>实战配合链：</strong>丢球瞬间全员合围夺回球权，趁对手阵型由守转攻未稳，3 脚直塞穿透防线完成致命一击。</p>
+          <div class="callout red"><strong>配套武器库：</strong>W04 贴地横扫传中、W07 刺穿线形传球、W18 越顶长传</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SLIDE 07: 进攻流派 5 & 6 -->
+    <div class="slide">
+      <div class="slide-header">
+        <div class="slide-subtitle">MODULE 02 · 实战进攻战术流派</div>
+        <h2>进攻流派 ⑤ 中锋支点空中轰炸流 & ⑥ 边路套边底线倒三角流</h2>
+      </div>
+      <div class="slide-body grid-2">
+        <div class="card">
+          <div class="card-title purple">流派 ⑤ · 中锋支点与空中轰炸流</div>
+          <div class="slide-media-card" style="margin-bottom: 10px;">
+            <img src="{b64_d05}" alt="支点中锋动图">
+            <div class="slide-media-caption">▶ 动图演示：中锋背身扛人胸部稳卸 ➔ 回做后排插上重炮</div>
+          </div>
+          <p><strong>实战配合链：</strong>后场起球给支点中锋，中锋强力背身扛人胸部卸球，软球回敲给前插的前腰或翼卫重炮轰门。</p>
+          <div class="callout purple"><strong>配套武器库：</strong>W06 迎前回敲做球、W18 越顶长传、W10 边线推进</div>
+        </div>
+        <div class="card">
+          <div class="card-title green">流派 ⑥ · 边路套边与底线倒三角流</div>
+          <div class="slide-media-card" style="margin-bottom: 10px;">
+            <img src="{b64_d06}" alt="倒三角动图">
+            <div class="slide-media-caption">▶ 动图演示：边锋下底吸引防线回缩 ➔ 推点球点真空区</div>
+          </div>
+          <p><strong>实战配合链：</strong>边卫与边锋二过一套边下底，迫使对手门将与后卫退防门线，发力贴地推向点球点真空区迎球推射。</p>
+          <div class="callout green"><strong>配套武器库：</strong>W03 底线倒三角回传、W04 贴地横扫传中、W15 反向对角塞球</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SLIDE 08: 进攻流派 7 & 8 -->
+    <div class="slide">
+      <div class="slide-header">
+        <div class="slide-subtitle">MODULE 02 · 实战进攻战术流派</div>
+        <h2>进攻流派 ⑦ 空间欺骗节奏突变流 & ⑧ 死球重开战术界外球流</h2>
+      </div>
+      <div class="slide-body grid-2">
+        <div class="card">
+          <div class="card-title gold">流派 ⑦ · 空间欺骗与节奏突变流</div>
+          <div class="slide-media-card" style="margin-bottom: 10px;">
+            <img src="{b64_d07}" alt="漏球配合动图">
+            <div class="slide-media-caption">▶ 动图演示：巧妙叉腿漏球顺势 ➔ 盲区队友单刀推射</div>
+          </div>
+          <p><strong>实战配合链：</strong>通过不看人传球（No-Look）、假射真传或前锋叉腿漏球，彻底破坏防守队员身体重心与出脚预判。</p>
+          <div class="callout gold"><strong>配套武器库：</strong>W13 不看人传球、W14 假射真传/节奏差、W16 漏球顺势配合</div>
+        </div>
+        <div class="card">
+          <div class="card-title cyan">流派 ⑧ · 死球重开与战术手抛界外球流</div>
+          <div class="slide-media-card" style="margin-bottom: 10px;">
+            <img src="{b64_d08}" alt="战术界外球动图">
+            <div class="slide-media-caption">▶ 动图演示：界外球掷前锋脚下 ➔ 回敲边卫套边横扫门前</div>
+          </div>
+          <p><strong>实战配合链：</strong>拒绝盲目抛高球争顶！界外球掷给回撤前锋脚下，前锋一脚回敲，掷球边卫套边插上平抽门前。</p>
+          <div class="callout cyan"><strong>配套武器库：</strong>W19 定位球低平倒三角、W20 战术手抛界外球</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SLIDE 09: 20武器 01-04 -->
+    <div class="slide">
+      <div class="slide-header">
+        <div class="slide-subtitle">MODULE 03 · 20 种传球武器精要库</div>
+        <h2>武器库分类一：穿透与终结类 (Weapons 01-04)</h2>
+      </div>
+      <div class="slide-body grid-4">
+        <div class="weapon-card">
+          <span class="weapon-num">WEAPON 01</span>
+          <div class="weapon-name">直塞穿透球<br><small style="color: var(--text-muted);">Through Ball</small></div>
+          <div class="weapon-desc">
+            <strong>要领：</strong>脚弓或外脚背贴地刺穿双中卫缝隙，给足前插提前量。<br>
+            <strong>场景：</strong>打防线身后、反击快速通过中场。<br>
+            <strong style="color: var(--accent-gold);">口令：</strong>“给身后！”
+          </div>
+        </div>
+        <div class="weapon-card">
+          <span class="weapon-num">WEAPON 02</span>
+          <div class="weapon-name">肋部挑传空当<br><small style="color: var(--text-muted);">Chipped Through</small></div>
+          <div class="weapon-desc">
+            <strong>要领：</strong>脚尖搓球底部使球越过防守头顶，落入肋部迅速减速下坠。<br>
+            <strong>场景：</strong>对手密集横向站位但门将未出击。<br>
+            <strong style="color: var(--accent-gold);">口令：</strong>“挑肋部！”
+          </div>
+        </div>
+        <div class="weapon-card">
+          <span class="weapon-num">WEAPON 03</span>
+          <div class="weapon-name">底线倒三角回传<br><small style="color: var(--text-muted);">Cut-Back Pass</small></div>
+          <div class="weapon-desc">
+            <strong>要领：</strong>底线吸引防线回缩，发力贴地推向点球点真空区。<br>
+            <strong>场景：</strong>破铁桶阵第一杀招，助攻成功率最高。<br>
+            <strong style="color: var(--accent-gold);">口令：</strong>“倒三角！”
+          </div>
+        </div>
+        <div class="weapon-card">
+          <span class="weapon-num">WEAPON 04</span>
+          <div class="weapon-name">贴地横扫传中<br><small style="color: var(--text-muted);">Driven Low Cross</small></div>
+          <div class="weapon-desc">
+            <strong>要领：</strong>脚内侧发力平抽门前走廊，球速极快，抢前点垫射或造乌龙。<br>
+            <strong>场景：</strong>反击中后卫慌乱退防门线之际。<br>
+            <strong style="color: var(--accent-gold);">口令：</strong>“前点平抽！”
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SLIDE 10: 20武器 05-08 -->
+    <div class="slide">
+      <div class="slide-header">
+        <div class="slide-subtitle">MODULE 03 · 20 种传球武器精要库</div>
+        <h2>武器库分类二：破压与渗透类 (Weapons 05-08)</h2>
+      </div>
+      <div class="slide-body grid-4">
+        <div class="weapon-card">
+          <span class="weapon-num">WEAPON 05</span>
+          <div class="weapon-name">二过一撞墙配合<br><small style="color: var(--text-muted);">Wall Pass / 1-2</small></div>
+          <div class="weapon-desc">
+            <strong>要领：</strong>持球人斜传后立即变向加速插上，接球人一脚触球回传跑动路线上。<br>
+            <strong>场景：</strong>边路突破边后卫、肋部破单人贴抢。<br>
+            <strong style="color: var(--accent-gold);">口令：</strong>“撞墙！”
+          </div>
+        </div>
+        <div class="weapon-card">
+          <span class="weapon-num">WEAPON 06</span>
+          <div class="weapon-name">迎前回敲做球<br><small style="color: var(--text-muted);">Lay-off / Drop Pass</small></div>
+          <div class="weapon-desc">
+            <strong>要领：</strong>背身迎球一脚轻推给面向进攻方向的队友，做球要软方便施射。<br>
+            <strong>场景：</strong>突前中锋做给前腰或后腰起脚远射。<br>
+            <strong style="color: var(--accent-gold);">口令：</strong>“回做！”
+          </div>
+        </div>
+        <div class="weapon-card">
+          <span class="weapon-num">WEAPON 07</span>
+          <div class="weapon-name">刺穿线形传球<br><small style="color: var(--text-muted);">Line-Breaking Pass</small></div>
+          <div class="weapon-desc">
+            <strong>要领：</strong>脚背正中发力贴地重炮，直接穿透对手前锋逼抢线直连中场。<br>
+            <strong>场景：</strong>后卫由守转攻关键第一脚出球。<br>
+            <strong style="color: var(--accent-gold);">口令：</strong>“穿透！”
+          </div>
+        </div>
+        <div class="weapon-card">
+          <span class="weapon-num">WEAPON 08</span>
+          <div class="weapon-name">第三人跑位导向球<br><small style="color: var(--text-muted);">Up-Back-Through</small></div>
+          <div class="weapon-desc">
+            <strong>要领：</strong>A传B、B回敲C、C直塞高速插上的第三人D，防守视线完全被B吸引。<br>
+            <strong>场景：</strong>德国体系核心灵魂，破密集防守第一神技。<br>
+            <strong style="color: var(--accent-gold);">口令：</strong>“看第三人！”
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SLIDE 11: 20武器 09-12 -->
+    <div class="slide">
+      <div class="slide-header">
+        <div class="slide-subtitle">MODULE 03 · 20 种传球武器精要库</div>
+        <h2>武器库分类三：宽度与调度类 (Weapons 09-12)</h2>
+      </div>
+      <div class="slide-body grid-4">
+        <div class="weapon-card">
+          <span class="weapon-num">WEAPON 09</span>
+          <div class="weapon-name">大范围对角长传<br><small style="color: var(--text-muted);">Diagonal Switch</small></div>
+          <div class="weapon-desc">
+            <strong>要领：</strong>脚背内侧搓出 30 米以上高速斜长传，从强侧瞬间转移至弱侧空当。<br>
+            <strong>场景：</strong>利用场地宽度制造弱侧 1v1 或空当传中。<br>
+            <strong style="color: var(--accent-gold);">口令：</strong>“弱侧弱侧！”
+          </div>
+        </div>
+        <div class="weapon-card">
+          <span class="weapon-num">WEAPON 10</span>
+          <div class="weapon-name">边线贴地推进球<br><small style="color: var(--text-muted);">Channel Pass</small></div>
+          <div class="weapon-desc">
+            <strong>要领：</strong>紧贴边线贴地直推，利用边线走廊直接送给边锋启动冲刺。<br>
+            <strong>场景：</strong>边后卫破逼抢、快速打对方边路身后。<br>
+            <strong style="color: var(--accent-gold);">口令：</strong>“走边线！”
+          </div>
+        </div>
+        <div class="weapon-card">
+          <span class="weapon-num">WEAPON 11</span>
+          <div class="weapon-name">弧线绕顶传球<br><small style="color: var(--text-muted);">Curled Around Block</small></div>
+          <div class="weapon-desc">
+            <strong>要领：</strong>脚内侧带强劲侧旋，球绕过中路防守队员进入边肋空当。<br>
+            <strong>场景：</strong>中路防守极其密集、直线传球受阻时。<br>
+            <strong style="color: var(--accent-gold);">口令：</strong>“绕外侧！”
+          </div>
+        </div>
+        <div class="weapon-card">
+          <span class="weapon-num">WEAPON 12</span>
+          <div class="weapon-name">回传重新组织球<br><small style="color: var(--text-muted);">Recycling / Reset</small></div>
+          <div class="weapon-desc">
+            <strong>要领：</strong>前场无机会时果断回传后卫或门将，重置阵型重新寻找攻击面。<br>
+            <strong>场景：</strong>拒绝对抗盲目失误、掌控比赛节奏。<br>
+            <strong style="color: var(--accent-gold);">口令：</strong>“回传重来！”
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SLIDE 12: 20武器 13-16 -->
+    <div class="slide">
+      <div class="slide-header">
+        <div class="slide-subtitle">MODULE 03 · 20 种传球武器精要库</div>
+        <h2>武器库分类四：隐蔽与特种破局类 (Weapons 13-16)</h2>
+      </div>
+      <div class="slide-body grid-4">
+        <div class="weapon-card">
+          <span class="weapon-num">WEAPON 13</span>
+          <div class="weapon-name">不看人隐蔽传球<br><small style="color: var(--text-muted);">No-Look / Disguised</small></div>
+          <div class="weapon-desc">
+            <strong>要领：</strong>身体朝向和眼神看左，脚腕抖动向右出球，完全破坏对手预判。<br>
+            <strong>场景：</strong>前场狭小空间内撕扯紧密盯人。<br>
+            <strong style="color: var(--accent-gold);">口令：</strong>“声东击西！”
+          </div>
+        </div>
+        <div class="weapon-card">
+          <span class="weapon-num">WEAPON 14</span>
+          <div class="weapon-name">假射真扣/节奏差<br><small style="color: var(--text-muted);">Fake Shot & Slip</small></div>
+          <div class="weapon-desc">
+            <strong>要领：</strong>大动作假射骗后卫下铲或门将出击，在最后一瞬轻推空当队友。<br>
+            <strong>场景：</strong>禁区前沿破密集包夹、单刀助攻。<br>
+            <strong style="color: var(--accent-gold);">口令：</strong>“假射真分！”
+          </div>
+        </div>
+        <div class="weapon-card">
+          <span class="weapon-num">WEAPON 15</span>
+          <div class="weapon-name">反向对角塞球<br><small style="color: var(--text-muted);">Reverse Diagonal</small></div>
+          <div class="weapon-desc">
+            <strong>要领：</strong>带球横向移动中，突然反方向直塞中路插上的前锋或边锋。<br>
+            <strong>场景：</strong>利用对手防线横移惯性打出反向空当。<br>
+            <strong style="color: var(--accent-gold);">口令：</strong>“打反向！”
+          </div>
+        </div>
+        <div class="weapon-card">
+          <span class="weapon-num">WEAPON 16</span>
+          <div class="weapon-name">漏球顺势配合<br><small style="color: var(--text-muted);">Dummy / Let-Through</small></div>
+          <div class="weapon-desc">
+            <strong>要领：</strong>迎球做出接球假动作突然叉腿漏球，球顺势滚给身后插上的第三人。<br>
+            <strong>场景：</strong>需要高度默契、瞬间瘫痪中路防守。<br>
+            <strong style="color: var(--accent-gold);">口令：</strong>“漏过来！”
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SLIDE 13: 20武器 17-20 (完全对齐最新规范术语) -->
+    <div class="slide">
+      <div class="slide-header">
+        <div class="slide-subtitle">MODULE 03 · 20 种传球武器精要库</div>
+        <h2>武器库分类五：现代专项与死球类 (Weapons 17-20)</h2>
+      </div>
+      <div class="slide-body grid-4">
+        <div class="weapon-card" style="border-color: var(--pitch-green); background: rgba(16, 185, 129, 0.08);">
+          <span class="weapon-num" style="background: var(--pitch-green); color: #000;">WEAPON 17 ★</span>
+          <div class="weapon-name">门将穿透性低平球<br><small style="color: var(--text-muted);">GK Build-up Laser</small></div>
+          <div class="weapon-desc">
+            <strong>要领：</strong>门将作为第7/8名出球球员，发力贴地平抽刺穿前锋逼抢线直连中场。<br>
+            <strong>场景：</strong>破对手高位压迫第一利器。<br>
+            <strong style="color: var(--accent-gold);">口令：</strong>“门将直穿！”
+          </div>
+        </div>
+        <div class="weapon-card">
+          <span class="weapon-num">WEAPON 18</span>
+          <div class="weapon-name">反击越顶快攻长传<br><small style="color: var(--text-muted);">Over-the-Top Counter</small></div>
+          <div class="weapon-desc">
+            <strong>要领：</strong>断球后不停球直接半高球/长传打到前场空旷地带供前锋冲刺。<br>
+            <strong>场景：</strong>由守转攻 3 秒闪击战术。<br>
+            <strong style="color: var(--accent-gold);">口令：</strong>“起身后！”
+          </div>
+        </div>
+        <div class="weapon-card">
+          <span class="weapon-num">WEAPON 19</span>
+          <div class="weapon-name">定位球低平倒三角<br><small style="color: var(--text-muted);">Set-piece Short Pass</small></div>
+          <div class="weapon-desc">
+            <strong>要领：</strong>角球/前场任意球不盲目起高球，发短传配合突入禁区肋部低平横扫。<br>
+            <strong>场景：</strong>战术角球、攻破高大后卫防线。<br>
+            <strong style="color: var(--accent-gold);">口令：</strong>“战术角球！”
+          </div>
+        </div>
+        <div class="weapon-card">
+          <span class="weapon-num">WEAPON 20</span>
+          <div class="weapon-name">战术手抛界外球<br><small style="color: var(--text-muted);">Tactical Throw-in</small></div>
+          <div class="weapon-desc">
+            <strong>要领：</strong>边卫抛给前锋脚下，前锋一脚回敲，边卫高速插上直接传中。<br>
+            <strong>场景：</strong>边线死球转化为快速边路进攻机会。<br>
+            <strong style="color: var(--accent-gold);">口令：</strong>“界外球一二配合！”
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SLIDE 14: 7人制 1-2-3-1 -->
+    <div class="slide">
+      <div class="slide-header">
+        <div class="slide-subtitle">MODULE 04 · 阵型与位置职责卡</div>
+        <h2>7人制 1-2-3-1 经典压迫传控阵型 & 位置职责卡</h2>
+      </div>
+      <div class="slide-body grid-2-1">
+        <div class="card">
+          <div class="card-title green">📋 1-2-3-1 球员三动作微观职责卡 (Role Cards)</div>
+          <ul style="font-size: 13px;">
+            <li><strong>1号 门将 (GK)：</strong>【前】站位推至禁区外做门卫；【主】执行 <em>W17 门将穿透性低平球</em> 连线中场；【后】横向滑步提供安全回传点。</li>
+            <li><strong>2/3号 双中卫 (CB)：</strong>【前】接球前观察弱侧；【主】大禁区两侧拉开提供宽度，直塞 4号(CM) 或送 <em>W18 越顶长传</em>；【后】压至中线防反击。</li>
+            <li><strong>4号 中前卫/核心 (CM)：</strong>【前】半侧身扫描盲区；【主】掌控攻防节奏，送 <em>W08 第三人导向球</em> 或 <em>W09 弱侧长传</em>；【后】前插弧顶补射。</li>
+            <li><strong>5/6号 双边锋 (LW/RW)：</strong>【前】贴边线站位拉满宽度；【主】内切打 <em>W05 二过一</em> 或底线送 <em>W03 倒三角</em>；【后】丢球立即回撤协防。</li>
+            <li><strong>7号 突前中锋 (ST)：</strong>【前】背身扛人反向摆脱；【主】胸部稳卸回做 <em>W06</em> 或反越位前插 <em>W01</em>；【后】抢前点垫射，丢球就地逼抢。</li>
+          </ul>
+          <div class="callout green" style="margin-top: 10px;">
+            <strong>★ 核心机制：</strong>中前场压迫极强、边路宽度充足，适合控球主导型打法。
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-title gold">⚡ 阵型战术跑位机制演示</div>
+          <div class="slide-media-card" style="margin-bottom: 10px;">
+            <img src="{b64_f1231}" alt="1231阵型动图">
+            <div class="slide-media-caption">▶ 动图演示：门将出球超载 ➔ 中路三角渗透 ➔ 边锋突击</div>
+          </div>
+          <p style="font-size: 12.5px; line-height: 1.5; color: var(--text-sub);">
+            <strong>三板斧套路：</strong><br>
+            1. 门将(1) + 双中卫(2/3) + 中前卫(4) 形成 4v3 三角破逼抢；<br>
+            2. 4号斜长传转移给右边锋(6) 制造 1v1 单挑；<br>
+            3. 中锋(7) 与边锋(5) 交叉跑位包抄门前。
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- SLIDE 15: 7人制 1-3-2-1 -->
+    <div class="slide">
+      <div class="slide-header">
+        <div class="slide-subtitle">MODULE 04 · 阵型与位置职责卡</div>
+        <h2>7人制 1-3-2-1 圣诞树稳守反击阵型 & 位置职责卡</h2>
+      </div>
+      <div class="slide-body grid-2-1">
+        <div class="card">
+          <div class="card-title cyan">📋 1-3-2-1 球员三动作微观职责卡 (Role Cards)</div>
+          <ul style="font-size: 13px;">
+            <li><strong>1号 门将 (GK)：</strong>防守指挥官，封堵单刀，得球后长传反击直找突前中锋。</li>
+            <li><strong>3号 居中中卫 (CB)：</strong>【前】保持拖后保护；【主】绝不上抢失位，中路卡位解围与长传调度；【后】指挥两侧翼卫回防。</li>
+            <li><strong>2/4号 左右翼卫 (LWB/RWB)：</strong>【前】沿边线冲刺；【主】套边插上下底送 <em>W04 贴地横扫</em>；【后】丢球全速回防变 5 人防线。</li>
+            <li><strong>5号 防守型后腰 (DM)：</strong>【前】锁死禁区弧顶核心区；【主】凶狠扫荡拦截，第一脚安全回敲或分边；【后】中卫补位时顶替中卫。</li>
+            <li><strong>6号 组织/前插中场 (AM)：</strong>【前】埋伏在盲区；【主】接中锋回做一脚爆射或送 <em>W01 直塞</em>；【后】封堵对方反击路线。</li>
+            <li><strong>7号 突前支点中锋 (ST)：</strong>【前】强力背身<strong>扛人</strong>；【主】胸部卸球回做 <em>W06</em> 给 6号；【后】转身前插补射抢点。</li>
+          </ul>
+          <div class="callout cyan" style="margin-top: 10px;">
+            <strong>★ 核心机制：</strong>中路与肋部防守固若金汤，反击时双翼卫与前锋 3 秒高速直插。
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-title gold">⚡ 阵型战术跑位机制演示</div>
+          <div class="slide-media-card" style="margin-bottom: 10px;">
+            <img src="{b64_f1321}" alt="1321阵型动图">
+            <div class="slide-media-caption">▶ 动图演示：5人防守铁闸 ➔ 翼卫走廊狂飙 ➔ 中锋回做爆射</div>
+          </div>
+          <p style="font-size: 12.5px; line-height: 1.5; color: var(--text-sub);">
+            <strong>三板斧套路：</strong><br>
+            1. 5 人紧凑防守盒锁死中路，断球后立即分给翼卫；<br>
+            2. 翼卫(2/4) 沿边线全速推进，直接送出低平横扫；<br>
+            3. 后场起球给 7号(ST)，7号背身回做给插上的 6号(AM) 一脚定乾坤。
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- SLIDE 16: 8人制 1-3-3-1 -->
+    <div class="slide">
+      <div class="slide-header">
+        <div class="slide-subtitle">MODULE 04 · 阵型与位置职责卡</div>
+        <h2>8人制 1-3-3-1 现代黄金全能阵型 & 位置职责卡</h2>
+      </div>
+      <div class="slide-body grid-2-1">
+        <div class="card">
+          <div class="card-title gold">📋 1-3-3-1 球员三动作微观职责卡 (Role Cards)</div>
+          <ul style="font-size: 13px;">
+            <li><strong>1号 门卫 (GK)：</strong>现代高位门将；大禁区弧顶扫荡；主导 3 后卫的地面出球。</li>
+            <li><strong>3号 居中中卫 (CB)：</strong>后防总指挥；前压压缩中场空间；大范围斜长传转移弱侧。</li>
+            <li><strong>2/4号 左右边后卫 (LB/RB)：</strong>边路防守屏障；进攻压至中线与边前卫形成局部 2v1 套边配合。</li>
+            <li><strong>6号 中场指挥官 (CM)：</strong>全队攻防枢纽；掌控节奏；主导第三人跑位直塞与弱侧调度。</li>
+            <li><strong>5/7号 左右边前卫 (LM/RM)：</strong>边路爆点；1v1 突破内切射门或底线送出倒三角传中。</li>
+            <li><strong>8号 突前全能中锋 (ST)：</strong>牵制双中卫；前插反越位单刀；抢前点横扫折射破门。</li>
+          </ul>
+          <div class="callout gold" style="margin-top: 10px;">
+            <strong>★ 核心机制：</strong>12+ 重叠三角网，攻守平衡无死角，传控容错率极高。
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-title green">⚡ 阵型战术跑位机制演示</div>
+          <div class="slide-media-card" style="margin-bottom: 10px;">
+            <img src="{b64_f1331}" alt="1331阵型动图">
+            <div class="slide-media-caption">▶ 动图演示：边路双人组套边 ➔ 中轴联动 ➔ 倒三角配合</div>
+          </div>
+          <p style="font-size: 12.5px; line-height: 1.5; color: var(--text-sub);">
+            <strong>三板斧套路：</strong><br>
+            1. 边后卫与边前卫（LB+LM / RB+RM）形成套边(Overlap)彻底撕裂边路；<br>
+            2. 黄金中轴线（CB ➔ CM ➔ ST）主导由守转攻节奏；<br>
+            3. 无论持球人在何处，身边均有至少 3 个角度的传球接应点。
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- SLIDE 17: 阵型实战抉择矩阵 -->
+    <div class="slide">
+      <div class="slide-header">
+        <div class="slide-subtitle">MODULE 05 · 临场实战决策</div>
+        <h2>三大阵型对比与比赛情境破局决策矩阵</h2>
+      </div>
+      <div class="slide-body" style="display: flex; flex-direction: column; gap: 14px;">
+        <table class="matrix-table">
+          <thead>
+            <tr>
+              <th>阵型架构</th>
+              <th>主要优势</th>
+              <th>潜在薄弱点</th>
+              <th>核心进攻流派与武器</th>
+              <th>推荐使用时机</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong style="color: var(--pitch-green);">7人制 1-2-3-1</strong></td>
+              <td>前场压迫极强<br>中前场控制力足</td>
+              <td>双中卫身后空当大<br>边锋回防要求高</td>
+              <td>流派① 渗透 + 流派② 弱侧转移<br>Weapon 01, 05, 08, 09</td>
+              <td>主场压迫 / 实力占优 / 必须赢球抢攻</td>
+            </tr>
+            <tr>
+              <td><strong style="color: var(--accent-cyan);">7人制 1-3-2-1</strong></td>
+              <td>防线铁闸极稳<br>中路肋部零死角</td>
+              <td>进攻宽度依赖翼卫<br>中锋容易孤立</td>
+              <td>流派③ 越顶 + 流派④ 5秒快攻<br>Weapon 03, 06, 08, 18</td>
+              <td>遇强敌 / 客场作战 / 领先保胜 / 防守反击</td>
+            </tr>
+            <tr>
+              <td><strong style="color: var(--accent-gold);">8人制 1-3-3-1</strong></td>
+              <td>攻守完美平衡<br>边路双人组套边</td>
+              <td>单后腰横向覆盖大<br>边后卫插上身后空当</td>
+              <td>流派① 渗透 + 流派⑥ 底线倒三角<br>Weapon 03, 04, 07, 08, 10</td>
+              <td>标准八人制比赛 / 全场控球主导打法</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="card" style="padding: 12px 18px;">
+          <div class="card-title gold" style="font-size: 15px; margin-bottom: 6px;">⚡ 临场破局速查公式：</div>
+          <p style="font-size: 13.5px; line-height: 1.6;">
+            <strong>遇到对方高位逼抢：</strong>严禁后场盲目出脚 ➔ 启动【门将穿透性低平球 + 越顶挑传反越位】<br>
+            <strong>遇到对方低位摆铁桶：</strong>严禁中路硬塞 ➔ 启动【强侧超载弱侧大转移 + 底线倒三角 + 假射真传】<br>
+            <strong>遇到中场激烈绞杀：</strong>严禁在脚下粘球 ➔ 启动【一脚出球 + 第三人跑位 + 中锋胸部做球】
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- SLIDE 18: 临场破局四大引擎 -->
+    <div class="slide">
+      <div class="slide-header">
+        <div class="slide-subtitle">MODULE 05 · 临场破局引擎</div>
+        <h2>四大典型被动困境深度破局指南 (Matchday Crisis Solver)</h2>
+      </div>
+      <div class="slide-body grid-2">
+        <div class="card" style="border-left: 4px solid var(--accent-red);">
+          <div class="card-title red">破局① · 突围对手全场疯狂高位逼抢</div>
+          <div style="font-size: 12.5px; color: var(--accent-red); font-weight: 700; margin-bottom: 8px;">【对手陷阱】多名进攻球员压迫我方后场出球点，切断地面出球路线。</div>
+          <p style="font-size: 13px;">
+            <strong>【破局解药】</strong>启动【门将+1超载模式】！门将提至弧顶接球，利用人数优势吸引逼抢，果断送出 <em>W17 门将穿透性低平球</em> 穿透逼抢线直连中场；若对手防线全线压上，直接起 <em>W18 越顶长传</em> 连线中锋反越位单刀！
+          </p>
+          <div class="callout red"><strong>核心武器：</strong>W17 门将穿透性低平球、W18 越顶长传 | <strong>口令：</strong>“门将直穿！” / “起身后！”</div>
+        </div>
+
+        <div class="card" style="border-left: 4px solid var(--accent-gold);">
+          <div class="card-title gold">破局② · 撕碎对手低位大巴铁桶阵</div>
+          <div style="font-size: 12.5px; color: var(--accent-gold); font-weight: 700; margin-bottom: 8px;">【对手陷阱】全员龟缩禁区前沿，中路无缝隙，盲目远射与高球均被解围。</div>
+          <p style="font-size: 13px;">
+            <strong>【破局解药】</strong>严禁强突中路！执行【宽度拉扯与弱侧转移】：强侧 3 人传导诱敌，突然送 <em>W09 弱侧长传</em>；边锋突破到底线坚决打 <em>W03 底线倒三角</em>；弧顶前腰辅以 <em>W14 假射真扣</em> 制造犯规或点球。
+          </p>
+          <div class="callout gold"><strong>核心武器：</strong>W03 底线倒三角、W09 弱侧大转移、W14 假射真传 | <strong>口令：</strong>“弱侧弱侧！” / “倒三角！”</div>
+        </div>
+
+        <div class="card" style="border-left: 4px solid var(--accent-cyan);">
+          <div class="card-title cyan">破局③ · 突围中场惨烈绞杀与人数劣势</div>
+          <div style="font-size: 12.5px; color: var(--accent-cyan); font-weight: 700; margin-bottom: 8px;">【对手陷阱】在中圈与两肋重兵封堵，凶狠逼抢第一接球人，拿球停顿即遭包夹。</div>
+          <p style="font-size: 13px;">
+            <strong>【破局解药】</strong>全员执行【一脚触球】铁律！启动【第三人跑位 Up-Back-Through】：后腰直塞前锋，前锋背身一脚回做，中场顺势送盲区第三人单刀；若地面绞杀惨烈，后场直接起半高球连线中锋胸部稳卸回做！
+          </p>
+          <div class="callout cyan"><strong>核心武器：</strong>W08 第三人导向球、W06 迎前回敲、W05 二过一撞墙 | <strong>口令：</strong>“看第三人！” / “回敲！”</div>
+        </div>
+
+        <div class="card" style="border-left: 4px solid var(--pitch-green);">
+          <div class="card-title green">破局④ · 终场比分落后绝境搏杀</div>
+          <div style="font-size: 12.5px; color: var(--pitch-green); font-weight: 700; margin-bottom: 8px;">【对手陷阱】对手领先拖延时间，故意制造停顿，打乱我方节奏。</div>
+          <p style="font-size: 13px;">
+            <strong>【破局解药】</strong>丢球 0.5 秒内全队合围就地反抢！断球后 5 秒内 3 脚传递直达门前；充分利用死球机会执行 <em>W20 战术手抛界外球</em>：边卫掷前锋脚下一脚回敲，边卫套边平抽横扫门前；定位球果断发 2 人配合倒三角！
+          </p>
+          <div class="callout green"><strong>核心武器：</strong>W04 贴地横扫传中、W20 战术手抛界外球、W19 定位球倒三角 | <strong>口令：</strong>“前点平抽！” / “界外球配合！”</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SLIDE 19: 8大赛场呼应暗号速查盘 -->
+    <div class="slide">
+      <div class="slide-header">
+        <div class="slide-subtitle">MODULE 05 · 赛场通讯暗号</div>
+        <h2>全队 8 大赛场呼应暗号速查盘 (8 Matchday Voice Cues)</h2>
+      </div>
+      <div class="slide-body grid-4">
+        <div class="card" style="padding: 12px;">
+          <div style="font-size: 16px; font-weight: 900; color: var(--accent-cyan); margin-bottom: 4px;">“转过来！”</div>
+          <div style="font-size: 11px; color: var(--accent-gold); font-weight: 700; margin-bottom: 6px;">🎯 身后无紧逼</div>
+          <p style="font-size: 12px; color: var(--text-sub); line-height: 1.4;">严禁习惯性回传！拿球队员顺势领球向前，正面冲击对方防线。</p>
+        </div>
+        <div class="card" style="padding: 12px;">
+          <div style="font-size: 16px; font-weight: 900; color: var(--accent-red); margin-bottom: 4px;">“身后有人！”</div>
+          <div style="font-size: 11px; color: var(--accent-gold); font-weight: 700; margin-bottom: 6px;">🎯 防守贴身逼抢</div>
+          <p style="font-size: 12px; color: var(--text-sub); line-height: 1.4;">严禁盲目转身！必须一脚触球顺势回敲，或身体卡位护球借力打力。</p>
+        </div>
+        <div class="card" style="padding: 12px;">
+          <div style="font-size: 16px; font-weight: 900; color: var(--accent-gold); margin-bottom: 4px;">“弱侧弱侧！”</div>
+          <div style="font-size: 11px; color: var(--accent-gold); font-weight: 700; margin-bottom: 6px;">🎯 强侧通道被堵死</div>
+          <p style="font-size: 12px; color: var(--text-sub); line-height: 1.4;">全队视线向弱侧转移，中场持球人立即送出 30 米大对角斜长传找空当。</p>
+        </div>
+        <div class="card" style="padding: 12px;">
+          <div style="font-size: 16px; font-weight: 900; color: var(--pitch-green); margin-bottom: 4px;">“看第三人！”</div>
+          <div style="font-size: 11px; color: var(--accent-gold); font-weight: 700; margin-bottom: 6px;">🎯 第一点被死盯</div>
+          <p style="font-size: 12px; color: var(--text-sub); line-height: 1.4;">不要传眼前暴露点，利用回敲过渡，一脚直塞给盲区突前插上的第三人。</p>
+        </div>
+        <div class="card" style="padding: 12px;">
+          <div style="font-size: 16px; font-weight: 900; color: var(--pitch-green); margin-bottom: 4px;">“门将直穿！”</div>
+          <div style="font-size: 11px; color: var(--accent-gold); font-weight: 700; margin-bottom: 6px;">🎯 对手高位逼抢</div>
+          <p style="font-size: 12px; color: var(--text-sub); line-height: 1.4;">门将提至弧顶接球，大力贴地平抽穿透前锋逼抢线，直接连线中场。</p>
+        </div>
+        <div class="card" style="padding: 12px;">
+          <div style="font-size: 16px; font-weight: 900; color: var(--accent-cyan); margin-bottom: 4px;">“起身后！”</div>
+          <div style="font-size: 11px; color: var(--accent-gold); font-weight: 700; margin-bottom: 6px;">🎯 防线身后留真空</div>
+          <p style="font-size: 12px; color: var(--text-sub); line-height: 1.4;">断球 0.5 秒内不倒脚，拖后中卫直接送半高球越顶长传，前锋反越位单刀。</p>
+        </div>
+        <div class="card" style="padding: 12px;">
+          <div style="font-size: 16px; font-weight: 900; color: var(--accent-gold); margin-bottom: 4px;">“倒三角！”</div>
+          <div style="font-size: 11px; color: var(--accent-gold); font-weight: 700; margin-bottom: 6px;">🎯 边锋下底吸引防守</div>
+          <p style="font-size: 12px; color: var(--text-sub); line-height: 1.4;">拒绝盲目起高球争顶！发力贴地推向点球点到禁区线之间的巨大真空区。</p>
+        </div>
+        <div class="card" style="padding: 12px;">
+          <div style="font-size: 16px; font-weight: 900; color: var(--accent-purple); margin-bottom: 4px;">“回传重来！”</div>
+          <div style="font-size: 11px; color: var(--accent-gold); font-weight: 700; margin-bottom: 6px;">🎯 边路陷入死胡同</div>
+          <p style="font-size: 12px; color: var(--text-sub); line-height: 1.4;">拒绝盲目对抗失误！果断回敲拖后中卫，全队横向展开重构进攻面。</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- SLIDE 20: 总结与更衣室赛前共识誓词 -->
+    <div class="slide">
+      <div class="slide-header">
+        <div class="slide-subtitle">SUMMARY & PLEDGE · 更衣室战术誓词</div>
+        <h2>全队更衣室赛前共识：打造不可阻挡的战术统一体</h2>
+      </div>
+      <div class="slide-body grid-2">
+        <div class="card" style="justify-content: center;">
+          <div class="card-title gold" style="font-size: 20px;">🛡️ 球队三大不可动摇的战术纪律</div>
+          <div class="callout green" style="margin-bottom: 12px;">
+            <strong>1. 传球永远走在跑位前面：</strong>我们不等待球停稳才抬头，接球前 0.5 秒必须完成盲区扫描，让皮球在空中流动！
+          </div>
+          <div class="callout cyan" style="margin-bottom: 12px;">
+            <strong>2. 坚决信任第三人（Third Man）：</strong>持球人永远不是终结点，通过一次看似平常的回敲，激活盲区高速前插的第三名队友！
+          </div>
+          <div class="callout gold">
+            <strong>3. 赛场呼应绝不沉默：</strong>用统一的“转过来！”、“身后有人！”、“弱侧弱侧！”、“倒三角！”主导比赛节奏！
+          </div>
+        </div>
+        <div class="card" style="background: var(--bg-card-inner); border-color: var(--pitch-green); justify-content: center; text-align: center;">
+          <div style="font-size: 48px; margin-bottom: 10px;">🏆 ⚽ 🔥</div>
+          <h3 style="font-size: 22px; color: var(--text-main); margin-bottom: 10px;">胜利属于执行纪律最坚决的团队</h3>
+          <p style="font-size: 14px; color: var(--text-sub); line-height: 1.7; max-width: 440px; margin: 0 auto 18px;">
+            “当我们在场上分享同一种战术语言、看向同一块进攻空间，我们便不再是 7 个人或 8 个人的简单相加，而是一支不可战胜的现代战术铁军！”
+          </p>
+          <div style="display: flex; justify-content: center; gap: 12px;">
+            <a href="football_tactics_hub.html" class="nav-btn" style="background: var(--pitch-green); color: #000; font-weight: 800; padding: 8px 20px; font-size: 14px;">🖥️ 开启战术战情室中枢</a>
+            <button class="nav-btn" onclick="goToSlide(0)" style="padding: 8px 20px; font-size: 14px;">🔄 重头复盘讲解</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Bottom Dots Navigation -->
+  <div class="bottombar" id="dots-container"></div>
+  <div class="hotkey-hint">键盘 ← / → 翻页 | 空格 下一页 | F 全屏 | 顶部切换护眼浅色</div>
+
+  <script>
+    let currentSlide = 0;
+    const slides = document.querySelectorAll('.slide');
+    const totalSlides = slides.length;
+    const dotsContainer = document.getElementById('dots-container');
+    const counter = document.getElementById('slide-counter');
+
+    // Create Dots
+    slides.forEach((_, idx) => {{
+      const dot = document.createElement('div');
+      dot.className = 'dot' + (idx === 0 ? ' active' : '');
+      dot.onclick = () => goToSlide(idx);
+      dotsContainer.appendChild(dot);
+    }});
+
+    const dots = document.querySelectorAll('.dot');
+
+    function updateSlide() {{
+      slides.forEach((s, idx) => {{
+        s.classList.toggle('active', idx === currentSlide);
+      }});
+      dots.forEach((d, idx) => {{
+        d.classList.toggle('active', idx === currentSlide);
+      }});
+      counter.innerText = `${{String(currentSlide + 1).padStart(2, '0')}} / ${{String(totalSlides).padStart(2, '0')}}`;
+    }}
+
+    function nextSlide() {{
+      if (currentSlide < totalSlides - 1) {{
+        currentSlide++;
+        updateSlide();
+      }}
+    }}
+
+    function prevSlide() {{
+      if (currentSlide > 0) {{
+        currentSlide--;
+        updateSlide();
+      }}
+    }}
+
+    function goToSlide(idx) {{
+      currentSlide = idx;
+      updateSlide();
+    }}
+
+    function toggleFullScreen() {{
+      if (!document.fullscreenElement) {{
+        document.documentElement.requestFullscreen();
+      }} else {{
+        if (document.exitFullscreen) {{
+          document.exitFullscreen();
+        }}
+      }}
+    }}
+
+    // 3-Theme Switcher & Storage
+    function setTheme(themeName) {{
+      document.body.classList.remove('theme-light', 'theme-sepia');
+      if (themeName === 'light') {{
+        document.body.classList.add('theme-light');
+      }} else if (themeName === 'sepia') {{
+        document.body.classList.add('theme-sepia');
+      }}
+      localStorage.setItem('tactics_theme', themeName);
+      updateThemeButtons(themeName);
+    }}
+
+    function updateThemeButtons(currentTheme) {{
+      document.querySelectorAll('.theme-btn').forEach(btn => btn.classList.remove('active'));
+      const activeBtn = document.getElementById('btn-theme-' + currentTheme);
+      if (activeBtn) activeBtn.classList.add('active');
+    }}
+
+    function initTheme() {{
+      const savedTheme = localStorage.getItem('tactics_theme') || 'dark';
+      setTheme(savedTheme);
+    }}
+
+    // Keyboard navigation
+    document.addEventListener('keydown', (e) => {{
+      if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') {{
+        nextSlide();
+      }} else if (e.key === 'ArrowLeft' || e.key === 'PageUp') {{
+        prevSlide();
+      }} else if (e.key.toLowerCase() === 'f') {{
+        toggleFullScreen();
+      }} else if (e.key === 'Home') {{
+        goToSlide(0);
+      }} else if (e.key === 'End') {{
+        goToSlide(totalSlides - 1);
+      }}
+    }});
+
+    // Touch swipe support
+    let touchStartX = 0;
+    document.addEventListener('touchstart', (e) => {{
+      touchStartX = e.touches[0].clientX;
+    }});
+    document.addEventListener('touchend', (e) => {{
+      let touchEndX = e.changedTouches[0].clientX;
+      if (touchStartX - touchEndX > 50) nextSlide();
+      if (touchEndX - touchStartX > 50) prevSlide();
+    }});
+
+    // Initialize Theme
+    initTheme();
+  </script>
+</body>
+</html>
+"""
+
+out_workspace = r"e:\06_Study\书籍\足球\football_tactics_deck.html"
+out_artifact = r"C:\Users\Administrator\.gemini\antigravity\brain\030fc641-b9cc-4e72-b4ba-ed21a5a6e35f\football_tactics_deck.html"
+
+with open(out_workspace, "w", encoding="utf-8") as f:
+    f.write(deck_html)
+
+with open(out_artifact, "w", encoding="utf-8") as f:
+    f.write(deck_html)
+
+print("Generated football_tactics_deck.html successfully!")

@@ -15,8 +15,7 @@ W19 Set-piece Short Corner Cut-Back
 import os, math
 from PIL import Image, ImageDraw, ImageFont
 
-base_dir = os.path.dirname(os.path.abspath(__file__))
-out_dir = os.path.join(base_dir, "tactics_animations_gif")
+out_dir = r"e:\06_Study\书籍\足球\tactics_animations_gif"
 os.makedirs(out_dir, exist_ok=True)
 
 W, H = 840, 640
