@@ -1,0 +1,128 @@
+<!-- miniprogram/pages/pitch/pitch.wxml -->
+<view class="container">
+  
+  <!-- Formation Tabs -->
+  <scroll-view class="formation-tabs" scroll-x enable-flex>
+    <view 
+      wx:for="{{formationKeys}}" 
+      wx:key="*this"
+      class="tab-btn {{currentFormationKey === item ? 'active' : ''}}"
+      bindtap="onSwitchFormation"
+      data-key="{{item}}"
+    >
+      {{formations[item].name}}
+    </view>
+  </scroll-view>
+
+  <!-- Pitch Container -->
+  <view class="pitch-card">
+    <view class="pitch-header">
+      <text class="pitch-title">{{currentFormation.name}}</text>
+      <text class="pitch-tag">{{currentFormation.tag}}</text>
+    </view>
+
+    <!-- Chalkboard Toolbar -->
+    <view class="toolbar">
+      <view class="tool-modes">
+        <view class="tool-pill {{drawMode === 'drag' ? 'active' : ''}}" bindtap="setToolMode" data-mode="drag">🖐️ 挪动</view>
+        <view class="tool-pill {{drawMode === 'pass' ? 'active' : ''}}" bindtap="setToolMode" data-mode="pass">🟡 传球</view>
+        <view class="tool-pill {{drawMode === 'run' ? 'active' : ''}}" bindtap="setToolMode" data-mode="run">🟢 跑位</view>
+        <view class="tool-pill {{drawMode === 'dribble' ? 'active' : ''}}" bindtap="setToolMode" data-mode="dribble">🔵 盘带</view>
+        <view class="tool-pill {{drawMode === 'press' ? 'active' : ''}}" bindtap="setToolMode" data-mode="press">🔴 逼抢</view>
+      </view>
+      <view class="tool-actions">
+        <view class="action-pill" bindtap="undoStroke">↩️ 撤销</view>
+        <view class="action-pill" bindtap="clearBoard">🧹 清除</view>
+        <view class="action-pill gold" bindtap="resetFormation">🔄 复原</view>
+      </view>
+    </view>
+
+    <!-- Interactive Pitch Board -->
+    <view class="pitch-board" id="pitchBoard">
+      <!-- Pitch Markings -->
+      <view class="pitch-line half-line"></view>
+      <view class="pitch-circle center-circle"></view>
+      <view class="pitch-spot center-spot"></view>
+      <view class="pitch-box penalty-top"></view>
+      <view class="pitch-box penalty-bottom"></view>
+
+      <!-- Canvas 2D for Drawing Arrows -->
+      <canvas 
+        type="2d" 
+        id="pitchCanvas" 
+        class="pitch-canvas {{drawMode === 'drag' ? 'pointer-none' : ''}}"
+        bindtouchstart="onTouchStart"
+        bindtouchmove="onTouchMove"
+        bindtouchend="onTouchEnd"
+      ></canvas>
+
+      <!-- Player Nodes Layer -->
+      <view 
+        wx:for="{{players}}" 
+        wx:key="num"
+        class="player-node {{selectedIndex === index ? 'active' : ''}}"
+        style="left: {{item.x}}%; top: {{item.y}}%;"
+        bindtap="onSelectPlayer"
+        data-index="{{index}}"
+        catchtouchstart="onPlayerTouchStart"
+        catchtouchmove="onPlayerTouchMove"
+        catchtouchend="onPlayerTouchEnd"
+      >
+        <text class="player-num">{{item.num}}</text>
+        <text class="player-pos">{{item.pos}}</text>
+      </view>
+    </view>
+
+    <!-- Scenario Presets Bar -->
+    <view class="scenario-bar">
+      <text class="scenario-label">⚡ 战术推演:</text>
+      <view class="scenario-pill {{currentScenario === 'standard' ? 'active' : ''}}" bindtap="applyScenario" data-scene="standard">标准站位</view>
+      <view class="scenario-pill {{currentScenario === 'high_press' ? 'active' : ''}}" bindtap="applyScenario" data-scene="high_press">高位合围</view>
+      <view class="scenario-pill {{currentScenario === 'deep_buildup' ? 'active' : ''}}" bindtap="applyScenario" data-scene="deep_buildup">后场出球</view>
+      <view class="scenario-pill {{currentScenario === 'flank_overload' ? 'active' : ''}}" bindtap="applyScenario" data-scene="flank_overload">强侧超载</view>
+    </view>
+  </view>
+
+  <!-- Player Role Card -->
+  <view class="role-card" wx:if="{{selectedPlayer}}">
+    <view class="role-head">
+      <view>
+        <text class="role-name">{{selectedPlayer.num}}号 {{selectedPlayer.name}}</text>
+        <text class="role-code">{{selectedPlayer.code}}</text>
+      </view>
+      <view class="num-badge">No. {{selectedPlayer.num}}</view>
+    </view>
+
+    <view class="duty-box">
+      {{selectedPlayer.duty}}
+    </view>
+
+    <!-- 3-Action Stepper -->
+    <view class="stepper">
+      <view class="step-item pre">
+        <text class="step-tag">01. 接球前准备 (Pre-Action)</text>
+        <text class="step-desc">{{selectedPlayer.pre}}</text>
+      </view>
+      <view class="step-item main">
+        <text class="step-tag">02. 触球主动作 (Main-Action)</text>
+        <text class="step-desc">{{selectedPlayer.main}}</text>
+      </view>
+      <view class="step-item post">
+        <text class="step-tag">03. 出球后衔接 (Post-Action)</text>
+        <text class="step-desc">{{selectedPlayer.post}}</text>
+      </view>
+    </view>
+
+    <view class="meta-row">
+      <view class="meta-card">
+        <text class="meta-label">🛠️ 核心武器</text>
+        <text class="meta-val">{{selectedPlayer.weapons}}</text>
+      </view>
+      <view class="meta-card">
+        <text class="meta-label">📢 呼应口令</text>
+        <text class="meta-val">{{selectedPlayer.callout}}</text>
+      </view>
+    </view>
+  </view>
+
+</view>
