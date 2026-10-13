@@ -1,0 +1,14 @@
+{
+  "pages": [
+    "pages/pitch/pitch"
+  ],
+  "window": {
+    "backgroundTextStyle": "dark",
+    "navigationBarBackgroundColor": "#0f1512",
+    "navigationBarTitleText": "德国足球战术中枢 · 教研画板",
+    "navigationBarTextStyle": "white",
+    "backgroundColor": "#0a0e0c"
+  },
+  "style": "v2",
+  "sitemapLocation": "sitemap.json"
+}

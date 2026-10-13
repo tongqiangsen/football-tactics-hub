@@ -1,0 +1,15 @@
+{
+  "miniprogramRoot": "./",
+  "projectname": "football-tactics-hub-mp",
+  "description": "现代足球战术教研中枢微信小程序",
+  "appid": "touristappid",
+  "setting": {
+    "urlCheck": false,
+    "es6": true,
+    "enhance": true,
+    "postcss": true,
+    "preloadBackgroundData": false,
+    "minified": true
+  },
+  "compileType": "miniprogram"
+}
