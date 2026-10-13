@@ -1,0 +1,2796 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>现代足球战术战情室 · 现代传控体系交互中枢 (Tactical Command Hub)</title>
+  <style>
+    :root {
+      --bg-app: #0a0e0c;
+      --bg-sidebar: #0f1512;
+      --bg-surface: #141c18;
+      --bg-subsurface: #1a2420;
+      --border-subtle: rgba(255, 255, 255, 0.07);
+      --border-focus: rgba(16, 185, 129, 0.4);
+      --pitch-green: #10b981;
+      --accent-gold: #f59e0b;
+      --accent-cyan: #38bdf8;
+      --accent-red: #ef4444;
+      --accent-purple: #a855f7;
+      --text-main: #f8fafc;
+      --text-sub: #94a3b8;
+      --text-muted: #64748b;
+      --tab-bg: #18221d;
+      --tab-color: #94a3b8;
+      --shadow-card: 0 4px 20px -2px rgba(0, 0, 0, 0.35);
+      --shadow-float: 0 12px 32px -4px rgba(0, 0, 0, 0.5);
+      --bg-dark: var(--bg-app);
+      --bg-card: var(--bg-surface);
+      --bg-card-inner: var(--bg-subsurface);
+      --border-color: var(--border-subtle);
+      --border-sub: var(--border-subtle);
+      --border-hover: var(--border-focus);
+    }
+
+    /* Light Eye-friendly Tactical Whiteboard Theme (战术白板) */
+    body.theme-light {
+      --bg-app: #f4f6f5;
+      --bg-sidebar: #e9eeea;
+      --bg-surface: #ffffff;
+      --bg-subsurface: #f1f5f2;
+      --border-subtle: rgba(0, 0, 0, 0.07);
+      --border-focus: rgba(4, 120, 87, 0.4);
+      --pitch-green: #047857;
+      --accent-gold: #b45309;
+      --accent-cyan: #0369a1;
+      --accent-red: #dc2626;
+      --accent-purple: #7e22ce;
+      --text-main: #0f172a;
+      --text-sub: #334155;
+      --text-muted: #64748b;
+      --tab-bg: #e2e8f0;
+      --tab-color: #475569;
+      --shadow-card: 0 4px 15px rgba(0, 0, 0, 0.04);
+      --shadow-float: 0 12px 28px rgba(0, 0, 0, 0.1);
+      --bg-dark: var(--bg-app);
+      --bg-card: var(--bg-surface);
+      --bg-card-inner: var(--bg-subsurface);
+      --border-color: var(--border-subtle);
+      --border-sub: var(--border-subtle);
+      --border-hover: var(--border-focus);
+    }
+
+    /* Sepia Theme (羊皮纸暖色护眼) */
+    body.theme-sepia {
+      --bg-app: #fbf7ee;
+      --bg-sidebar: #f3ede0;
+      --bg-surface: #fdfbf7;
+      --bg-subsurface: #f5eedf;
+      --border-subtle: rgba(120, 90, 40, 0.12);
+      --border-focus: rgba(180, 83, 9, 0.4);
+      --pitch-green: #15803d;
+      --accent-gold: #b45309;
+      --accent-cyan: #0284c7;
+      --accent-red: #b91c1c;
+      --accent-purple: #6b21a8;
+      --text-main: #292524;
+      --text-sub: #57534e;
+      --text-muted: #78716c;
+      --tab-bg: #e7dec8;
+      --tab-color: #57534e;
+      --shadow-card: 0 4px 15px rgba(60, 40, 10, 0.04);
+      --shadow-float: 0 12px 28px rgba(60, 40, 10, 0.1);
+      --bg-dark: var(--bg-app);
+      --bg-card: var(--bg-surface);
+      --bg-card-inner: var(--bg-subsurface);
+      --border-color: var(--border-subtle);
+      --border-sub: var(--border-subtle);
+      --border-hover: var(--border-focus);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      background: var(--bg-app);
+      color: var(--text-main);
+      display: flex;
+      height: 100vh;
+      overflow: hidden;
+      -webkit-font-smoothing: antialiased;
+      transition: background-color 0.25s, color 0.25s;
+    }
+
+    /* Left Sidebar */
+    .sidebar {
+      width: 260px;
+      background: var(--bg-sidebar);
+      border-right: 1px solid var(--border-subtle);
+      display: flex;
+      flex-direction: column;
+      flex-shrink: 0;
+      transition: background-color 0.25s;
+      z-index: 50;
+    }
+    .sidebar-header {
+      padding: 22px 20px 18px;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+    .sidebar-title {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      letter-spacing: -0.01em;
+    }
+    .sidebar-subtitle {
+      font-size: 11px;
+      color: var(--text-muted);
+      margin-top: 4px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .nav-menu {
+      padding: 14px 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      flex: 1;
+      overflow-y: auto;
+    }
+    .nav-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 14px;
+      border-radius: 8px;
+      color: var(--text-sub);
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      border: 1px solid transparent;
+    }
+    .nav-item:hover {
+      background: var(--bg-subsurface);
+      color: var(--text-main);
+    }
+    .nav-item.active {
+      background: var(--bg-surface);
+      color: var(--pitch-green);
+      font-weight: 600;
+      border-color: var(--border-subtle);
+      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.15);
+    }
+    .nav-badge {
+      font-size: 10.5px;
+      padding: 2px 7px;
+      border-radius: 6px;
+      background: var(--bg-subsurface);
+      color: var(--text-muted);
+      border: 1px solid var(--border-subtle);
+      font-weight: 500;
+    }
+    .nav-item.active .nav-badge {
+      background: rgba(16, 185, 129, 0.15);
+      color: var(--pitch-green);
+      border-color: rgba(16, 185, 129, 0.3);
+      font-weight: 600;
+    }
+
+    .sidebar-footer {
+      padding: 14px 18px;
+      border-top: 1px solid var(--border-subtle);
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    /* Main Content Area */
+    .main-content {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      overflow-y: auto;
+      background: var(--bg-app);
+      transition: background-color 0.25s;
+    }
+
+    /* Top Utility Bar */
+    .topbar {
+      height: 56px;
+      background: var(--bg-app);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border-subtle);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 28px;
+      position: sticky;
+      top: 0;
+      z-index: 40;
+    }
+    .current-view-title {
+      font-size: 14.5px;
+      font-weight: 600;
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .view-tag {
+      font-size: 11px;
+      font-weight: 600;
+      padding: 2px 8px;
+      border-radius: 6px;
+      background: var(--bg-subsurface);
+      color: var(--pitch-green);
+      border: 1px solid var(--border-subtle);
+    }
+    .top-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .theme-palette-group {
+      display: flex;
+      background: var(--bg-subsurface);
+      border: 1px solid var(--border-subtle);
+      border-radius: 8px;
+      padding: 2px;
+    }
+    .theme-btn {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      padding: 5px 10px;
+      font-size: 11.5px;
+      font-weight: 600;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+    .theme-btn:hover { color: var(--text-main); }
+    .theme-btn.active {
+      background: var(--bg-surface);
+      color: var(--text-main);
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+    }
+    .btn-action {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      color: var(--text-main);
+      padding: 6px 13px;
+      border-radius: 7px;
+      font-size: 12px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .btn-action:hover {
+      background: var(--bg-subsurface);
+      border-color: var(--border-focus);
+    }
+
+    /* Content Views */
+    .view-container {
+      padding: 24px 32px 60px;
+      display: none;
+      animation: fadeIn 0.2s ease-out;
+    }
+    .view-container.active { display: block; }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(4px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .section-header {
+      margin-bottom: 22px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+    .section-header h2 {
+      font-size: 19px;
+      font-weight: 700;
+      color: var(--text-main);
+      letter-spacing: -0.01em;
+    }
+    .section-header p {
+      font-size: 13px;
+      color: var(--text-muted);
+      margin-top: 4px;
+      line-height: 1.5;
+    }
+
+    /* Grids & Cards */
+    .grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 18px; }
+    .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+    .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
+
+    .card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      border-radius: 12px;
+      padding: 18px 20px;
+      box-shadow: var(--shadow-card);
+      transition: border-color 0.15s, box-shadow 0.15s;
+    }
+    .card p, .card li {
+      color: var(--text-sub);
+      font-size: 13px;
+      line-height: 1.6;
+    }
+    .card strong { color: var(--text-main); font-weight: 600; }
+    .card:hover { border-color: var(--border-focus); }
+    .card-title {
+      font-size: 14.5px;
+      font-weight: 700;
+      color: var(--text-main);
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .card-title.gold { color: var(--accent-gold); }
+    .card-title.green { color: var(--pitch-green); }
+    .card-title.red { color: var(--accent-red); }
+
+    /* Module 04: Formation & Pitch */
+    .formation-nav {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 18px;
+    }
+    .formation-tab-btn {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      color: var(--text-muted);
+      padding: 8px 16px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+    .formation-tab-btn:hover {
+      background: var(--bg-subsurface);
+      color: var(--text-main);
+    }
+    .formation-tab-btn.active {
+      background: var(--bg-subsurface);
+      border-color: var(--pitch-green);
+      color: var(--pitch-green);
+      font-weight: 600;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+    }
+    .pitch-workbench {
+      display: grid;
+      grid-template-columns: 54% 46%;
+      gap: 20px;
+      align-items: start;
+    }
+    .pitch-container {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      border-radius: 12px;
+      padding: 16px;
+      box-shadow: var(--shadow-card);
+      display: flex;
+      flex-direction: column;
+    }
+    .pitch-header-info {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+    .pitch-title {
+      font-size: 14.5px;
+      font-weight: 700;
+      color: var(--text-main);
+    }
+    .pitch-badge {
+      font-size: 11px;
+      padding: 2px 8px;
+      border-radius: 5px;
+      background: rgba(245, 158, 11, 0.12);
+      color: var(--accent-gold);
+      border: 1px solid rgba(245, 158, 11, 0.25);
+      font-weight: 600;
+    }
+    .pitch-board {
+      position: relative;
+      background: #071911;
+      border: 1px solid rgba(16, 185, 129, 0.25);
+      border-radius: 8px;
+      height: 480px;
+      overflow: hidden;
+      box-shadow: inset 0 0 35px rgba(0, 0, 0, 0.7);
+    }
+    body.theme-light .pitch-board {
+      background: #15452d;
+      border-color: #047857;
+    }
+    body.theme-sepia .pitch-board {
+      background: #133e28;
+      border-color: #047857;
+    }
+    .pitch-marking {
+      position: absolute;
+      border-color: rgba(255, 255, 255, 0.22);
+      border-style: solid;
+      pointer-events: none;
+    }
+    .pitch-half-line {
+      top: 50%; left: 0; width: 100%; height: 1px;
+      border-top-width: 1.5px;
+    }
+    .pitch-center-circle {
+      top: 50%; left: 50%; width: 104px; height: 104px;
+      transform: translate(-50%, -50%);
+      border-width: 1.5px;
+      border-radius: 50%;
+    }
+    .pitch-center-spot {
+      top: 50%; left: 50%; width: 6px; height: 6px;
+      transform: translate(-50%, -50%);
+      background: rgba(255, 255, 255, 0.35);
+      border-radius: 50%;
+    }
+    .pitch-penalty-top {
+      top: 0; left: 50%; width: 190px; height: 90px;
+      transform: translateX(-50%);
+      border-width: 0 1.5px 1.5px 1.5px;
+    }
+    .pitch-penalty-bottom {
+      bottom: 0; left: 50%; width: 190px; height: 90px;
+      transform: translateX(-50%);
+      border-width: 1.5px 1.5px 0 1.5px;
+    }
+
+    .player-node {
+      position: absolute;
+      width: 36px;
+      height: 36px;
+      transform: translate(-50%, -50%);
+      border-radius: 50%;
+      background: #ffffff;
+      border: 2px solid #0f172a;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      cursor: grab;
+      box-shadow: 0 3px 10px rgba(0, 0, 0, 0.5);
+      transition: box-shadow 0.2s ease, border-color 0.2s ease;
+      z-index: 10;
+      touch-action: none;
+      user-select: none;
+    }
+    .player-node:hover {
+      transform: translate(-50%, -50%) scale(1.1);
+      box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.4), 0 4px 12px rgba(0, 0, 0, 0.6);
+    }
+    .player-node.active {
+      transform: translate(-50%, -50%) scale(1.16);
+      border-color: #ffffff;
+      background: var(--pitch-green);
+      box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.5), 0 6px 16px rgba(0, 0, 0, 0.6);
+      z-index: 12;
+    }
+    .player-node.dragging {
+      transform: translate(-50%, -50%) scale(1.28) !important;
+      box-shadow: 0 0 0 4px rgba(245, 158, 11, 0.7), 0 10px 25px rgba(0, 0, 0, 0.85) !important;
+      z-index: 25 !important;
+      cursor: grabbing !important;
+      border-color: #fbbf24 !important;
+    }
+    .player-node-num {
+      font-size: 13.5px;
+      font-weight: 800;
+      color: #0f172a;
+      line-height: 1;
+    }
+    .player-node.active .player-node-num { color: #ffffff; }
+    .player-node-label {
+      position: absolute;
+      bottom: -17px;
+      font-size: 10px;
+      font-weight: 700;
+      color: #f1f5f9;
+      background: rgba(15, 23, 42, 0.85);
+      padding: 1px 5px;
+      border-radius: 3px;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      white-space: nowrap;
+      pointer-events: none;
+    }
+    .player-node.active .player-node-label {
+      color: #000;
+      background: var(--pitch-green);
+      border-color: var(--pitch-green);
+      font-weight: 800;
+    }
+
+    /* Tactical Chalkboard Toolbar & Tools */
+    .chalkboard-toolbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: var(--bg-subsurface);
+      border: 1px solid var(--border-subtle);
+      border-radius: 8px;
+      padding: 8px 12px;
+      margin-bottom: 12px;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .toolbar-group {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+    .toolbar-label {
+      font-size: 11.5px;
+      font-weight: 700;
+      color: var(--text-muted);
+      margin-right: 2px;
+    }
+    .tool-btn {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      color: var(--text-sub);
+      padding: 5px 10px;
+      border-radius: 6px;
+      font-size: 11.5px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      user-select: none;
+    }
+    .tool-btn:hover {
+      background: var(--bg-card);
+      color: var(--text-main);
+      border-color: var(--border-focus);
+    }
+    .tool-btn.active {
+      background: rgba(16, 185, 129, 0.15);
+      border-color: var(--pitch-green);
+      color: var(--pitch-green);
+      box-shadow: 0 0 0 1px var(--pitch-green);
+    }
+    .tool-btn-sm {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      color: var(--text-muted);
+      padding: 4px 8px;
+      border-radius: 5px;
+      font-size: 11px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+    .tool-btn-sm:hover {
+      background: var(--bg-card);
+      color: var(--text-main);
+    }
+    .tool-btn-sm.primary {
+      color: var(--accent-gold);
+      border-color: rgba(245, 158, 11, 0.35);
+    }
+    .tool-btn-sm.primary:hover {
+      background: rgba(245, 158, 11, 0.12);
+    }
+
+    /* Pitch Chalkboard Canvas & Grid Overlay */
+    .pitch-chalkboard-canvas {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      z-index: 6;
+      touch-action: none;
+      cursor: crosshair;
+    }
+    .pitch-board.mode-drag .pitch-chalkboard-canvas {
+      pointer-events: none;
+      cursor: default;
+    }
+    .pitch-board.mode-draw .player-node {
+      pointer-events: none;
+    }
+    .pitch-grid-overlay {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      pointer-events: none;
+      z-index: 3;
+      opacity: 0.65;
+    }
+
+    /* Tactical Scenario Presets */
+    .tactical-scenario-bar {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: wrap;
+      margin-top: 10px;
+      padding: 7px 10px;
+      background: rgba(16, 185, 129, 0.05);
+      border: 1px dashed rgba(16, 185, 129, 0.25);
+      border-radius: 8px;
+    }
+    .scenario-label {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--pitch-green);
+      margin-right: 2px;
+    }
+    .scenario-pill {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      color: var(--text-sub);
+      padding: 3px 8px;
+      border-radius: 4px;
+      font-size: 11px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+    .scenario-pill:hover, .scenario-pill.active {
+      background: var(--pitch-green);
+      color: #000;
+      font-weight: 700;
+      border-color: var(--pitch-green);
+    }
+
+    .pitch-footer-controls {
+      margin-top: 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: var(--bg-subsurface);
+      padding: 9px 12px;
+      border-radius: 8px;
+      font-size: 12px;
+      border: 1px solid var(--border-subtle);
+    }
+
+    .role-card-deck {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      border-radius: 12px;
+      padding: 20px 22px;
+      display: flex;
+      flex-direction: column;
+      box-shadow: var(--shadow-card);
+    }
+    .role-card-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      border-bottom: 1px solid var(--border-subtle);
+      padding-bottom: 12px;
+      margin-bottom: 14px;
+    }
+    .role-card-title {
+      font-size: 17px;
+      font-weight: 700;
+      color: var(--text-main);
+      letter-spacing: -0.01em;
+    }
+    .role-card-code {
+      font-size: 12px;
+      color: var(--accent-gold);
+      font-weight: 600;
+      margin-top: 2px;
+    }
+    .role-duty-block {
+      background: var(--bg-subsurface);
+      border-left: 3px solid var(--pitch-green);
+      padding: 10px 14px;
+      border-radius: 0 8px 8px 0;
+      font-size: 13px;
+      color: var(--text-main);
+      line-height: 1.6;
+      margin-bottom: 16px;
+    }
+
+    .timeline-stepper {
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      padding-left: 20px;
+      margin-bottom: 18px;
+    }
+    .timeline-stepper::before {
+      content: '';
+      position: absolute;
+      left: 7px;
+      top: 12px;
+      bottom: 24px;
+      width: 2px;
+      background: var(--border-subtle);
+    }
+    .stepper-item {
+      position: relative;
+      padding-bottom: 14px;
+    }
+    .stepper-item:last-child { padding-bottom: 0; }
+    .stepper-dot {
+      position: absolute;
+      left: -20px;
+      top: 3px;
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background: var(--bg-surface);
+      border: 2px solid var(--border-subtle);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .stepper-dot::after {
+      content: '';
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--text-muted);
+    }
+    .stepper-item.pre .stepper-dot { border-color: var(--pitch-green); }
+    .stepper-item.pre .stepper-dot::after { background: var(--pitch-green); }
+    .stepper-item.main .stepper-dot { border-color: var(--accent-gold); }
+    .stepper-item.main .stepper-dot::after { background: var(--accent-gold); }
+    .stepper-item.post .stepper-dot { border-color: var(--pitch-green); }
+    .stepper-item.post .stepper-dot::after { background: var(--pitch-green); }
+    .stepper-header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 4px;
+    }
+    .stepper-tag {
+      font-size: 11.5px;
+      font-weight: 700;
+    }
+    .stepper-item.pre .stepper-tag { color: var(--pitch-green); }
+    .stepper-item.main .stepper-tag { color: var(--accent-gold); }
+    .stepper-item.post .stepper-tag { color: var(--pitch-green); }
+    .stepper-timing { font-size: 11px; color: var(--text-muted); }
+    .stepper-desc { font-size: 13px; line-height: 1.55; color: var(--text-sub); }
+
+    .role-meta-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-top: 4px;
+    }
+    .role-meta-box {
+      background: var(--bg-subsurface);
+      border-radius: 8px;
+      padding: 10px 12px;
+      border: 1px solid var(--border-subtle);
+    }
+    .role-meta-label {
+      font-size: 11px;
+      color: var(--text-muted);
+      font-weight: 600;
+      margin-bottom: 3px;
+    }
+    .role-meta-val {
+      font-size: 12.5px;
+      color: var(--text-main);
+      font-weight: 600;
+      line-height: 1.4;
+    }
+
+    /* Module 02: Doctrines */
+    .doctrine-filter-bar {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 18px;
+      flex-wrap: wrap;
+    }
+    .doctrine-filter-btn {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      color: var(--text-muted);
+      padding: 6px 14px;
+      border-radius: 18px;
+      font-size: 12px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+    .doctrine-filter-btn:hover {
+      background: var(--bg-subsurface);
+      color: var(--text-main);
+    }
+    .doctrine-filter-btn.active {
+      background: var(--bg-subsurface);
+      border-color: var(--pitch-green);
+      color: var(--pitch-green);
+      font-weight: 600;
+    }
+    .doctrine-card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      border-radius: 12px;
+      padding: 18px;
+      display: flex;
+      flex-direction: column;
+      box-shadow: var(--shadow-card);
+      transition: border-color 0.15s;
+    }
+    .doctrine-card:hover { border-color: var(--border-focus); }
+    .doctrine-card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+    .doctrine-card-title {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .doctrine-tag {
+      font-size: 10.5px;
+      font-weight: 600;
+      padding: 2px 7px;
+      border-radius: 5px;
+      background: rgba(56, 189, 248, 0.1);
+      color: var(--accent-cyan);
+      border: 1px solid rgba(56, 189, 248, 0.2);
+    }
+    .doctrine-anim-box {
+      background: #000;
+      border-radius: 8px;
+      border: 1px solid var(--border-subtle);
+      position: relative;
+      cursor: zoom-in;
+      overflow: hidden;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 200px;
+    }
+    .doctrine-anim-box img {
+      width: 100%;
+      height: auto;
+      max-height: 240px;
+      object-fit: contain;
+      display: block;
+    }
+    .doctrine-anim-box::after {
+      content: '🔍 点击全屏放大';
+      position: absolute;
+      bottom: 8px;
+      right: 10px;
+      background: rgba(15, 23, 42, 0.85);
+      color: #fff;
+      font-size: 10.5px;
+      padding: 3px 7px;
+      border-radius: 4px;
+      opacity: 0;
+      transition: opacity 0.15s;
+      pointer-events: none;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    .doctrine-anim-box:hover::after { opacity: 1; }
+    .doctrine-steps-list {
+      font-size: 12.5px;
+      line-height: 1.6;
+      color: var(--text-sub);
+      margin-bottom: 12px;
+    }
+    .doctrine-weapons-group {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: wrap;
+      margin-top: auto;
+      padding-top: 10px;
+      border-top: 1px solid var(--border-subtle);
+    }
+    .doctrine-weapon-pill {
+      font-size: 11px;
+      font-weight: 600;
+      padding: 3px 8px;
+      border-radius: 6px;
+      background: var(--bg-subsurface);
+      color: var(--text-main);
+      border: 1px solid var(--border-subtle);
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+    .doctrine-weapon-pill:hover {
+      background: rgba(245, 158, 11, 0.15);
+      border-color: var(--accent-gold);
+      color: var(--accent-gold);
+    }
+
+    /* Module 03: Weapon Console */
+    .category-tabs {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 18px;
+      border-bottom: 1px solid var(--border-subtle);
+      padding-bottom: 10px;
+      flex-wrap: wrap;
+    }
+    .cat-tab-btn {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      color: var(--text-muted);
+      padding: 7px 15px;
+      border-radius: 8px;
+      font-size: 12.5px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+    .cat-tab-btn:hover {
+      background: var(--bg-subsurface);
+      color: var(--text-main);
+    }
+    .cat-tab-btn.active {
+      background: var(--bg-subsurface);
+      border-color: var(--pitch-green);
+      color: var(--pitch-green);
+      font-weight: 600;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+    }
+    .weapon-console-grid {
+      display: grid;
+      grid-template-columns: 55% 45%;
+      gap: 20px;
+      align-items: start;
+    }
+    .player-deck {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      border-radius: 12px;
+      padding: 16px;
+      box-shadow: var(--shadow-card);
+      display: flex;
+      flex-direction: column;
+    }
+    .player-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+    .player-title {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--text-main);
+    }
+    .player-tag {
+      font-size: 11px;
+      padding: 2px 8px;
+      border-radius: 5px;
+      background: rgba(56, 189, 248, 0.1);
+      color: var(--accent-cyan);
+      border: 1px solid rgba(56, 189, 248, 0.2);
+      font-weight: 600;
+    }
+    .anim-display-wrapper {
+      position: relative;
+      border-radius: 8px;
+    }
+    .anim-display {
+      background: #000;
+      border-radius: 8px;
+      border: 1px solid var(--border-subtle);
+      position: relative;
+      cursor: zoom-in;
+      overflow: hidden;
+      min-height: 360px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .anim-display img {
+      width: 100%;
+      height: auto;
+      max-height: 400px;
+      object-fit: contain;
+      display: block;
+    }
+    .anim-freeze-canvas {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      object-fit: contain;
+      display: none;
+      z-index: 4;
+      pointer-events: none;
+    }
+    .anim-grid-svg {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      pointer-events: none;
+      z-index: 5;
+      display: none;
+    }
+    .anim-display::after {
+      content: '🔍 点击全屏放大观察';
+      position: absolute;
+      bottom: 10px;
+      right: 12px;
+      background: rgba(15, 23, 42, 0.85);
+      color: #fff;
+      font-size: 11px;
+      font-weight: 500;
+      padding: 3px 8px;
+      border-radius: 4px;
+      opacity: 0;
+      transition: opacity 0.15s;
+      pointer-events: none;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      z-index: 6;
+    }
+    .anim-display:hover::after { opacity: 1; }
+    .anim-controller-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: var(--bg-subsurface);
+      border: 1px solid var(--border-subtle);
+      border-radius: 8px;
+      padding: 8px 12px;
+      margin-top: 10px;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .anim-ctrl-left {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .ctrl-btn {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      color: var(--text-sub);
+      padding: 4px 10px;
+      border-radius: 6px;
+      font-size: 11.5px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      user-select: none;
+    }
+    .ctrl-btn:hover {
+      background: var(--bg-card);
+      color: var(--text-main);
+    }
+    .ctrl-btn.active {
+      background: var(--accent-gold);
+      color: #000;
+      font-weight: 700;
+      border-color: var(--accent-gold);
+    }
+    .phase-tag {
+      font-size: 11.5px;
+      color: var(--pitch-green);
+      font-weight: 600;
+    }
+    .anim-3phase-pills {
+      display: flex;
+      gap: 6px;
+      margin-top: 8px;
+    }
+    .phase-step-btn {
+      flex: 1;
+      background: var(--bg-subsurface);
+      border: 1px solid var(--border-subtle);
+      color: var(--text-muted);
+      padding: 6px 8px;
+      border-radius: 6px;
+      font-size: 11px;
+      font-weight: 600;
+      cursor: pointer;
+      text-align: center;
+      transition: all 0.15s ease;
+      user-select: none;
+    }
+    .phase-step-btn:hover {
+      border-color: var(--border-focus);
+      color: var(--text-main);
+    }
+    .phase-step-btn.active {
+      background: rgba(56, 189, 248, 0.15);
+      border-color: var(--accent-cyan);
+      color: var(--accent-cyan);
+    }
+    .player-switcher-bar {
+      margin-top: 10px;
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+      background: var(--bg-subsurface);
+      padding: 6px;
+      border-radius: 8px;
+      border: 1px solid var(--border-subtle);
+    }
+    .switcher-pill {
+      background: transparent;
+      border: 1px solid transparent;
+      color: var(--text-muted);
+      padding: 5px 10px;
+      border-radius: 6px;
+      font-size: 11.5px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+    .switcher-pill:hover {
+      color: var(--text-main);
+      background: rgba(255, 255, 255, 0.05);
+    }
+    .switcher-pill.active {
+      background: var(--bg-surface);
+      border-color: var(--pitch-green);
+      color: var(--pitch-green);
+      font-weight: 600;
+    }
+    .player-details {
+      margin-top: 12px;
+      background: var(--bg-subsurface);
+      border-radius: 8px;
+      padding: 12px 14px;
+      border: 1px solid var(--border-subtle);
+    }
+    .player-details-title {
+      font-size: 12.5px;
+      font-weight: 700;
+      color: var(--accent-gold);
+      margin-bottom: 4px;
+    }
+    .player-details-desc {
+      font-size: 13px;
+      line-height: 1.55;
+      color: var(--text-sub);
+    }
+    .weapon-list-container {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      max-height: 600px;
+      overflow-y: auto;
+      padding-right: 4px;
+    }
+    .weapon-select-card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      border-radius: 10px;
+      padding: 12px 14px;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      box-shadow: var(--shadow-card);
+    }
+    .weapon-select-card:hover {
+      border-color: var(--border-focus);
+      background: var(--bg-subsurface);
+    }
+    .weapon-select-card.active {
+      border-color: var(--pitch-green);
+      background: var(--bg-subsurface);
+      box-shadow: 0 0 0 1px var(--pitch-green);
+    }
+    .weapon-card-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 4px;
+    }
+    .weapon-badge {
+      font-size: 10.5px;
+      font-weight: 700;
+      color: var(--accent-gold);
+      background: rgba(245, 158, 11, 0.12);
+      padding: 2px 6px;
+      border-radius: 4px;
+    }
+    .weapon-en {
+      font-size: 11px;
+      color: var(--text-muted);
+      font-style: italic;
+    }
+    .weapon-name {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--text-main);
+      margin-bottom: 4px;
+    }
+    .weapon-body {
+      font-size: 12px;
+      color: var(--text-sub);
+      line-height: 1.45;
+      margin-bottom: 6px;
+    }
+    .weapon-callout {
+      font-size: 11.5px;
+      color: var(--accent-cyan);
+      font-weight: 600;
+    }
+
+    /* Module 05: Crisis */
+    .crisis-tabs {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 18px;
+      flex-wrap: wrap;
+    }
+    .crisis-tab-btn {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      color: var(--text-muted);
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-size: 12.5px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+    .crisis-tab-btn:hover {
+      background: var(--bg-subsurface);
+      color: var(--text-main);
+    }
+    .crisis-tab-btn.active {
+      background: rgba(239, 68, 68, 0.12);
+      border-color: var(--accent-red);
+      color: var(--accent-red);
+      font-weight: 700;
+    }
+    .crisis-dashboard-card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      border-radius: 12px;
+      padding: 22px;
+      display: grid;
+      grid-template-columns: 1.15fr 0.85fr;
+      gap: 24px;
+      box-shadow: var(--shadow-card);
+      margin-bottom: 24px;
+    }
+    .crisis-callout-card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      border-radius: 10px;
+      padding: 14px 16px;
+      transition: all 0.15s ease;
+      box-shadow: var(--shadow-card);
+    }
+    .crisis-callout-card:hover {
+      border-color: var(--border-focus);
+      transform: translateY(-2px);
+    }
+
+    /* Lightbox Modal */
+    .lightbox-modal {
+      position: fixed;
+      top: 0; left: 0; width: 100vw; height: 100vh;
+      background: rgba(0, 0, 0, 0.88);
+      backdrop-filter: blur(10px);
+      z-index: 9999;
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+    .lightbox-modal.open { display: flex; }
+    .lightbox-controls {
+      position: absolute;
+      top: 18px;
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      z-index: 10001;
+    }
+    .lightbox-title-badge {
+      font-size: 14px; font-weight: 600; color: #fff;
+      background: rgba(20, 28, 24, 0.9);
+      border: 1px solid var(--border-subtle);
+      padding: 6px 16px; border-radius: 20px;
+    }
+    .lb-btn {
+      background: rgba(20, 28, 24, 0.9);
+      border: 1px solid var(--border-subtle);
+      color: #fff; padding: 6px 14px; border-radius: 6px;
+      font-size: 12px; font-weight: 500; cursor: pointer; transition: all 0.15s ease;
+    }
+    .lb-btn:hover { background: var(--pitch-green); color: #000; border-color: var(--pitch-green); }
+    .lb-btn.close:hover { background: var(--accent-red); color: #fff; border-color: var(--accent-red); }
+    .lightbox-viewport {
+      max-width: 92vw; max-height: 84vh;
+      display: flex; align-items: center; justify-content: center;
+      overflow: hidden; cursor: grab;
+    }
+    .lightbox-viewport:active { cursor: grabbing; }
+    #lightbox-img {
+      max-width: 100%; max-height: 82vh; object-fit: contain;
+      border-radius: 8px; box-shadow: 0 25px 60px rgba(0, 0, 0, 0.95);
+      transition: transform 0.08s ease-out;
+    }
+    .lightbox-hint {
+      position: absolute; bottom: 16px; font-size: 11.5px; color: #94a3b8;
+      background: rgba(20, 28, 24, 0.85); padding: 4px 14px;
+      border-radius: 12px; border: 1px solid var(--border-subtle);
+    }
+
+    /* Weapon Quick Pop-up Modal */
+    .weapon-modal-overlay {
+      position: fixed;
+      top: 0; left: 0; width: 100vw; height: 100vh;
+      background: rgba(0, 0, 0, 0.75);
+      backdrop-filter: blur(8px);
+      z-index: 10000;
+      display: none;
+      align-items: center;
+      justify-content: center;
+    }
+    .weapon-modal-overlay.open { display: flex; }
+    .weapon-modal-card {
+      background: var(--bg-surface);
+      color: var(--text-main);
+      border: 1px solid var(--border-focus);
+      border-radius: 14px;
+      padding: 22px;
+      width: 500px;
+      max-width: 90vw;
+      box-shadow: var(--shadow-float);
+      animation: popIn 0.2s ease-out;
+    }
+    @keyframes popIn {
+      from { transform: scale(0.95); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+    .weapon-modal-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+    .weapon-modal-btn-close {
+      background: var(--bg-subsurface);
+      border: 1px solid var(--border-subtle);
+      color: var(--text-main);
+      padding: 4px 10px; border-radius: 6px; cursor: pointer;
+    }
+
+    /* Responsive */
+    @media (max-width: 1024px) {
+      .pitch-workbench, .weapon-console-grid, .crisis-dashboard-card { grid-template-columns: 1fr; }
+      .grid-3 { grid-template-columns: 1fr; }
+      .grid-2 { grid-template-columns: 1fr; }
+      .grid-4 { grid-template-columns: 1fr 1fr; }
+      .sidebar { width: 220px; }
+    }
+    @media (max-width: 768px) {
+      body { flex-direction: column; overflow-y: auto; height: auto; }
+      .sidebar { width: 100%; border-right: none; border-bottom: 1px solid var(--border-subtle); }
+      .nav-menu { flex-direction: row; overflow-x: auto; padding: 8px; }
+      .nav-item { white-space: nowrap; }
+      .main-content { height: auto; overflow: visible; }
+      .topbar { padding: 0 16px; }
+      .view-container { padding: 16px; }
+      .grid-4 { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Left Sidebar Navigation -->
+  <aside class="sidebar">
+    <div class="sidebar-header">
+      <div class="sidebar-title">⚽ 德国战术战情室</div>
+      <div class="sidebar-subtitle">TACTICAL COMMAND HUB · 7v7 / 8v8</div>
+    </div>
+    <nav class="nav-menu">
+      <div class="nav-item" onclick="switchView('view-foundations')">
+        <span>📐 01. 战术基石与网格</span>
+        <span class="nav-badge">理念</span>
+      </div>
+      <div class="nav-item" onclick="switchView('view-doctrines')">
+        <span>⚔️ 02. 八大实战进攻流派</span>
+        <span class="nav-badge">武器联动</span>
+      </div>
+      <div class="nav-item" onclick="switchView('view-weapons')">
+        <span>🎯 03. 20项传球武器点播台</span>
+        <span class="nav-badge" style="background: var(--pitch-green); color:#000;">点播台</span>
+      </div>
+      <div class="nav-item active" onclick="switchView('view-formations')">
+        <span>📋 04. 阵型与球员职责卡</span>
+        <span class="nav-badge" style="background: var(--accent-gold); color:#000;">互动球场</span>
+      </div>
+      <div class="nav-item" onclick="switchView('view-decisions')">
+        <span>⚡ 05. 临场破局与口令手册</span>
+        <span class="nav-badge">决策</span>
+      </div>
+    </nav>
+    <div class="sidebar-footer">
+      <div style="font-weight: 700; color: var(--pitch-green); font-size: 13px;">⚽ 现代足球传球战术教研室</div>
+      <div style="font-size: 11px; margin-top: 3px; opacity: 0.85;">《足球训练完全图解》研学转化中枢</div>
+    </div>
+  </aside>
+
+  <!-- Main Content Area -->
+  <main class="main-content">
+
+    <!-- Top Utility Bar -->
+    <header class="topbar">
+      <div class="current-view-title" id="topbar-title">
+        <span>📋 模块 04 · 阵型架构与球员职责卡</span>
+        <span class="view-tag">互动球场画板版</span>
+      </div>
+      <div class="top-actions">
+        <!-- 3-Theme Palette Switcher -->
+        <div class="theme-palette-group">
+          <button class="theme-btn active" id="btn-theme-dark" onclick="setTheme('dark')" title="深色战术 (温润墨绿)">🌙 战术夜间</button>
+          <button class="theme-btn" id="btn-theme-sepia" onclick="setTheme('sepia')" title="羊皮纸暖色 (柔和护眼)">📖 暖阳护眼</button>
+          <button class="theme-btn" id="btn-theme-light" onclick="setTheme('light')" title="战术白板 (清晰明快)">☀️ 战术白板</button>
+        </div>
+        <a href="football_tactics_deck.html" class="btn-action" title="查看20页全彩战术演讲与更衣室动员讲义">📑 演讲Deck</a>
+        <a href="https://github.com/tongqiangsen/football-tactics-hub" target="_blank" class="btn-action" title="访问 GitHub 开源仓库">⭐ GitHub</a>
+        <button class="btn-action" onclick="toggleFullscreen()">⛶ 全屏显示</button>
+      </div>
+    </header>
+
+    <!-- VIEW 04: 阵型架构与球员职责卡 -->
+    <div id="view-formations" class="view-container active">
+      <div class="section-header">
+        <h2>模块 04 · 阵型架构与互动球场画板 (Interactive Pitch Board)</h2>
+        <p>在左侧战术板上<strong>点击任意球员号码（如 4号后腰、7号前锋）</strong>，右侧立即切换该位置的攻防使命、三动作行为规范及配套战术跑位！</p>
+      </div>
+
+      <div class="formation-nav" id="formation-nav-container">
+        <!-- Rendered by JS -->
+      </div>
+
+      <div class="pitch-workbench">
+        <!-- Left Interactive Pitch Board -->
+        <div class="pitch-container">
+          <div class="pitch-header-info">
+            <div class="pitch-title" id="pitch-formation-title">7人制 1-2-3-1 经典压迫传控阵型</div>
+            <span class="pitch-badge" id="pitch-formation-tag">适合控球压迫 / 进攻宽度充足</span>
+          </div>
+
+          <!-- Tactical Chalkboard Toolbar -->
+          <div class="chalkboard-toolbar">
+            <div class="toolbar-group">
+              <span class="toolbar-label">标绘模式:</span>
+              <button class="tool-btn active" id="tool-mode-drag" onclick="setBoardMode('drag')" title="自由拖拽球员站位与阵型微调">
+                🖐️ 挪动球员
+              </button>
+              <button class="tool-btn" id="tool-mode-pass" onclick="setBoardMode('pass')" title="绘制传球路线 (金黄虚线箭头)">
+                🟡 传球虚线
+              </button>
+              <button class="tool-btn" id="tool-mode-run" onclick="setBoardMode('run')" title="绘制跑位路线 (荧光绿实线箭头)">
+                🟢 跑位实线
+              </button>
+              <button class="tool-btn" id="tool-mode-dribble" onclick="setBoardMode('dribble')" title="绘制盘带推进 (青蓝波浪线箭头)">
+                🔵 盘带曲线
+              </button>
+              <button class="tool-btn" id="tool-mode-press" onclick="setBoardMode('press')" title="绘制防守逼抢 (鲜红压迫箭头)">
+                🔴 逼抢压迫
+              </button>
+            </div>
+            <div class="toolbar-group">
+              <button class="tool-btn-sm" onclick="undoChalkboardStroke()" title="撤销上一笔标线">↩️ 撤销</button>
+              <button class="tool-btn-sm" onclick="clearChalkboard()" title="清除画板所有标线">🧹 清除</button>
+              <button class="tool-btn-sm" onclick="togglePitchGrid()" id="btn-pitch-grid" title="切换16区域空间网格">📐 16格网格</button>
+              <button class="tool-btn-sm primary" onclick="resetFormationPositions()" title="一键复原为阵型标准站位">🔄 复位阵型</button>
+            </div>
+          </div>
+
+          <div class="pitch-board mode-drag" id="interactive-pitch">
+            <div class="pitch-marking pitch-half-line"></div>
+            <div class="pitch-marking pitch-center-circle"></div>
+            <div class="pitch-marking pitch-center-spot"></div>
+            <div class="pitch-marking pitch-penalty-top"></div>
+            <div class="pitch-marking pitch-penalty-bottom"></div>
+            
+            <!-- 16-Zone Tactical Grid SVG Overlay -->
+            <svg id="pitch-grid-svg" class="pitch-grid-overlay" viewBox="0 0 100 100" preserveAspectRatio="none" style="display: none;">
+              <line x1="25" y1="0" x2="25" y2="100" stroke="#22c55e" stroke-width="0.5" stroke-dasharray="2,2"/>
+              <line x1="50" y1="0" x2="50" y2="100" stroke="#22c55e" stroke-width="0.8" stroke-opacity="0.8"/>
+              <line x1="75" y1="0" x2="75" y2="100" stroke="#22c55e" stroke-width="0.5" stroke-dasharray="2,2"/>
+              <line x1="0" y1="25" x2="100" y2="25" stroke="#22c55e" stroke-width="0.5" stroke-dasharray="2,2"/>
+              <line x1="0" y1="50" x2="100" y2="50" stroke="#22c55e" stroke-width="0.8" stroke-opacity="0.8"/>
+              <line x1="0" y1="75" x2="100" y2="75" stroke="#22c55e" stroke-width="0.5" stroke-dasharray="2,2"/>
+              <text x="12.5" y="14" fill="#94a3b8" font-size="3" text-anchor="middle" opacity="0.7">左翼前场</text>
+              <text x="37.5" y="14" fill="#fbbf24" font-size="3" text-anchor="middle" opacity="0.7">左肋前场</text>
+              <text x="62.5" y="14" fill="#fbbf24" font-size="3" text-anchor="middle" opacity="0.7">右肋前场</text>
+              <text x="87.5" y="14" fill="#94a3b8" font-size="3" text-anchor="middle" opacity="0.7">右翼前场</text>
+              <text x="12.5" y="64" fill="#94a3b8" font-size="3" text-anchor="middle" opacity="0.7">左翼后场</text>
+              <text x="37.5" y="64" fill="#38bdf8" font-size="3" text-anchor="middle" opacity="0.7">左肋中场</text>
+              <text x="62.5" y="64" fill="#38bdf8" font-size="3" text-anchor="middle" opacity="0.7">右肋中场</text>
+              <text x="87.5" y="64" fill="#94a3b8" font-size="3" text-anchor="middle" opacity="0.7">右翼后场</text>
+            </svg>
+
+            <!-- Chalkboard Drawing Canvas -->
+            <canvas id="pitch-chalkboard" class="pitch-chalkboard-canvas"></canvas>
+
+            <div id="pitch-players-layer"></div>
+          </div>
+
+          <!-- Tactical Scenarios Quick Presets -->
+          <div class="tactical-scenario-bar">
+            <span class="scenario-label">⚡ 战术推演预设:</span>
+            <button class="scenario-pill active" id="scenario-btn-standard" onclick="applyTacticalScenario('standard')">标准传控</button>
+            <button class="scenario-pill" id="scenario-btn-high_press" onclick="applyTacticalScenario('high_press')">前场高位合围 (3v2)</button>
+            <button class="scenario-pill" id="scenario-btn-deep_buildup" onclick="applyTacticalScenario('deep_buildup')">后场门将出球组织</button>
+            <button class="scenario-pill" id="scenario-btn-flank_overload" onclick="applyTacticalScenario('flank_overload')">右路强侧超载</button>
+          </div>
+
+          <div class="pitch-footer-controls">
+            <span style="color: var(--text-muted); font-size: 11.5px;">💡 支持触控拖拽球员与手指/画笔标线</span>
+            <button class="btn-action" onclick="openFormationAnimLightbox()" style="font-size: 11px; padding: 4px 10px;">
+              🎬 观察阵型跑位沙盘
+            </button>
+          </div>
+        </div>
+
+        <!-- Right Role Card -->
+        <div class="role-card-deck">
+          <div class="role-card-head">
+            <div>
+              <div class="role-card-title" id="role-title">4号 中前卫 (Central Midfielder)</div>
+              <div class="role-card-code" id="role-code">攻防节拍器 · 阵型心脏</div>
+            </div>
+            <div class="nav-badge" style="background: rgba(245, 158, 11, 0.12); color: var(--accent-gold); border-color: rgba(245, 158, 11, 0.25);" id="role-num-badge">No. 4</div>
+          </div>
+
+          <div class="role-duty-block" id="role-duty">
+            全队攻防节奏掌控者；在后场双中卫身前形成接应三角，前场主导第三人跑位直塞与弱侧调度。
+          </div>
+
+          <!-- 3-Action Guidelines Stepper -->
+          <div class="timeline-stepper">
+            <div class="stepper-item pre">
+              <div class="stepper-dot"></div>
+              <div class="stepper-header">
+                <span class="stepper-tag">01. 接球前准备</span>
+                <span class="stepper-timing">Pre-Action · 盲区扫描与半侧身</span>
+              </div>
+              <div class="stepper-desc" id="role-pre">保持半侧身面向前场边线，皮球滑行中完成身后防守盲区扫描2次，拒绝死板背对球门。</div>
+            </div>
+            <div class="stepper-item main">
+              <div class="stepper-dot"></div>
+              <div class="stepper-header">
+                <span class="stepper-tag">02. 触球主动作</span>
+                <span class="stepper-timing">Main-Action · 精准执行出球</span>
+              </div>
+              <div class="stepper-desc" id="role-main">用远离逼抢脚外侧顺势领球摆脱；一脚触球即完成控球转向，出球低平快。</div>
+            </div>
+            <div class="stepper-item post">
+              <div class="stepper-dot"></div>
+              <div class="stepper-header">
+                <span class="stepper-tag">03. 出球后衔接</span>
+                <span class="stepper-timing">Post-Action · 传完即动二次接应</span>
+              </div>
+              <div class="stepper-desc" id="role-post">出球后立即二次启动前插接应或横移保护防线肋部空当；丢球0.5秒内就地反抢。</div>
+            </div>
+          </div>
+
+          <div class="role-meta-row">
+            <div class="role-meta-box">
+              <div class="role-meta-label">🛠️ 核心传球武器</div>
+              <div class="role-meta-val" id="role-weapons">W01直塞 · W08第三人 · W14假射</div>
+            </div>
+            <div class="role-meta-box">
+              <div class="role-meta-label">📢 专属呼应口令</div>
+              <div class="role-meta-val" id="role-callout">“转过来！” / “看第三人！”</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- VIEW 02: 八大实战进攻流派 -->
+    <div id="view-doctrines" class="view-container">
+      <div class="section-header">
+        <h2>模块 02 · 八大实战进攻流派全景沙盘 (Doctrines Hub)</h2>
+        <p>全套 8 大进攻流派高帧率沙盘演示；<strong>点击卡片下方的武器胶囊标签</strong>可直接弹出对应武器的微观脚法要领！</p>
+      </div>
+
+      <div class="doctrine-filter-bar">
+        <button class="doctrine-filter-btn active" onclick="filterDoctrines('all')">全部 8 大流派</button>
+        <button class="doctrine-filter-btn" onclick="filterDoctrines('penetration')">地面渗透组</button>
+        <button class="doctrine-filter-btn" onclick="filterDoctrines('transition')">转换与越顶组</button>
+        <button class="doctrine-filter-btn" onclick="filterDoctrines('flank')">边路与终结组</button>
+        <button class="doctrine-filter-btn" onclick="filterDoctrines('setpiece')">特种与死球组</button>
+      </div>
+
+      <div class="grid-2" id="doctrines-grid">
+        <!-- Rendered dynamically by JS from TACTICS_DATA -->
+      </div>
+    </div>
+
+    <!-- VIEW 03: 20 传球武器点播台 -->
+    <div id="view-weapons" class="view-container">
+      <div class="section-header">
+        <h2>模块 03 · 20 种传球武器点播台 (Interactive Weapon Console)</h2>
+        <p>支持单个武器独立点播！点击右侧任意武器卡片，左侧战术屏幕立即切换该武器的专属动图与微动作要领。</p>
+      </div>
+
+      <div class="category-tabs" id="weapon-category-tabs">
+        <!-- Rendered by JS -->
+      </div>
+
+      <div class="weapon-console-grid">
+        <!-- Left Tactical Sandbox Player -->
+        <div class="player-deck">
+          <div class="player-header">
+            <div class="player-title" id="player-title">W 01 · 直塞穿透球 (Through Ball)</div>
+            <div class="player-tag" id="player-tag">贴地发力 · 刺穿中卫结合部</div>
+          </div>
+          <div class="anim-display-wrapper">
+            <div class="anim-display" onclick="openPlayerLightbox()">
+              <img id="player-gif" src="tactics_animations_gif/anim_w01_through_ball.gif" alt="武器演示动图">
+              <canvas id="freeze-canvas" class="anim-freeze-canvas"></canvas>
+              <svg id="anim-grid-overlay" class="anim-grid-svg" viewBox="0 0 100 100" preserveAspectRatio="none">
+                <line x1="25" y1="0" x2="25" y2="100" stroke="#22c55e" stroke-width="0.5" stroke-dasharray="2,2"/>
+                <line x1="50" y1="0" x2="50" y2="100" stroke="#22c55e" stroke-width="0.8" stroke-opacity="0.8"/>
+                <line x1="75" y1="0" x2="75" y2="100" stroke="#22c55e" stroke-width="0.5" stroke-dasharray="2,2"/>
+                <line x1="0" y1="25" x2="100" y2="25" stroke="#22c55e" stroke-width="0.5" stroke-dasharray="2,2"/>
+                <line x1="0" y1="50" x2="100" y2="50" stroke="#22c55e" stroke-width="0.8" stroke-opacity="0.8"/>
+                <line x1="0" y1="75" x2="100" y2="75" stroke="#22c55e" stroke-width="0.5" stroke-dasharray="2,2"/>
+              </svg>
+            </div>
+            <!-- Tactical Controller Bar -->
+            <div class="anim-controller-bar">
+              <div class="anim-ctrl-left">
+                <button class="ctrl-btn" id="btn-anim-pause" onclick="toggleAnimPause(event)" title="抓取当前帧定格，深度解析球员身位与出球角度">
+                  ⏸️ 定格研判
+                </button>
+                <button class="ctrl-btn" id="btn-anim-speed" onclick="toggleAnimSpeed(event)" title="慢放观察微动作">
+                  ⏱️ 0.5x慢放
+                </button>
+                <button class="ctrl-btn" id="btn-anim-grid" onclick="toggleAnimGrid(event)" title="叠印16区域传球网格空间透视">
+                  📐 16格网格
+                </button>
+              </div>
+              <div class="anim-ctrl-phase">
+                <span class="phase-tag" id="anim-phase-badge">▶️ 动态演练中 · 循环播放</span>
+              </div>
+            </div>
+            <!-- 3-Action Micro-Guide Focus Buttons -->
+            <div class="anim-3phase-pills">
+              <button class="phase-step-btn" onclick="focusActionPhase(0, event)">① 准备扫描身位</button>
+              <button class="phase-step-btn" onclick="focusActionPhase(1, event)">② 触球主动作</button>
+              <button class="phase-step-btn" onclick="focusActionPhase(2, event)">③ 第三人二次启动</button>
+            </div>
+          </div>
+          <div class="player-switcher-bar" id="category-pills"></div>
+          <div class="player-details">
+            <div class="player-details-title" id="player-details-title">📌 技术要领与微观执行</div>
+            <div class="player-details-desc" id="player-details-desc">
+              脚内侧或正脚背贴地快速刺穿两条防线之间的空当；给足前锋前插提前量，让队友不降速领球单刀。
+            </div>
+            <div style="margin-top: 6px; font-size: 12px; color: var(--accent-cyan);" id="player-callout">
+              📢 场上实战口令：“给身后！”
+            </div>
+          </div>
+        </div>
+
+        <!-- Right Weapon Select Cards List -->
+        <div class="weapon-list-container" id="weapon-cards-list"></div>
+      </div>
+    </div>
+
+    <!-- VIEW 01: 战术基石 -->
+    <div id="view-foundations" class="view-container">
+      <div class="section-header">
+        <h2>模块 01 · 战术基石与空间地图</h2>
+        <p>德国足球传球战术认知变革、16 格空间网格纪律与球员微观“三动作体系”。</p>
+      </div>
+      <div class="grid-3" style="margin-bottom: 24px;">
+        <div class="card">
+          <div class="card-title red">❌ 传统业余误区</div>
+          <p id="foundations-mistakes">只看脚下、静态站立等球、单打独斗盲目推进、在密集区以少打多扎堆。</p>
+        </div>
+        <div class="card">
+          <div class="card-title green">✅ 现代德国战术真理</div>
+          <p id="foundations-truths">传球即人际语言；球永远比人跑得快；通过三角站位制造局部 3v2；传向空当而非脚下。</p>
+        </div>
+        <div class="card">
+          <div class="card-title gold">⚡ 全队三大铁律</div>
+          <p id="foundations-rules">1. 后场中路绝不盲目横传<br>2. 保持开放半侧身面向前场<br>3. 接球前 0.5 秒完成盲区扫描</p>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title green">📐 16 区域动态传球网格与同格不站双人法则</div>
+        <p style="font-size: 13.5px; margin-bottom: 12px;" id="foundations-grid">同一方格内严禁出现两名本方队员；全队保持 5~10 米黄金呼应间距，形成菱形与三角形接应网。</p>
+        <div style="max-width: 650px; margin: 0 auto; background: var(--bg-subsurface); border: 1px solid var(--border-subtle); padding: 14px; border-radius: 10px;">
+          <svg viewBox="0 0 500 280" width="100%">
+            <rect width="500" height="280" fill="#071911" rx="6" stroke="var(--pitch-green)" stroke-width="1.5"/>
+            <line x1="125" y1="0" x2="125" y2="280" stroke="var(--pitch-green)" stroke-opacity="0.35" stroke-dasharray="4,4"/>
+            <line x1="250" y1="0" x2="250" y2="280" stroke="var(--pitch-green)" stroke-opacity="0.6" stroke-width="1.5"/>
+            <line x1="375" y1="0" x2="375" y2="280" stroke="var(--pitch-green)" stroke-opacity="0.35" stroke-dasharray="4,4"/>
+            <line x1="0" y1="70" x2="500" y2="70" stroke="var(--pitch-green)" stroke-opacity="0.35" stroke-dasharray="4,4"/>
+            <line x1="0" y1="140" x2="500" y2="140" stroke="var(--pitch-green)" stroke-opacity="0.6" stroke-width="1.5"/>
+            <line x1="0" y1="210" x2="500" y2="210" stroke="var(--pitch-green)" stroke-opacity="0.35" stroke-dasharray="4,4"/>
+            <circle cx="250" cy="140" r="40" fill="none" stroke="var(--pitch-green)" stroke-opacity="0.6" stroke-width="1.5"/>
+            <text x="250" y="144" fill="#f8fafc" font-size="11.5" font-weight="600" text-anchor="middle">中场控制核心区 (菱形接应)</text>
+          </svg>
+        </div>
+      </div>
+    </div>
+
+    <!-- VIEW 05: 临场破局速查与呼应暗号 -->
+    <div id="view-decisions" class="view-container">
+      <div class="section-header">
+        <h2>模块 05 · 临场破局速查与呼应暗号 (Matchday Crisis Solver)</h2>
+        <p>面对高位逼抢、低位铁桶与中场绞杀的实时交互式战术解药；点击场景即时获取破局组合拳与实战暗号。</p>
+      </div>
+
+      <div class="crisis-tabs" id="crisis-tabs-container">
+        <!-- Rendered by JS -->
+      </div>
+
+      <div class="crisis-dashboard-card" id="crisis-dashboard-content">
+        <!-- Rendered by JS -->
+      </div>
+
+      <div style="margin-top: 30px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+          <h3 style="font-size: 17px; color: var(--text-main); font-weight: 800; display: flex; align-items: center; gap: 8px;">
+            📢 全队 8 大赛场呼应暗号速查盘 (8 Core Communication Codes)
+          </h3>
+          <span style="font-size: 12px; color: var(--pitch-green); font-weight: 600;">全队语言统一 · 消除 0.5 秒犹豫时延</span>
+        </div>
+
+        <div class="grid-4" id="callouts-grid">
+          <!-- Rendered by JS -->
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- Global Lightbox Zoom Viewer -->
+  <div id="lightbox-modal" class="lightbox-modal" onclick="closeLightbox(event)">
+    <div class="lightbox-controls" onclick="event.stopPropagation()">
+      <span class="lightbox-title-badge" id="lightbox-title">战术动图放大观察</span>
+      <div style="display: flex; gap: 8px;">
+        <button class="lb-btn" onclick="zoomIn()">➕ 放大</button>
+        <button class="lb-btn" onclick="zoomOut()">➖ 缩小</button>
+        <button class="lb-btn" onclick="resetZoom()">⟲ 还原</button>
+        <button class="lb-btn close" onclick="closeLightboxDirect()">✕ 关闭 [ESC]</button>
+      </div>
+    </div>
+    <div class="lightbox-viewport" id="lb-viewport" onclick="event.stopPropagation()">
+      <img id="lightbox-img" src="" alt="战术放大图">
+    </div>
+    <div class="lightbox-hint">💡 滚轮缩放 | 按住拖拽平移 | 双击切换 1x/2x | ESC 退出</div>
+  </div>
+
+  <!-- Quick Weapon Pop-up Modal -->
+  <div id="weapon-modal" class="weapon-modal-overlay" onclick="closeWeaponModal(event)">
+    <div class="weapon-modal-card" onclick="event.stopPropagation()">
+      <div class="weapon-modal-head">
+        <div>
+          <span class="weapon-badge" id="wmodal-num">W 01</span>
+          <strong style="font-size: 17px; margin-left: 8px; color: var(--text-main);" id="wmodal-name">直塞穿透球</strong>
+        </div>
+        <button class="weapon-modal-btn-close" onclick="closeWeaponModalDirect()">✕</button>
+      </div>
+      <div class="anim-display" style="min-height: 220px; max-height: 240px; margin-bottom: 12px;">
+        <img id="wmodal-gif" src="" alt="武器动图" style="max-height: 230px;">
+      </div>
+      <div style="font-size: 13px; color: var(--text-sub); line-height: 1.55; margin-bottom: 12px;" id="wmodal-desc"></div>
+      <div style="display: flex; justify-content: space-between; align-items: center;">
+        <span style="font-size: 12px; color: var(--accent-cyan);" id="wmodal-callout"></span>
+        <button class="btn-action" onclick="jumpToWeaponFromModal()" style="font-size: 11.5px; padding: 4px 10px;">
+          前往武器点播台查看 →
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Core Data Store -->
+  <script src="data/tactics_data.js"></script>
+
+  <script>
+    // ==========================================
+    // 0. Database Binding & State
+    // ==========================================
+    const DB = window.TACTICS_DATA || {};
+    const doctrinesDatabase = DB.doctrines || [];
+    const weaponCategories = DB.weaponCategories || [];
+    const weaponDatabase = DB.weapons || {};
+    const comboDatabase = DB.combo || {};
+    const formationDatabase = DB.formations || {};
+    const crisisDatabase = DB.crises || {};
+    const calloutsDatabase = DB.callouts || [];
+
+    let currentCategory = 1;
+    let currentWeaponIndex = 0;
+    let currentFormationKey = '1231';
+    let currentSelectedPlayerIdx = 3;
+    let currentCrisisKey = 'press';
+    let pendingJumpWeaponId = null;
+
+    // View Navigation
+    function switchView(viewId) {
+      document.querySelectorAll('.view-container').forEach(v => v.classList.remove('active'));
+      document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+
+      const targetView = document.getElementById(viewId);
+      if (targetView) targetView.classList.add('active');
+
+      const titleMap = {
+        'view-foundations': '📐 模块 01 · 战术基石与空间地图',
+        'view-doctrines': '⚔️ 模块 02 · 八大实战进攻流派全景沙盘',
+        'view-weapons': '🎯 模块 03 · 20 种传球武器点播台',
+        'view-formations': '📋 模块 04 · 阵型架构与球员职责卡 (互动球场)',
+        'view-decisions': '⚡ 模块 05 · 临场破局速查与呼应暗号'
+      };
+      document.getElementById('topbar-title').innerHTML = `<span>${titleMap[viewId] || '战情室'}</span>`;
+
+      const navItems = document.querySelectorAll('.nav-item');
+      if (viewId === 'view-foundations') navItems[0].classList.add('active');
+      if (viewId === 'view-doctrines') navItems[1].classList.add('active');
+      if (viewId === 'view-weapons') navItems[2].classList.add('active');
+      if (viewId === 'view-formations') navItems[3].classList.add('active');
+      if (viewId === 'view-decisions') navItems[4].classList.add('active');
+    }
+
+    // ==========================================
+    // 1. Module 02: Doctrines Dynamic Rendering
+    // ==========================================
+    function renderDoctrinesGrid() {
+      const container = document.getElementById('doctrines-grid');
+      if (!container) return;
+      let html = '';
+      doctrinesDatabase.forEach(d => {
+        let weaponsHtml = '';
+        (d.weapons || []).forEach(wId => {
+          const wObj = findWeaponById(wId);
+          const label = wObj ? `${wObj.num} ${wObj.name}` : wId.toUpperCase();
+          weaponsHtml += `<span class="doctrine-weapon-pill" onclick="popWeaponModal('${wId}')">${label}</span> `;
+        });
+
+        html += `
+          <div class="doctrine-card" data-category="${d.category}">
+            <div class="doctrine-card-header">
+              <div class="doctrine-card-title">🎬 ${d.title}</div>
+              <span class="doctrine-tag">${d.tag}</span>
+            </div>
+            <div class="doctrine-anim-box" onclick="openCustomLightbox('${d.gif}', '${d.title}')">
+              <img src="${d.gif}" alt="${d.title}" loading="lazy">
+            </div>
+            <div class="doctrine-steps-list">
+              <strong>时序逻辑：</strong>${d.steps}
+            </div>
+            <div class="doctrine-weapons-group">
+              <span style="font-size: 11px; color: var(--text-muted); margin-right:4px;">调用武器:</span>
+              ${weaponsHtml}
+            </div>
+          </div>
+        `;
+      });
+      container.innerHTML = html;
+    }
+
+    function filterDoctrines(category) {
+      document.querySelectorAll('.doctrine-filter-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.getAttribute('onclick').includes(category));
+      });
+      document.querySelectorAll('.doctrine-card').forEach(card => {
+        if (category === 'all' || card.getAttribute('data-category') === category) {
+          card.style.display = 'flex';
+        } else {
+          card.style.display = 'none';
+        }
+      });
+    }
+
+    // ==========================================
+    // 2. Module 03: Weapons Console
+    // ==========================================
+    function initWeaponCategories() {
+      const tabsContainer = document.getElementById('weapon-category-tabs');
+      if (!tabsContainer) return;
+      let html = '';
+      weaponCategories.forEach((cat, idx) => {
+        const isActive = cat.id === currentCategory;
+        html += `<button class="cat-tab-btn ${isActive ? 'active' : ''}" onclick="switchCategory(${cat.id})">${cat.name}</button>`;
+      });
+      tabsContainer.innerHTML = html;
+    }
+
+    function switchCategory(catNum) {
+      currentCategory = catNum;
+      currentWeaponIndex = 0;
+      document.querySelectorAll('.cat-tab-btn').forEach((btn, idx) => {
+        btn.classList.toggle('active', idx + 1 === catNum);
+      });
+      renderWeaponConsole();
+    }
+
+    function renderWeaponConsole() {
+      const weapons = weaponDatabase[currentCategory] || [];
+      const cardsContainer = document.getElementById('weapon-cards-list');
+      const pillsContainer = document.getElementById('category-pills');
+
+      let cardsHtml = '';
+      weapons.forEach((w, idx) => {
+        const isActive = idx === currentWeaponIndex;
+        cardsHtml += `
+          <div class="weapon-select-card ${isActive ? 'active' : ''}" onclick="selectWeapon(${idx})">
+            <div class="weapon-card-head">
+              <span class="weapon-badge">${w.num}</span>
+              <span class="weapon-en">${w.en}</span>
+            </div>
+            <div class="weapon-name">${w.name}</div>
+            <div class="weapon-body">${w.desc}</div>
+            <div class="weapon-callout">${w.callout}</div>
+          </div>
+        `;
+      });
+      cardsContainer.innerHTML = cardsHtml;
+
+      let pillsHtml = '';
+      weapons.forEach((w, idx) => {
+        const isActive = idx === currentWeaponIndex;
+        pillsHtml += `
+          <button class="switcher-pill ${isActive ? 'active' : ''}" onclick="selectWeapon(${idx})">
+            ${w.num} ${w.name}
+          </button>
+        `;
+      });
+      if (currentCategory === 1 && comboDatabase.title) {
+        pillsHtml += `<button class="switcher-pill" onclick="selectCombo()">★ 挑传+平抽连招</button>`;
+      }
+      pillsContainer.innerHTML = pillsHtml;
+
+      updatePlayerContent(weapons[currentWeaponIndex]);
+    }
+
+    function selectWeapon(idx) {
+      currentWeaponIndex = idx;
+      const weapons = weaponDatabase[currentCategory] || [];
+      const selected = weapons[idx];
+      document.querySelectorAll('.weapon-select-card').forEach((c, i) => c.classList.toggle('active', i === idx));
+      document.querySelectorAll('.switcher-pill').forEach((p, i) => p.classList.toggle('active', i === idx));
+      updatePlayerContent(selected);
+    }
+
+    function selectCombo() {
+      document.querySelectorAll('.weapon-select-card').forEach(c => c.classList.remove('active'));
+      document.querySelectorAll('.switcher-pill').forEach(p => p.classList.remove('active'));
+      event.target.classList.add('active');
+
+      document.getElementById('player-title').innerText = comboDatabase.title;
+      document.getElementById('player-tag').innerText = comboDatabase.tag;
+      document.getElementById('player-gif').src = comboDatabase.gif;
+      document.getElementById('player-details-title').innerText = comboDatabase.descTitle;
+      document.getElementById('player-details-desc').innerText = comboDatabase.desc;
+      document.getElementById('player-callout').innerText = comboDatabase.callout;
+    }
+
+    function updatePlayerContent(w) {
+      if (!w) return;
+      if (isAnimPaused) toggleAnimPause();
+      document.getElementById('player-title').innerText = `${w.num} · ${w.name} (${w.en})`;
+      document.getElementById('player-tag').innerText = w.tag;
+      document.getElementById('player-gif').src = w.gif;
+      document.getElementById('player-details-title').innerText = "📌 技术要领与微观执行";
+      document.getElementById('player-details-desc').innerText = w.desc;
+      document.getElementById('player-callout').innerText = w.callout;
+      document.querySelectorAll('.phase-step-btn').forEach(btn => btn.classList.remove('active'));
+    }
+
+    function findWeaponById(weaponId) {
+      for (let c = 1; c <= 5; c++) {
+        const list = weaponDatabase[c] || [];
+        for (let i = 0; i < list.length; i++) {
+          if (list[i].id === weaponId) return list[i];
+        }
+      }
+      return null;
+    }
+
+    function popWeaponModal(weaponId) {
+      const foundWeapon = findWeaponById(weaponId);
+      if (!foundWeapon) return;
+
+      let foundCat = 1, foundIdx = 0;
+      for (let c = 1; c <= 5; c++) {
+        const list = weaponDatabase[c] || [];
+        const idx = list.findIndex(w => w.id === weaponId);
+        if (idx !== -1) { foundCat = c; foundIdx = idx; break; }
+      }
+
+      pendingJumpWeaponId = { cat: foundCat, idx: foundIdx };
+      document.getElementById('wmodal-num').innerText = foundWeapon.num;
+      document.getElementById('wmodal-name').innerText = `${foundWeapon.name} (${foundWeapon.en})`;
+      document.getElementById('wmodal-gif').src = foundWeapon.gif;
+      document.getElementById('wmodal-desc').innerText = foundWeapon.desc;
+      document.getElementById('wmodal-callout').innerText = foundWeapon.callout;
+      document.getElementById('weapon-modal').classList.add('open');
+    }
+
+    function closeWeaponModalDirect() {
+      document.getElementById('weapon-modal').classList.remove('open');
+    }
+    function closeWeaponModal(e) {
+      if (e.target === document.getElementById('weapon-modal')) closeWeaponModalDirect();
+    }
+    function jumpToWeaponFromModal() {
+      closeWeaponModalDirect();
+      if (pendingJumpWeaponId) {
+        switchView('view-weapons');
+        switchCategory(pendingJumpWeaponId.cat);
+        selectWeapon(pendingJumpWeaponId.idx);
+      }
+    }
+
+    // ==========================================
+    // 3. Module 04: Formations, Chalkboard & Pitch
+    // ==========================================
+    let currentBoardMode = 'drag'; // 'drag' | 'pass' | 'run' | 'dribble' | 'press'
+    let chalkboardStrokes = [];
+    let isDrawingOnBoard = false;
+    let drawStartX = 0, drawStartY = 0;
+    let isPitchGridVisible = false;
+    let activeScenario = 'standard';
+
+    // Deep clone initial coordinates for resetting
+    const defaultFormationCoords = JSON.parse(JSON.stringify(formationDatabase));
+
+    function initFormationTabs() {
+      const navContainer = document.getElementById('formation-nav-container');
+      if (!navContainer) return;
+      let html = '';
+      const keys = Object.keys(formationDatabase);
+      keys.forEach((key, idx) => {
+        const form = formationDatabase[key];
+        const isActive = key === currentFormationKey;
+        html += `<button class="formation-tab-btn ${isActive ? 'active' : ''}" onclick="switchFormation('${key}')">${form.name.split(' ')[0]} ${form.name.split(' ')[1]}</button>`;
+      });
+      navContainer.innerHTML = html;
+    }
+
+    function switchFormation(formKey) {
+      currentFormationKey = formKey;
+      currentSelectedPlayerIdx = (formKey === '1331' ? 5 : 3);
+      activeScenario = 'standard';
+      updateScenarioPills('standard');
+      document.querySelectorAll('.formation-tab-btn').forEach((btn, idx) => {
+        const keys = Object.keys(formationDatabase);
+        btn.classList.toggle('active', keys[idx] === formKey);
+      });
+      chalkboardStrokes = [];
+      redrawChalkboard();
+      renderInteractivePitch();
+    }
+
+    function renderInteractivePitch() {
+      const form = formationDatabase[currentFormationKey];
+      if (!form) return;
+      document.getElementById('pitch-formation-title').innerText = form.name;
+      document.getElementById('pitch-formation-tag').innerText = form.tag;
+
+      const layer = document.getElementById('pitch-players-layer');
+      let nodesHtml = '';
+      form.players.forEach((p, idx) => {
+        const isActive = idx === currentSelectedPlayerIdx;
+        nodesHtml += `
+          <div class="player-node ${isActive ? 'active' : ''}" id="player-node-${idx}" style="left: ${p.x}%; top: ${p.y}%;">
+            <span class="player-node-num">${p.num}</span>
+            <span class="player-node-label">${p.pos}</span>
+          </div>
+        `;
+      });
+      layer.innerHTML = nodesHtml;
+
+      // Attach draggable handlers
+      form.players.forEach((p, idx) => {
+        const node = document.getElementById(`player-node-${idx}`);
+        if (node) makePlayerDraggable(node, idx);
+      });
+
+      renderPlayerRoleCard(form.players[currentSelectedPlayerIdx]);
+      initPitchChalkboard();
+    }
+
+    function selectFormationPlayer(idx) {
+      currentSelectedPlayerIdx = idx;
+      const form = formationDatabase[currentFormationKey];
+      document.querySelectorAll('.player-node').forEach((node, i) => node.classList.toggle('active', i === idx));
+      renderPlayerRoleCard(form.players[idx]);
+    }
+
+    function renderPlayerRoleCard(p) {
+      if (!p) return;
+      document.getElementById('role-title').innerText = `${p.num}号 ${p.name}`;
+      document.getElementById('role-code').innerText = p.code;
+      document.getElementById('role-num-badge').innerText = `No. ${p.num}`;
+      document.getElementById('role-duty').innerText = p.duty;
+      document.getElementById('role-pre').innerText = p.pre;
+      document.getElementById('role-main').innerText = p.main;
+      document.getElementById('role-post').innerText = p.post;
+      document.getElementById('role-weapons').innerText = p.weapons;
+      document.getElementById('role-callout').innerText = p.callout;
+    }
+
+    // --- Draggable Player Nodes ---
+    function makePlayerDraggable(node, playerIdx) {
+      let isDragging = false;
+      let startX = 0, startY = 0;
+      let origPctX = 0, origPctY = 0;
+      let movedDistance = 0;
+
+      const onStart = (e) => {
+        if (currentBoardMode !== 'drag') return;
+        isDragging = true;
+        movedDistance = 0;
+        node.classList.add('dragging');
+        const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+        const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+        startX = clientX;
+        startY = clientY;
+        const form = formationDatabase[currentFormationKey];
+        origPctX = form.players[playerIdx].x;
+        origPctY = form.players[playerIdx].y;
+        e.stopPropagation();
+      };
+
+      const onMove = (e) => {
+        if (!isDragging) return;
+        const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+        const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+        const dx = clientX - startX;
+        const dy = clientY - startY;
+        movedDistance += Math.abs(dx) + Math.abs(dy);
+
+        const pitch = document.getElementById('interactive-pitch');
+        const rect = pitch.getBoundingClientRect();
+        const dPctX = (dx / rect.width) * 100;
+        const dPctY = (dy / rect.height) * 100;
+
+        let newX = Math.max(4, Math.min(96, Math.round((origPctX + dPctX) * 10) / 10));
+        let newY = Math.max(4, Math.min(96, Math.round((origPctY + dPctY) * 10) / 10));
+
+        const form = formationDatabase[currentFormationKey];
+        form.players[playerIdx].x = newX;
+        form.players[playerIdx].y = newY;
+        node.style.left = newX + '%';
+        node.style.top = newY + '%';
+        if (e.cancelable) e.preventDefault();
+      };
+
+      const onEnd = () => {
+        if (!isDragging) return;
+        isDragging = false;
+        node.classList.remove('dragging');
+        if (movedDistance < 6) {
+          selectFormationPlayer(playerIdx);
+        }
+      };
+
+      node.addEventListener('mousedown', onStart);
+      window.addEventListener('mousemove', onMove);
+      window.addEventListener('mouseup', onEnd);
+
+      node.addEventListener('touchstart', onStart, { passive: false });
+      window.addEventListener('touchmove', onMove, { passive: false });
+      window.addEventListener('touchend', endEnd = () => { onEnd(); });
+    }
+
+    // --- Chalkboard Mode & Tools ---
+    function setBoardMode(mode) {
+      currentBoardMode = mode;
+      document.querySelectorAll('.tool-btn').forEach(btn => btn.classList.remove('active'));
+      const activeBtn = document.getElementById(`tool-mode-${mode}`);
+      if (activeBtn) activeBtn.classList.add('active');
+
+      const pitch = document.getElementById('interactive-pitch');
+      pitch.classList.remove('mode-drag', 'mode-draw');
+      if (mode === 'drag') {
+        pitch.classList.add('mode-drag');
+      } else {
+        pitch.classList.add('mode-draw');
+      }
+    }
+
+    function initPitchChalkboard() {
+      const canvas = document.getElementById('pitch-chalkboard');
+      const pitch = document.getElementById('interactive-pitch');
+      if (!canvas || !pitch) return;
+
+      const rect = pitch.getBoundingClientRect();
+      const dpr = window.devicePixelRatio || 1;
+      canvas.width = rect.width * dpr;
+      canvas.height = rect.height * dpr;
+      canvas.style.width = rect.width + 'px';
+      canvas.style.height = rect.height + 'px';
+
+      const ctx = canvas.getContext('2d');
+      ctx.scale(dpr, dpr);
+      redrawChalkboard();
+
+      if (canvas._hasEvents) return;
+      canvas._hasEvents = true;
+
+      const getPos = (e) => {
+        const cRect = canvas.getBoundingClientRect();
+        const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+        const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+        return {
+          x: clientX - cRect.left,
+          y: clientY - cRect.top
+        };
+      };
+
+      const startDraw = (e) => {
+        if (currentBoardMode === 'drag') return;
+        isDrawingOnBoard = true;
+        const pos = getPos(e);
+        drawStartX = pos.x;
+        drawStartY = pos.y;
+        e.stopPropagation();
+        if (e.cancelable) e.preventDefault();
+      };
+
+      const moveDraw = (e) => {
+        if (!isDrawingOnBoard || currentBoardMode === 'drag') return;
+        const pos = getPos(e);
+        redrawChalkboard();
+        // Preview active line
+        const ctx2 = canvas.getContext('2d');
+        drawTacticalArrow(ctx2, {
+          type: currentBoardMode,
+          x1: drawStartX,
+          y1: drawStartY,
+          x2: pos.x,
+          y2: pos.y
+        });
+        if (e.cancelable) e.preventDefault();
+      };
+
+      const endDraw = (e) => {
+        if (!isDrawingOnBoard || currentBoardMode === 'drag') return;
+        isDrawingOnBoard = false;
+        const clientX = e.changedTouches ? e.changedTouches[0].clientX : (e.touches ? e.touches[0].clientX : e.clientX);
+        const clientY = e.changedTouches ? e.changedTouches[0].clientY : (e.touches ? e.touches[0].clientY : e.clientY);
+        const cRect = canvas.getBoundingClientRect();
+        const endX = clientX - cRect.left;
+        const endY = clientY - cRect.top;
+        const dist = Math.hypot(endX - drawStartX, endY - drawStartY);
+        if (dist > 10) {
+          chalkboardStrokes.push({
+            type: currentBoardMode,
+            x1: drawStartX,
+            y1: drawStartY,
+            x2: endX,
+            y2: endY
+          });
+        }
+        redrawChalkboard();
+      };
+
+      canvas.addEventListener('mousedown', startDraw);
+      window.addEventListener('mousemove', moveDraw);
+      window.addEventListener('mouseup', endDraw);
+
+      canvas.addEventListener('touchstart', startDraw, { passive: false });
+      window.addEventListener('touchmove', moveDraw, { passive: false });
+      window.addEventListener('touchend', endDraw);
+    }
+
+    function redrawChalkboard() {
+      const canvas = document.getElementById('pitch-chalkboard');
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+      ctx.save();
+      ctx.setTransform(1, 0, 0, 1, 0, 0);
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.restore();
+
+      const dpr = window.devicePixelRatio || 1;
+      chalkboardStrokes.forEach(stroke => {
+        drawTacticalArrow(ctx, stroke);
+      });
+    }
+
+    function drawTacticalArrow(ctx, stroke) {
+      const { type, x1, y1, x2, y2 } = stroke;
+      const dx = x2 - x1;
+      const dy = y2 - y1;
+      const dist = Math.hypot(dx, dy);
+      if (dist < 4) return;
+      const angle = Math.atan2(dy, dx);
+      const headLen = 13;
+
+      ctx.save();
+      if (type === 'pass') {
+        // 🟡 传球虚线 (Passing Line)
+        ctx.strokeStyle = '#fbbf24';
+        ctx.fillStyle = '#fbbf24';
+        ctx.lineWidth = 3;
+        ctx.setLineDash([7, 5]);
+        ctx.beginPath();
+        ctx.moveTo(x1, y1);
+        ctx.lineTo(x2, y2);
+        ctx.stroke();
+        // Arrow Head
+        ctx.setLineDash([]);
+        ctx.beginPath();
+        ctx.moveTo(x2, y2);
+        ctx.lineTo(x2 - headLen * Math.cos(angle - Math.PI / 6), y2 - headLen * Math.sin(angle - Math.PI / 6));
+        ctx.lineTo(x2 - headLen * Math.cos(angle + Math.PI / 6), y2 - headLen * Math.sin(angle + Math.PI / 6));
+        ctx.closePath();
+        ctx.fill();
+      } else if (type === 'run') {
+        // 🟢 跑位实线 (Running Off the Ball)
+        ctx.strokeStyle = '#10b981';
+        ctx.fillStyle = '#10b981';
+        ctx.lineWidth = 3;
+        ctx.setLineDash([]);
+        ctx.beginPath();
+        ctx.moveTo(x1, y1);
+        ctx.lineTo(x2, y2);
+        ctx.stroke();
+        // Arrow Head
+        ctx.beginPath();
+        ctx.moveTo(x2, y2);
+        ctx.lineTo(x2 - headLen * Math.cos(angle - Math.PI / 6), y2 - headLen * Math.sin(angle - Math.PI / 6));
+        ctx.lineTo(x2 - headLen * Math.cos(angle + Math.PI / 6), y2 - headLen * Math.sin(angle + Math.PI / 6));
+        ctx.closePath();
+        ctx.fill();
+      } else if (type === 'dribble') {
+        // 🔵 盘带波浪曲线 (Dribbling Drive)
+        ctx.strokeStyle = '#38bdf8';
+        ctx.fillStyle = '#38bdf8';
+        ctx.lineWidth = 2.6;
+        ctx.setLineDash([]);
+        ctx.beginPath();
+        const steps = Math.max(10, Math.floor(dist / 6));
+        const perpX = -Math.sin(angle);
+        const perpY = Math.cos(angle);
+        for (let i = 0; i <= steps; i++) {
+          const t = i / steps;
+          const wave = Math.sin(t * Math.PI * 6) * 5;
+          const px = x1 + dx * t + perpX * wave;
+          const py = y1 + dy * t + perpY * wave;
+          if (i === 0) ctx.moveTo(px, py);
+          else ctx.lineTo(px, py);
+        }
+        ctx.stroke();
+        // Arrow Head
+        ctx.beginPath();
+        ctx.moveTo(x2, y2);
+        ctx.lineTo(x2 - headLen * Math.cos(angle - Math.PI / 6), y2 - headLen * Math.sin(angle - Math.PI / 6));
+        ctx.lineTo(x2 - headLen * Math.cos(angle + Math.PI / 6), y2 - headLen * Math.sin(angle + Math.PI / 6));
+        ctx.closePath();
+        ctx.fill();
+      } else if (type === 'press') {
+        // 🔴 逼抢压迫 (High Press)
+        ctx.strokeStyle = '#ef4444';
+        ctx.fillStyle = '#ef4444';
+        ctx.lineWidth = 3.5;
+        ctx.setLineDash([]);
+        ctx.beginPath();
+        ctx.moveTo(x1, y1);
+        ctx.lineTo(x2, y2);
+        ctx.stroke();
+        // Sharp Press Arrow
+        ctx.beginPath();
+        ctx.moveTo(x2, y2);
+        ctx.lineTo(x2 - headLen * Math.cos(angle - Math.PI / 5), y2 - headLen * Math.sin(angle - Math.PI / 5));
+        ctx.lineTo(x2 - headLen * Math.cos(angle + Math.PI / 5), y2 - headLen * Math.sin(angle + Math.PI / 5));
+        ctx.closePath();
+        ctx.fill();
+      }
+      ctx.restore();
+    }
+
+    function undoChalkboardStroke() {
+      chalkboardStrokes.pop();
+      redrawChalkboard();
+    }
+
+    function clearChalkboard() {
+      chalkboardStrokes = [];
+      redrawChalkboard();
+    }
+
+    function togglePitchGrid() {
+      isPitchGridVisible = !isPitchGridVisible;
+      const svg = document.getElementById('pitch-grid-svg');
+      const btn = document.getElementById('btn-pitch-grid');
+      if (svg) svg.style.display = isPitchGridVisible ? 'block' : 'none';
+      if (btn) btn.classList.toggle('active', isPitchGridVisible);
+    }
+
+    function resetFormationPositions() {
+      const defaults = defaultFormationCoords[currentFormationKey];
+      if (defaults && defaults.players) {
+        formationDatabase[currentFormationKey].players = JSON.parse(JSON.stringify(defaults.players));
+      }
+      activeScenario = 'standard';
+      updateScenarioPills('standard');
+      chalkboardStrokes = [];
+      redrawChalkboard();
+      renderInteractivePitch();
+    }
+
+    // --- Tactical Scenario Presets ---
+    function updateScenarioPills(key) {
+      document.querySelectorAll('.scenario-pill').forEach(btn => {
+        btn.classList.toggle('active', btn.id === `scenario-btn-${key}`);
+      });
+    }
+
+    function applyTacticalScenario(scenarioKey) {
+      activeScenario = scenarioKey;
+      updateScenarioPills(scenarioKey);
+      chalkboardStrokes = [];
+
+      const form = formationDatabase[currentFormationKey];
+      const defaults = defaultFormationCoords[currentFormationKey].players;
+      const canvas = document.getElementById('pitch-chalkboard');
+      const rect = canvas ? canvas.getBoundingClientRect() : { width: 500, height: 480 };
+
+      // Helper to convert % to canvas px
+      const px = (pctX) => (pctX / 100) * rect.width;
+      const py = (pctY) => (pctY / 100) * rect.height;
+
+      if (scenarioKey === 'standard') {
+        form.players = JSON.parse(JSON.stringify(defaults));
+      } else if (scenarioKey === 'high_press') {
+        // High Press (全队前压高位合围)
+        if (currentFormationKey === '1231') {
+          form.players[0].x = 50; form.players[0].y = 78; // GK 清道夫
+          form.players[1].x = 32; form.players[1].y = 50; // LCB
+          form.players[2].x = 68; form.players[2].y = 50; // RCB
+          form.players[3].x = 50; form.players[3].y = 32; // CM
+          form.players[4].x = 18; form.players[4].y = 20; // LM
+          form.players[5].x = 82; form.players[5].y = 20; // RM
+          form.players[6].x = 50; form.players[6].y = 11; // ST
+          // Add press arrows
+          chalkboardStrokes.push(
+            { type: 'press', x1: px(50), y1: py(20), x2: px(50), y2: py(8) },
+            { type: 'press', x1: px(25), y1: py(26), x2: px(35), y2: py(14) },
+            { type: 'press', x1: px(75), y1: py(26), x2: px(65), y2: py(14) }
+          );
+        } else if (currentFormationKey === '1321') {
+          form.players[0].x = 50; form.players[0].y = 80;
+          form.players[1].x = 16; form.players[1].y = 38;
+          form.players[2].x = 50; form.players[2].y = 56;
+          form.players[3].x = 84; form.players[3].y = 38;
+          form.players[4].x = 35; form.players[4].y = 26;
+          form.players[5].x = 65; form.players[5].y = 26;
+          form.players[6].x = 50; form.players[6].y = 12;
+          chalkboardStrokes.push(
+            { type: 'press', x1: px(40), y1: py(30), x2: px(48), y2: py(16) },
+            { type: 'press', x1: px(60), y1: py(30), x2: px(52), y2: py(16) }
+          );
+        }
+      } else if (scenarioKey === 'deep_buildup') {
+        // Deep Buildup (后场门将出球组织)
+        if (currentFormationKey === '1231') {
+          form.players[0].x = 50; form.players[0].y = 92; // GK
+          form.players[1].x = 22; form.players[1].y = 80; // LCB 拉大角度
+          form.players[2].x = 78; form.players[2].y = 80; // RCB 拉大角度
+          form.players[3].x = 50; form.players[3].y = 66; // CM 回撤要球
+          form.players[4].x = 12; form.players[4].y = 44; // LM 压边线
+          form.players[5].x = 88; form.players[5].y = 44; // RM 压边线
+          form.players[6].x = 50; form.players[6].y = 24; // ST
+          chalkboardStrokes.push(
+            { type: 'pass', x1: px(50), y1: py(90), x2: px(26), y2: py(80) },
+            { type: 'pass', x1: px(26), y1: py(78), x2: px(46), y2: py(67) },
+            { type: 'run', x1: px(50), y1: py(66), x2: px(50), y2: py(52) }
+          );
+        }
+      } else if (scenarioKey === 'flank_overload') {
+        // Flank Overload (右路强侧超载，左翼弱侧包抄)
+        if (currentFormationKey === '1231') {
+          form.players[0].x = 50; form.players[0].y = 86;
+          form.players[1].x = 35; form.players[1].y = 70;
+          form.players[2].x = 68; form.players[2].y = 66;
+          form.players[3].x = 62; form.players[3].y = 42; // CM 靠右
+          form.players[4].x = 14; form.players[4].y = 22; // LM 弱侧大空当
+          form.players[5].x = 86; form.players[5].y = 34; // RM 强侧
+          form.players[6].x = 68; form.players[6].y = 20; // ST 靠右做墙
+          chalkboardStrokes.push(
+            { type: 'pass', x1: px(68), y1: py(64), x2: px(84), y2: py(36) },
+            { type: 'pass', x1: px(84), y1: py(34), x2: px(66), y2: py(40) },
+            { type: 'pass', x1: px(64), y1: py(40), x2: px(18), y2: py(24) } // 大范围弱侧转移！
+          );
+        }
+      }
+
+      renderInteractivePitch();
+      redrawChalkboard();
+    }
+
+    function openFormationAnimLightbox() {
+      const form = formationDatabase[currentFormationKey];
+      openCustomLightbox(form.animGif, form.name + ' · 战术跑位沙盘');
+    }
+
+    // --- Tactical Animation Controller (Module 03 & Lightbox) ---
+    let isAnimPaused = false;
+    let isAnimGridVisible = false;
+    let isSlowMotion = false;
+
+    function toggleAnimPause(e) {
+      if (e) e.stopPropagation();
+      const gif = document.getElementById('player-gif');
+      const canvas = document.getElementById('freeze-canvas');
+      const btn = document.getElementById('btn-anim-pause');
+      const badge = document.getElementById('anim-phase-badge');
+      if (!gif || !canvas) return;
+
+      if (!isAnimPaused) {
+        canvas.width = gif.naturalWidth || gif.clientWidth || 400;
+        canvas.height = gif.naturalHeight || gif.clientHeight || 250;
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(gif, 0, 0, canvas.width, canvas.height);
+        gif.style.visibility = 'hidden';
+        canvas.style.display = 'block';
+        if (btn) {
+          btn.innerText = '▶️ 恢复播放';
+          btn.classList.add('active');
+        }
+        if (badge) {
+          badge.innerText = '⏸️ 已定格研判 · 观察微动作身位与出球提前量';
+          badge.style.color = 'var(--accent-gold)';
+        }
+        isAnimPaused = true;
+      } else {
+        canvas.style.display = 'none';
+        gif.style.visibility = 'visible';
+        if (btn) {
+          btn.innerText = '⏸️ 定格研判';
+          btn.classList.remove('active');
+        }
+        if (badge) {
+          badge.innerText = '▶️ 动态演练中 · 循环播放';
+          badge.style.color = 'var(--pitch-green)';
+        }
+        isAnimPaused = false;
+      }
+    }
+
+    function toggleAnimSpeed(e) {
+      if (e) e.stopPropagation();
+      isSlowMotion = !isSlowMotion;
+      const btn = document.getElementById('btn-anim-speed');
+      const badge = document.getElementById('anim-phase-badge');
+      if (btn) btn.classList.toggle('active', isSlowMotion);
+      if (badge) {
+        badge.innerText = isSlowMotion ? '⏱️ 0.5x 慢放观察模式 · 研判传球时机' : '▶️ 动态演练中 · 循环播放';
+      }
+    }
+
+    function toggleAnimGrid(e) {
+      if (e) e.stopPropagation();
+      isAnimGridVisible = !isAnimGridVisible;
+      const overlay = document.getElementById('anim-grid-overlay');
+      const btn = document.getElementById('btn-anim-grid');
+      if (overlay) overlay.style.display = isAnimGridVisible ? 'block' : 'none';
+      if (btn) btn.classList.toggle('active', isAnimGridVisible);
+    }
+
+    function focusActionPhase(phaseIdx, e) {
+      if (e) e.stopPropagation();
+      document.querySelectorAll('.phase-step-btn').forEach((btn, idx) => {
+        btn.classList.toggle('active', idx === phaseIdx);
+      });
+      if (!isAnimPaused) toggleAnimPause(e);
+      const badge = document.getElementById('anim-phase-badge');
+      const labels = [
+        '① 前动作：接球前 0.5 秒盲区扫描与半侧身',
+        '② 主动作：远离逼抢脚顺势外侧领球与精准低平出球',
+        '③ 后动作：传完即动二次启动，充当第三人'
+      ];
+      if (badge) {
+        badge.innerText = `🎯 聚焦：${labels[phaseIdx]}`;
+        badge.style.color = 'var(--accent-cyan)';
+      }
+    }
+
+    // ==========================================
+    // 4. Module 05: Crisis Database & Callouts
+    // ==========================================
+    function initCrisisTabs() {
+      const container = document.getElementById('crisis-tabs-container');
+      if (!container) return;
+      let html = '';
+      const keys = Object.keys(crisisDatabase);
+      const iconMap = { 'press': '🚨', 'bus': '🧱', 'mid': '⚔️', 'late': '⏱️' };
+      keys.forEach((key, idx) => {
+        const c = crisisDatabase[key];
+        const isActive = key === currentCrisisKey;
+        html += `<button class="crisis-tab-btn ${isActive ? 'active' : ''}" onclick="switchCrisis('${key}')">${iconMap[key] || '⚡'} ${c.title.split('(')[0]}</button>`;
+      });
+      container.innerHTML = html;
+    }
+
+    function switchCrisis(crisisKey) {
+      currentCrisisKey = crisisKey;
+      document.querySelectorAll('.crisis-tab-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.getAttribute('onclick').includes(crisisKey));
+      });
+      renderCrisisDashboard();
+    }
+
+    function renderCrisisDashboard() {
+      const c = crisisDatabase[currentCrisisKey];
+      if (!c) return;
+      const container = document.getElementById('crisis-dashboard-content');
+      let weaponsHtml = '';
+      (c.weapons || []).forEach(w => {
+        weaponsHtml += `<span class="doctrine-weapon-pill" onclick="popWeaponModal('${w.id}')">${w.name}</span> `;
+      });
+
+      container.innerHTML = `
+        <div>
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+            <div style="font-size: 18px; font-weight: 800; color: var(--text-main);">${c.title}</div>
+            <span class="doctrine-tag" style="background: rgba(248,113,113,0.15); color: var(--accent-red); border-color: rgba(248,113,113,0.3);">${c.tag}</span>
+          </div>
+          <div style="font-size: 13.5px; line-height: 1.6; color: var(--accent-red); font-weight: 600; margin-bottom: 14px; background: rgba(239,68,68,0.08); padding: 10px 14px; border-radius: 8px; border-left: 3px solid var(--accent-red);">
+            ${c.trap}
+          </div>
+          <div style="font-size: 13.5px; line-height: 1.7; color: var(--text-sub);">
+            ${c.antidote}
+          </div>
+        </div>
+        <div style="border-left: 1px solid var(--border-sub); padding-left: 20px; display: flex; flex-direction: column; justify-content: space-between;">
+          <div>
+            <div style="font-size: 13px; font-weight: 800; color: var(--accent-gold); margin-bottom: 10px;">
+              🛠️ 核心推荐破局武器 (点击查看要领):
+            </div>
+            <div style="display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 20px;">
+              ${weaponsHtml}
+            </div>
+          </div>
+          <div style="background: rgba(16,185,129,0.08); border: 1px solid rgba(16,185,129,0.25); border-radius: 8px; padding: 12px 14px;">
+            <div style="font-size: 13.5px; font-weight: 800; color: var(--pitch-green); line-height: 1.5;">
+              ${c.callout}
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    function renderCalloutsGrid() {
+      const container = document.getElementById('callouts-grid');
+      if (!container) return;
+      let html = '';
+      calloutsDatabase.forEach(co => {
+        html += `
+          <div class="crisis-callout-card">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+              <span style="font-size: 16px; font-weight: 900; color: var(--accent-cyan);">${co.code}</span>
+              <span style="font-size: 11px; color: var(--text-muted); font-weight: 600;">${co.en}</span>
+            </div>
+            <div style="font-size: 12px; color: var(--accent-gold); font-weight: 700; margin-bottom: 6px;">
+              🎯 触发：${co.scene}
+            </div>
+            <div style="font-size: 12px; color: var(--text-sub); line-height: 1.5;">
+              ${co.act}
+            </div>
+          </div>
+        `;
+      });
+      container.innerHTML = html;
+    }
+
+    // ==========================================
+    // 5. Lightbox Controls
+    // ==========================================
+    const lbModal = document.getElementById('lightbox-modal');
+    const lbImg = document.getElementById('lightbox-img');
+    const lbTitle = document.getElementById('lightbox-title');
+    const lbViewport = document.getElementById('lb-viewport');
+    let currentScale = 1;
+    let isDragging = false;
+    let startX, startY, transX = 0, transY = 0;
+
+    function openPlayerLightbox() {
+      const currentGif = document.getElementById('player-gif').src;
+      const currentTitle = document.getElementById('player-title').innerText;
+      openCustomLightbox(currentGif, currentTitle);
+    }
+    function openCustomLightbox(src, title) {
+      lbImg.src = src;
+      lbTitle.innerText = `🔍 ${title || '战术动态沙盘'}`;
+      lbModal.classList.add('open');
+      resetZoom();
+    }
+    function closeLightboxDirect() { lbModal.classList.remove('open'); }
+    function closeLightbox(e) { if (e.target === lbModal) closeLightboxDirect(); }
+    function applyTransform() { lbImg.style.transform = `scale(${currentScale}) translate(${transX}px, ${transY}px)`; }
+    function zoomIn() { currentScale = Math.min(3.8, currentScale + 0.3); applyTransform(); }
+    function zoomOut() { currentScale = Math.max(0.5, currentScale - 0.3); applyTransform(); }
+    function resetZoom() { currentScale = 1; transX = 0; transY = 0; applyTransform(); }
+
+    lbViewport.addEventListener('wheel', (e) => {
+      e.preventDefault();
+      if (e.deltaY < 0) currentScale = Math.min(3.8, currentScale + 0.18);
+      else currentScale = Math.max(0.5, currentScale - 0.18);
+      applyTransform();
+    });
+    lbViewport.addEventListener('mousedown', (e) => {
+      isDragging = true; startX = e.clientX - transX; startY = e.clientY - transY;
+    });
+    window.addEventListener('mousemove', (e) => {
+      if (isDragging) { transX = e.clientX - startX; transY = e.clientY - startY; applyTransform(); }
+    });
+    window.addEventListener('mouseup', () => { isDragging = false; });
+    lbViewport.addEventListener('dblclick', () => {
+      if (currentScale > 1.2) resetZoom();
+      else { currentScale = 2.0; applyTransform(); }
+    });
+
+    function toggleFullscreen() {
+      if (!document.fullscreenElement) document.documentElement.requestFullscreen();
+      else if (document.exitFullscreen) document.exitFullscreen();
+    }
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        if (lbModal.classList.contains('open')) closeLightboxDirect();
+        if (document.getElementById('weapon-modal').classList.contains('open')) closeWeaponModalDirect();
+      }
+    });
+
+    // Theme Switcher
+    function setTheme(themeName) {
+      document.body.classList.remove('theme-light', 'theme-sepia');
+      if (themeName === 'light') document.body.classList.add('theme-light');
+      else if (themeName === 'sepia') document.body.classList.add('theme-sepia');
+      localStorage.setItem('tactics_theme', themeName);
+      updateThemeButtons(themeName);
+    }
+    function updateThemeButtons(currentTheme) {
+      document.querySelectorAll('.theme-btn').forEach(btn => btn.classList.remove('active'));
+      const activeBtn = document.getElementById('btn-theme-' + currentTheme);
+      if (activeBtn) activeBtn.classList.add('active');
+    }
+    function initTheme() {
+      const savedTheme = localStorage.getItem('tactics_theme') || 'dark';
+      setTheme(savedTheme);
+    }
+
+    // Initialize App
+    initTheme();
+    renderDoctrinesGrid();
+    initWeaponCategories();
+    renderWeaponConsole();
+    initFormationTabs();
+    renderInteractivePitch();
+    initCrisisTabs();
+    renderCrisisDashboard();
+    renderCalloutsGrid();
+
+    window.addEventListener('resize', () => {
+      initPitchChalkboard();
+    });
+  </script>
+</body>
+</html>
