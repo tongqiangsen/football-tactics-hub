@@ -215,7 +215,7 @@
         "name": "弧线绕顶传球",
         "en": "Curled Around Block",
         "tag": "外侧强侧旋 · 绕过防守封锁",
-        "gif": "tactics_animations_gif/anim_w11_curled_pass.gif",
+        "gif": "tactics_animations_gif/anim_w_cat3_curled.gif",
         "desc": "在中路直线被完全封死时，脚内侧带强侧旋踢出弧线，球绕过防守队员身体外侧进入肋部空当。",
         "callout": "📢 场上实战口令：“绕外侧！”"
       },
@@ -247,7 +247,7 @@
         "name": "假射真传/节奏差",
         "en": "Fake Shot & Slip",
         "tag": "大动作假射 · 最后一刻分球",
-        "gif": "tactics_animations_gif/anim_w14_fake_shot.gif",
+        "gif": "tactics_animations_gif/anim_w_cat4_fake_shot.gif",
         "desc": "大动作假装起脚爆射诱使后卫下铲封堵，在最后一瞬间脚腕轻扣，节奏差隐蔽直塞空当单刀助攻。",
         "callout": "📢 场上实战口令：“假射真分！”"
       },
@@ -279,7 +279,7 @@
         "name": "门将穿透性低平球",
         "en": "GK Line-Breaking Ground Pass",
         "tag": "门将第7人 · 贴地刺穿双人逼抢线",
-        "gif": "tactics_animations_gif/anim_w17_gk_laser.gif",
+        "gif": "tactics_animations_gif/anim_w_cat5_gk_laser.gif",
         "desc": "门将推至大禁区弧顶，脚内侧大力贴地平抽穿透前锋逼抢线，直接连线中场，瞬间瓦解对手高位逼抢。",
         "callout": "📢 场上实战口令：“门将直穿！”"
       },
@@ -319,7 +319,7 @@
     "id": "combo_w02_w04",
     "title": "W 02 + W 04 · 肋部挑传 + 贴地平抽连招",
     "tag": "综合实战进球连招演示",
-    "gif": "tactics_animations_gif/anim_combo_chipped.gif",
+    "gif": "tactics_animations_gif/anim_w_cat1_chipped.gif",
     "descTitle": "📌 综合连招实战时序",
     "desc": "中场(4)脚尖搓挑打入左肋空当[W02] ➔ 边锋(5)不停球平抽门前危险走廊[W04] ➔ 中锋(7)高速抢前点垫射破门！",
     "callout": "📢 场上实战口令：“挑肋部” ➔ “前点平抽！”"
