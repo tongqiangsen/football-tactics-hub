@@ -284,10 +284,7 @@
       animation: fadeIn 0.2s ease-out;
     }
     .view-container.active { display: block; }
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(4px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
+    @keyframes fadeIn {\n      from { opacity: 0; transform: translateY(4px); }\n      to { opacity: 1; transform: translateY(0); }\n    }
 
     .section-header {
       margin-bottom: 22px;
@@ -1170,34 +1167,83 @@
     .weapon-list-container {
       display: flex;
       flex-direction: column;
-      gap: 10px;
-      max-height: 600px;
+      gap: 12px;
+      max-height: 620px;
       overflow-y: auto;
-      padding-right: 4px;
+      padding-right: 6px;
     }
     .weapon-select-card {
       background: var(--bg-surface);
       border: 1px solid var(--border-subtle);
-      border-radius: 10px;
+      border-radius: 12px;
       padding: 12px 14px;
       cursor: pointer;
-      transition: all 0.15s ease;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
       box-shadow: var(--shadow-card);
+      position: relative;
     }
     .weapon-select-card:hover {
       border-color: var(--border-focus);
       background: var(--bg-subsurface);
+      transform: translateY(-2px);
     }
     .weapon-select-card.active {
       border-color: var(--pitch-green);
       background: var(--bg-subsurface);
-      box-shadow: 0 0 0 1px var(--pitch-green);
+      box-shadow: 0 0 0 1.5px var(--pitch-green), var(--shadow-float);
+    }
+    .weapon-card-flex-wrapper {
+      display: flex;
+      gap: 14px;
+      align-items: flex-start;
+    }
+    .weapon-thumb-box {
+      width: 128px;
+      height: 96px;
+      flex-shrink: 0;
+      background: #000;
+      border-radius: 8px;
+      overflow: hidden;
+      border: 1px solid var(--border-subtle);
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.5);
+    }
+    .weapon-thumb-box img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.3s ease;
+    }
+    .weapon-select-card:hover .weapon-thumb-box img {
+      transform: scale(1.06);
+    }
+    .weapon-thumb-badge {
+      position: absolute;
+      top: 5px;
+      left: 5px;
+      background: rgba(15, 23, 42, 0.88);
+      color: var(--accent-gold);
+      font-size: 10px;
+      font-weight: 800;
+      padding: 1px 6px;
+      border-radius: 4px;
+      border: 1px solid rgba(251, 191, 36, 0.35);
+      backdrop-filter: blur(4px);
+      z-index: 2;
+    }
+    .weapon-card-content {
+      flex: 1;
+      min-width: 0;
     }
     .weapon-card-head {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 4px;
+      margin-bottom: 3px;
     }
     .weapon-badge {
       font-size: 10.5px;
@@ -1213,10 +1259,21 @@
       font-style: italic;
     }
     .weapon-name {
-      font-size: 14px;
+      font-size: 14.5px;
       font-weight: 700;
       color: var(--text-main);
       margin-bottom: 4px;
+    }
+    .weapon-tag-pill {
+      display: inline-block;
+      font-size: 10.5px;
+      font-weight: 700;
+      color: var(--pitch-green);
+      background: rgba(16, 185, 129, 0.1);
+      border: 1px solid rgba(16, 185, 129, 0.22);
+      padding: 2px 7px;
+      border-radius: 4px;
+      margin-bottom: 6px;
     }
     .weapon-body {
       font-size: 12px;
@@ -1228,6 +1285,38 @@
       font-size: 11.5px;
       color: var(--accent-cyan);
       font-weight: 600;
+    }
+
+    /* Category Thematic Accents */
+    .cat-theme-1.active { border-color: var(--accent-cyan); box-shadow: 0 0 0 1.5px var(--accent-cyan); }
+    .cat-theme-1 .weapon-tag-pill { color: var(--accent-cyan); background: rgba(56, 189, 248, 0.12); border-color: rgba(56, 189, 248, 0.3); }
+    .cat-theme-2.active { border-color: var(--pitch-green); box-shadow: 0 0 0 1.5px var(--pitch-green); }
+    .cat-theme-2 .weapon-tag-pill { color: var(--pitch-green); background: rgba(16, 185, 129, 0.12); border-color: rgba(16, 185, 129, 0.3); }
+    .cat-theme-3.active { border-color: var(--accent-gold); box-shadow: 0 0 0 1.5px var(--accent-gold); }
+    .cat-theme-3 .weapon-tag-pill { color: var(--accent-gold); background: rgba(245, 158, 11, 0.12); border-color: rgba(245, 158, 11, 0.3); }
+    .cat-theme-4.active { border-color: var(--accent-purple); box-shadow: 0 0 0 1.5px var(--accent-purple); }
+    .cat-theme-4 .weapon-tag-pill { color: var(--accent-purple); background: rgba(192, 132, 252, 0.12); border-color: rgba(192, 132, 252, 0.3); }
+    .cat-theme-5.active { border-color: var(--accent-red); box-shadow: 0 0 0 1.5px var(--accent-red); }
+    .cat-theme-5 .weapon-tag-pill { color: var(--accent-red); background: rgba(248, 113, 113, 0.12); border-color: rgba(248, 113, 113, 0.3); }
+
+    /* Main Player GIF Fade Transition */
+    #player-gif {
+      transition: opacity 0.22s ease-in-out;
+    }
+    .doctrine-overlay-cue {
+      position: absolute;
+      bottom: 8px;
+      left: 10px;
+      background: rgba(15, 23, 42, 0.88);
+      color: var(--pitch-green);
+      font-size: 10.5px;
+      font-weight: 700;
+      padding: 3px 8px;
+      border-radius: 4px;
+      border: 1px solid rgba(16, 185, 129, 0.3);
+      backdrop-filter: blur(4px);
+      z-index: 3;
+      pointer-events: none;
     }
 
     /* Module 05: Crisis */
@@ -1357,10 +1446,7 @@
       box-shadow: var(--shadow-float);
       animation: popIn 0.2s ease-out;
     }
-    @keyframes popIn {
-      from { transform: scale(0.95); opacity: 0; }
-      to { transform: scale(1); opacity: 1; }
-    }
+    @keyframes popIn {\n      from { transform: scale(0.95); opacity: 0; }\n      to { transform: scale(1); opacity: 1; }\n    }
     .weapon-modal-head {
       display: flex;
       justify-content: space-between;
@@ -1375,23 +1461,8 @@
     }
 
     /* Responsive */
-    @media (max-width: 1024px) {
-      .pitch-workbench, .weapon-console-grid, .crisis-dashboard-card { grid-template-columns: 1fr; }
-      .grid-3 { grid-template-columns: 1fr; }
-      .grid-2 { grid-template-columns: 1fr; }
-      .grid-4 { grid-template-columns: 1fr 1fr; }
-      .sidebar { width: 220px; }
-    }
-    @media (max-width: 768px) {
-      body { flex-direction: column; overflow-y: auto; height: auto; }
-      .sidebar { width: 100%; border-right: none; border-bottom: 1px solid var(--border-subtle); }
-      .nav-menu { flex-direction: row; overflow-x: auto; padding: 8px; }
-      .nav-item { white-space: nowrap; }
-      .main-content { height: auto; overflow: visible; }
-      .topbar { padding: 0 16px; }
-      .view-container { padding: 16px; }
-      .grid-4 { grid-template-columns: 1fr; }
-    }
+    @media (max-width: 1024px) {\n      .pitch-workbench, .weapon-console-grid, .crisis-dashboard-card { grid-template-columns: 1fr; }\n      .grid-3 { grid-template-columns: 1fr; }\n      .grid-2 { grid-template-columns: 1fr; }\n      .grid-4 { grid-template-columns: 1fr 1fr; }\n      .sidebar { width: 220px; }\n    }
+    @media (max-width: 768px) {\n      body { flex-direction: column; overflow-y: auto; height: auto; }\n      .sidebar { width: 100%; border-right: none; border-bottom: 1px solid var(--border-subtle); }\n      .nav-menu { flex-direction: row; overflow-x: auto; padding: 8px; }\n      .nav-item { white-space: nowrap; }\n      .main-content { height: auto; overflow: visible; }\n      .topbar { padding: 0 16px; }\n      .view-container { padding: 16px; }\n      .grid-4 { grid-template-columns: 1fr; }\n    }
   </style>
 </head>
 <body>
@@ -1442,7 +1513,7 @@
       <div class="top-actions">
         <!-- 3-Theme Palette Switcher -->
         <div class="theme-palette-group">
-          <button class="theme-btn active" id="btn-theme-dark" onclick="setTheme('dark')" title="深色战术 (温润墨绿)">🌙 战术夜间</button>
+          <button class="theme-btn active" id="btn-theme-dark" onclick="setTheme('dark')\" title=\"深色战术 (温润墨绿)\">🌙 战术夜间</button>
           <button class="theme-btn" id="btn-theme-sepia" onclick="setTheme('sepia')" title="羊皮纸暖色 (柔和护眼)">📖 暖阳护眼</button>
           <button class="theme-btn" id="btn-theme-light" onclick="setTheme('light')" title="战术白板 (清晰明快)">☀️ 战术白板</button>
         </div>
@@ -1493,117 +1564,126 @@
             </div>
             <div class="toolbar-group">
               <button class="tool-btn-sm" onclick="undoChalkboardStroke()" title="撤销上一笔标线">↩️ 撤销</button>
-              <button class="tool-btn-sm" onclick="clearChalkboard()" title="清除画板所有标线">🧹 清除</button>
-              <button class="tool-btn-sm" onclick="togglePitchGrid()" id="btn-pitch-grid" title="切换16区域空间网格">📐 16格网格</button>
-              <button class="tool-btn-sm primary" onclick="resetFormationPositions()" title="一键复原为阵型标准站位">🔄 复位阵型</button>
+              <button class="tool-btn-sm" onclick="clearChalkboard()" title="一键清除球场所有画线">🗑️ 清空</button>
+              <button class="tool-btn-sm primary" id="btn-pitch-grid" onclick="togglePitchGrid()" title="透视16区域网格">📐 16格空间网格</button>
             </div>
           </div>
 
-          <div class="pitch-board mode-drag" id="interactive-pitch">
+          <div class="pitch-board mode-drag" id="tactical-pitch">
+            <!-- Background Markings -->
             <div class="pitch-marking pitch-half-line"></div>
             <div class="pitch-marking pitch-center-circle"></div>
             <div class="pitch-marking pitch-center-spot"></div>
             <div class="pitch-marking pitch-penalty-top"></div>
             <div class="pitch-marking pitch-penalty-bottom"></div>
-            
-            <!-- 16-Zone Tactical Grid SVG Overlay -->
+
+            <!-- SVG 16-Zone Grid Overlay -->
             <svg id="pitch-grid-svg" class="pitch-grid-overlay" viewBox="0 0 100 100" preserveAspectRatio="none" style="display: none;">
-              <line x1="25" y1="0" x2="25" y2="100" stroke="#22c55e" stroke-width="0.5" stroke-dasharray="2,2"/>
-              <line x1="50" y1="0" x2="50" y2="100" stroke="#22c55e" stroke-width="0.8" stroke-opacity="0.8"/>
-              <line x1="75" y1="0" x2="75" y2="100" stroke="#22c55e" stroke-width="0.5" stroke-dasharray="2,2"/>
-              <line x1="0" y1="25" x2="100" y2="25" stroke="#22c55e" stroke-width="0.5" stroke-dasharray="2,2"/>
-              <line x1="0" y1="50" x2="100" y2="50" stroke="#22c55e" stroke-width="0.8" stroke-opacity="0.8"/>
-              <line x1="0" y1="75" x2="100" y2="75" stroke="#22c55e" stroke-width="0.5" stroke-dasharray="2,2"/>
-              <text x="12.5" y="14" fill="#94a3b8" font-size="3" text-anchor="middle" opacity="0.7">左翼前场</text>
-              <text x="37.5" y="14" fill="#fbbf24" font-size="3" text-anchor="middle" opacity="0.7">左肋前场</text>
-              <text x="62.5" y="14" fill="#fbbf24" font-size="3" text-anchor="middle" opacity="0.7">右肋前场</text>
-              <text x="87.5" y="14" fill="#94a3b8" font-size="3" text-anchor="middle" opacity="0.7">右翼前场</text>
-              <text x="12.5" y="64" fill="#94a3b8" font-size="3" text-anchor="middle" opacity="0.7">左翼后场</text>
-              <text x="37.5" y="64" fill="#38bdf8" font-size="3" text-anchor="middle" opacity="0.7">左肋中场</text>
-              <text x="62.5" y="64" fill="#38bdf8" font-size="3" text-anchor="middle" opacity="0.7">右肋中场</text>
-              <text x="87.5" y="64" fill="#94a3b8" font-size="3" text-anchor="middle" opacity="0.7">右翼后场</text>
+              <line x1="25" y1="0" x2="25" y2="100" stroke="#22c55e" stroke-width="0.75" stroke-dasharray="3,3"/>
+              <line x1="50" y1="0" x2="50" y2="100" stroke="#22c55e" stroke-width="1.2" stroke-opacity="0.9"/>
+              <line x1="75" y1="0" x2="75" y2="100" stroke="#22c55e" stroke-width="0.75" stroke-dasharray="3,3"/>
+              <line x1="0" y1="25" x2="100" y2="25" stroke="#22c55e" stroke-width="0.75" stroke-dasharray="3,3"/>
+              <line x1="0" y1="50" x2="100" y2="50" stroke="#22c55e" stroke-width="1.2" stroke-opacity="0.9"/>
+              <line x1="0" y1="75" x2="100" y2="75" stroke="#22c55e" stroke-width="0.75" stroke-dasharray="3,3"/>
+              <text x="5" y="8" fill="#10b981" font-size="3" font-family="monospace" opacity="0.8">ZONE 01</text>
+              <text x="30" y="8" fill="#10b981" font-size="3" font-family="monospace" opacity="0.8">ZONE 02 (HALFSPACE)</text>
+              <text x="55" y="8" fill="#10b981" font-size="3" font-family="monospace" opacity="0.8">ZONE 03 (HALFSPACE)</text>
+              <text x="80" y="8" fill="#10b981" font-size="3" font-family="monospace" opacity="0.8">ZONE 04</text>
+              <text x="30" y="48" fill="#fbbf24" font-size="3.2" font-weight="bold" font-family="monospace" opacity="0.9">ZONE 14 (黄金核心中枢)</text>
             </svg>
 
-            <!-- Chalkboard Drawing Canvas -->
+            <!-- Canvas for Drawing -->
             <canvas id="pitch-chalkboard" class="pitch-chalkboard-canvas"></canvas>
 
-            <div id="pitch-players-layer"></div>
+            <!-- Dynamic Player Nodes Container -->
+            <div id="player-nodes-layer"></div>
           </div>
 
-          <!-- Tactical Scenarios Quick Presets -->
+          <!-- Tactical Scenario Presets Bar -->
           <div class="tactical-scenario-bar">
-            <span class="scenario-label">⚡ 战术推演预设:</span>
-            <button class="scenario-pill active" id="scenario-btn-standard" onclick="applyTacticalScenario('standard')">标准传控</button>
-            <button class="scenario-pill" id="scenario-btn-high_press" onclick="applyTacticalScenario('high_press')">前场高位合围 (3v2)</button>
-            <button class="scenario-pill" id="scenario-btn-deep_buildup" onclick="applyTacticalScenario('deep_buildup')">后场门将出球组织</button>
-            <button class="scenario-pill" id="scenario-btn-flank_overload" onclick="applyTacticalScenario('flank_overload')">右路强侧超载</button>
+            <span class="scenario-label">🎯 战术推演演练预设:</span>
+            <button class="scenario-pill active" id="scenario-btn-standard" onclick="applyTacticalScenario('standard')">标准初始落位</button>
+            <button class="scenario-pill" id="scenario-btn-press" onclick="applyTacticalScenario('press')">高位压迫前顶</button>
+            <button class="scenario-pill" id="scenario-btn-lowblock" onclick="applyTacticalScenario('lowblock')">低位深度防守</button>
+            <button class="scenario-pill" id="scenario-btn-overload" onclick="applyTacticalScenario('overload')">强侧局部超载 (3v2)</button>
+            <button class="scenario-pill" id="scenario-btn-reset" onclick="resetFormationPositions()" style="margin-left:auto; color:var(--accent-red);">↺ 重置阵型</button>
           </div>
 
           <div class="pitch-footer-controls">
-            <span style="color: var(--text-muted); font-size: 11.5px;">💡 支持触控拖拽球员与手指/画笔标线</span>
-            <button class="btn-action" onclick="openFormationAnimLightbox()" style="font-size: 11px; padding: 4px 10px;">
-              🎬 观察阵型跑位沙盘
-            </button>
+            <span style="color: var(--text-muted);">💡 交互提示：按住任意球员圆点可拖拽微调站位，或选择标绘模式画出传跑配合路线。</span>
+            <button class="tool-btn-sm" onclick="resetFormationPositions()">还原默认站位</button>
           </div>
         </div>
 
-        <!-- Right Role Card -->
+        <!-- Right Role Details Deck -->
         <div class="role-card-deck">
           <div class="role-card-head">
             <div>
-              <div class="role-card-title" id="role-title">4号 中前卫 (Central Midfielder)</div>
-              <div class="role-card-code" id="role-code">攻防节拍器 · 阵型心脏</div>
+              <div class="role-card-title" id="role-title">4号 · 控球型单后腰 / 节拍器</div>
+              <div class="role-card-code" id="role-en">Deep-Lying Playmaker (DLP)</div>
             </div>
-            <div class="nav-badge" style="background: rgba(245, 158, 11, 0.12); color: var(--accent-gold); border-color: rgba(245, 158, 11, 0.25);" id="role-num-badge">No. 4</div>
+            <div class="pitch-badge" id="role-number-badge">#4 PIVOT</div>
           </div>
 
           <div class="role-duty-block" id="role-duty">
-            全队攻防节奏掌控者；在后场双中卫身前形成接应三角，前场主导第三人跑位直塞与弱侧调度。
+            全队攻防平衡枢纽。接应两名后卫横向出球，利用半侧身观察前场，在对手第一道逼抢线身后接球并快速向前渗透。
           </div>
 
-          <!-- 3-Action Guidelines Stepper -->
+          <!-- 3-Action Guide Stepper -->
+          <div style="font-size: 13.5px; font-weight: 700; color: var(--text-main); margin-bottom: 12px; display: flex; align-items: center; gap: 6px;">
+            <span>⏱️ 球员微观“三动作行为体系” (3-Action Micro-Guide)</span>
+          </div>
+
           <div class="timeline-stepper">
             <div class="stepper-item pre">
               <div class="stepper-dot"></div>
               <div class="stepper-header">
-                <span class="stepper-tag">01. 接球前准备</span>
-                <span class="stepper-timing">Pre-Action · 盲区扫描与半侧身</span>
+                <span class="stepper-tag">动作一：接球前 0.5s</span>
+                <span class="stepper-timing">预判与身位准备</span>
               </div>
-              <div class="stepper-desc" id="role-pre">保持半侧身面向前场边线，皮球滑行中完成身后防守盲区扫描2次，拒绝死板背对球门。</div>
+              <div class="stepper-desc" id="role-step-pre">
+                转头盲区扫描（看身后防守队员距离与弱侧空当）；身体保持 45° 开放半侧身面向前场，绝不能完全背对进攻方向。
+              </div>
             </div>
+
             <div class="stepper-item main">
               <div class="stepper-dot"></div>
               <div class="stepper-header">
-                <span class="stepper-tag">02. 触球主动作</span>
-                <span class="stepper-timing">Main-Action · 精准执行出球</span>
+                <span class="stepper-tag">动作二：触球与决策时</span>
+                <span class="stepper-timing">第一脚触球质量</span>
               </div>
-              <div class="stepper-desc" id="role-main">用远离逼抢脚外侧顺势领球摆脱；一脚触球即完成控球转向，出球低平快。</div>
+              <div class="stepper-desc" id="role-step-main">
+                后脚顺势领球向前推 1~2 米打破平衡；若遭遇背后贴身压迫，坚决一脚出球（撞墙回做或过渡弱侧），拒绝原地粘球。
+              </div>
             </div>
+
             <div class="stepper-item post">
               <div class="stepper-dot"></div>
               <div class="stepper-header">
-                <span class="stepper-tag">03. 出球后衔接</span>
-                <span class="stepper-timing">Post-Action · 传完即动二次接应</span>
+                <span class="stepper-tag">动作三：出球后 0.5s</span>
+                <span class="stepper-timing">二次跑动与再呼应</span>
               </div>
-              <div class="stepper-desc" id="role-post">出球后立即二次启动前插接应或横移保护防线肋部空当；丢球0.5秒内就地反抢。</div>
+              <div class="stepper-desc" id="role-step-post">
+                传完球后绝不原地看球！立刻向前或斜向移动 3~5 米建立新的三角形支撑保护，随时准备反抢或接应第二落点。
+              </div>
             </div>
           </div>
 
           <div class="role-meta-row">
             <div class="role-meta-box">
-              <div class="role-meta-label">🛠️ 核心传球武器</div>
-              <div class="role-meta-val" id="role-weapons">W01直塞 · W08第三人 · W14假射</div>
+              <div class="role-meta-label">🎯 推荐搭配传球武器</div>
+              <div class="role-meta-val" id="role-weapons">W01直塞球, W09大范围转移, W06一脚触球</div>
             </div>
             <div class="role-meta-box">
-              <div class="role-meta-label">📢 专属呼应口令</div>
-              <div class="role-meta-val" id="role-callout">“转过来！” / “看第三人！”</div>
+              <div class="role-meta-label">📢 现场实战核心呼号</div>
+              <div class="role-meta-val" id="role-voice-cue" style="color: var(--accent-gold);">“看身后！转过来！”</div>
             </div>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- VIEW 02: 八大实战进攻流派 -->
+    <!-- VIEW 02: 八大实战进攻流派全景沙盘 -->
     <div id="view-doctrines" class="view-container">
       <div class="section-header">
         <h2>模块 02 · 八大实战进攻流派全景沙盘 (Doctrines Hub)</h2>
@@ -1707,100 +1787,84 @@
           <p id="foundations-mistakes">只看脚下、静态站立等球、单打独斗盲目推进、在密集区以少打多扎堆。</p>
         </div>
         <div class="card">
-          <div class="card-title green">✅ 现代德国战术真理</div>
+          <div class="card-title green">✅ 现代德系铁律</div>
           <p id="foundations-truths">传球即人际语言；球永远比人跑得快；通过三角站位制造局部 3v2；传向空当而非脚下。</p>
         </div>
         <div class="card">
-          <div class="card-title gold">⚡ 全队三大铁律</div>
-          <p id="foundations-rules">1. 后场中路绝不盲目横传<br>2. 保持开放半侧身面向前场<br>3. 接球前 0.5 秒完成盲区扫描</p>
+          <div class="card-title gold">⚡ 场上三不铁则</div>
+          <ul id="foundations-rules" style="padding-left: 18px; margin-top: 4px;">
+            <li>1. 后场中路绝不盲目横传</li>
+            <li>2. 保持开放半侧身面向前场</li>
+            <li>3. 接球前 0.5 秒完成盲区扫描</li>
+          </ul>
         </div>
       </div>
-      <div class="card">
-        <div class="card-title green">📐 16 区域动态传球网格与同格不站双人法则</div>
-        <p style="font-size: 13.5px; margin-bottom: 12px;" id="foundations-grid">同一方格内严禁出现两名本方队员；全队保持 5~10 米黄金呼应间距，形成菱形与三角形接应网。</p>
-        <div style="max-width: 650px; margin: 0 auto; background: var(--bg-subsurface); border: 1px solid var(--border-subtle); padding: 14px; border-radius: 10px;">
-          <svg viewBox="0 0 500 280" width="100%">
-            <rect width="500" height="280" fill="#071911" rx="6" stroke="var(--pitch-green)" stroke-width="1.5"/>
-            <line x1="125" y1="0" x2="125" y2="280" stroke="var(--pitch-green)" stroke-opacity="0.35" stroke-dasharray="4,4"/>
-            <line x1="250" y1="0" x2="250" y2="280" stroke="var(--pitch-green)" stroke-opacity="0.6" stroke-width="1.5"/>
-            <line x1="375" y1="0" x2="375" y2="280" stroke="var(--pitch-green)" stroke-opacity="0.35" stroke-dasharray="4,4"/>
-            <line x1="0" y1="70" x2="500" y2="70" stroke="var(--pitch-green)" stroke-opacity="0.35" stroke-dasharray="4,4"/>
-            <line x1="0" y1="140" x2="500" y2="140" stroke="var(--pitch-green)" stroke-opacity="0.6" stroke-width="1.5"/>
-            <line x1="0" y1="210" x2="500" y2="210" stroke="var(--pitch-green)" stroke-opacity="0.35" stroke-dasharray="4,4"/>
-            <circle cx="250" cy="140" r="40" fill="none" stroke="var(--pitch-green)" stroke-opacity="0.6" stroke-width="1.5"/>
-            <text x="250" y="144" fill="#f8fafc" font-size="11.5" font-weight="600" text-anchor="middle">中场控制核心区 (菱形接应)</text>
-          </svg>
-        </div>
+      <div class="card" style="border-left: 4px solid var(--accent-gold);">
+        <div class="card-title gold">📐 16 区域空间网格控制纪律</div>
+        <p id="foundations-grid">
+          同一方格内严禁出现两名本方队员；全队保持 5~10 米黄金呼应间距，形成菱形与三角形接应网。
+        </p>
       </div>
     </div>
 
-    <!-- VIEW 05: 临场破局速查与呼应暗号 -->
+    <!-- VIEW 05: 临场破局与暗号 -->
     <div id="view-decisions" class="view-container">
       <div class="section-header">
-        <h2>模块 05 · 临场破局速查与呼应暗号 (Matchday Crisis Solver)</h2>
-        <p>面对高位逼抢、低位铁桶与中场绞杀的实时交互式战术解药；点击场景即时获取破局组合拳与实战暗号。</p>
+        <h2>模块 05 · 临场破局决策速查与呼应暗号 (Crisis Solver & Voice Cues)</h2>
+        <p>比赛现场应对不同防守态势的快速调整对策，以及统一全队默契的 8 大简短口令。</p>
       </div>
 
       <div class="crisis-tabs" id="crisis-tabs-container">
         <!-- Rendered by JS -->
       </div>
 
-      <div class="crisis-dashboard-card" id="crisis-dashboard-content">
+      <div class="crisis-dashboard-card" id="crisis-content-box">
         <!-- Rendered by JS -->
       </div>
 
-      <div style="margin-top: 30px;">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
-          <h3 style="font-size: 17px; color: var(--text-main); font-weight: 800; display: flex; align-items: center; gap: 8px;">
-            📢 全队 8 大赛场呼应暗号速查盘 (8 Core Communication Codes)
-          </h3>
-          <span style="font-size: 12px; color: var(--pitch-green); font-weight: 600;">全队语言统一 · 消除 0.5 秒犹豫时延</span>
-        </div>
-
-        <div class="grid-4" id="callouts-grid">
-          <!-- Rendered by JS -->
-        </div>
+      <div class="section-header" style="margin-top: 32px;">
+        <h2>🎙️ 场上统一 8 大呼应口令 (Voice Cues)</h2>
+        <p>短促、明确、高穿透力，杜绝球场上的信息静默。</p>
+      </div>
+      <div class="grid-4" id="callouts-grid">
+        <!-- Rendered by JS -->
       </div>
     </div>
 
   </main>
 
-  <!-- Global Lightbox Zoom Viewer -->
-  <div id="lightbox-modal" class="lightbox-modal" onclick="closeLightbox(event)">
-    <div class="lightbox-controls" onclick="event.stopPropagation()">
-      <span class="lightbox-title-badge" id="lightbox-title">战术动图放大观察</span>
-      <div style="display: flex; gap: 8px;">
-        <button class="lb-btn" onclick="zoomIn()">➕ 放大</button>
-        <button class="lb-btn" onclick="zoomOut()">➖ 缩小</button>
-        <button class="lb-btn" onclick="resetZoom()">⟲ 还原</button>
-        <button class="lb-btn close" onclick="closeLightboxDirect()">✕ 关闭 [ESC]</button>
-      </div>
+  <!-- Global Lightbox Modal -->
+  <div id="custom-lightbox" class="lightbox-modal" onclick="closeLightbox(event)">
+    <div class="lightbox-controls">
+      <span class="lightbox-title-badge" id="lb-title">战术沙盘放大研判</span>
+      <button class="lb-btn" onclick="zoomIn()">➕ 放大</button>
+      <button class="lb-btn" onclick="zoomOut()">➖ 缩小</button>
+      <button class="lb-btn" onclick="resetZoom()">↺ 1:1还原</button>
+      <button class="lb-btn close" onclick="closeLightboxDirect()">✕ 关闭 (ESC)</button>
     </div>
-    <div class="lightbox-viewport" id="lb-viewport" onclick="event.stopPropagation()">
-      <img id="lightbox-img" src="" alt="战术放大图">
+    <div class="lightbox-viewport" id="lb-viewport">
+      <img id="lightbox-img" src="" alt="放大战术图">
     </div>
-    <div class="lightbox-hint">💡 滚轮缩放 | 按住拖拽平移 | 双击切换 1x/2x | ESC 退出</div>
+    <div class="lightbox-hint">💡 提示：按住鼠标左键可拖动画布 · 滚动鼠标滚轮缩放 · 双击快速切换 2x / 1x</div>
   </div>
 
-  <!-- Quick Weapon Pop-up Modal -->
+  <!-- Quick Weapon Pop-up Modal (From Doctrines) -->
   <div id="weapon-modal" class="weapon-modal-overlay" onclick="closeWeaponModal(event)">
-    <div class="weapon-modal-card" onclick="event.stopPropagation()">
+    <div class="weapon-modal-card">
       <div class="weapon-modal-head">
         <div>
-          <span class="weapon-badge" id="wmodal-num">W 01</span>
-          <strong style="font-size: 17px; margin-left: 8px; color: var(--text-main);" id="wmodal-name">直塞穿透球</strong>
+          <span class="weapon-badge" id="wmodal-num">W01</span>
+          <strong style="margin-left: 8px; font-size: 15px;" id="wmodal-name">直塞穿透球</strong>
         </div>
         <button class="weapon-modal-btn-close" onclick="closeWeaponModalDirect()">✕</button>
       </div>
-      <div class="anim-display" style="min-height: 220px; max-height: 240px; margin-bottom: 12px;">
-        <img id="wmodal-gif" src="" alt="武器动图" style="max-height: 230px;">
+      <div style="background:#000; border-radius:8px; overflow:hidden; margin-bottom:12px; border:1px solid var(--border-subtle); display:flex; justify-content:center;">
+        <img id="wmodal-gif" src="" alt="武器动图" style="max-height: 220px; width: 100%; object-fit: contain;">
       </div>
-      <div style="font-size: 13px; color: var(--text-sub); line-height: 1.55; margin-bottom: 12px;" id="wmodal-desc"></div>
-      <div style="display: flex; justify-content: space-between; align-items: center;">
-        <span style="font-size: 12px; color: var(--accent-cyan);" id="wmodal-callout"></span>
-        <button class="btn-action" onclick="jumpToWeaponFromModal()" style="font-size: 11.5px; padding: 4px 10px;">
-          前往武器点播台查看 →
-        </button>
+      <p style="font-size: 13px; line-height: 1.55; color: var(--text-sub); margin-bottom: 8px;" id="wmodal-desc"></p>
+      <div style="font-size: 12px; color: var(--accent-cyan); font-weight: 600;" id="wmodal-callout"></div>
+      <div style="margin-top: 14px; display: flex; justify-content: flex-end; gap: 8px;">
+        <button class="btn-action" onclick="jumpToWeaponFromModal()">🎯 在武器台点播此项</button>
       </div>
     </div>
   </div>
@@ -1876,6 +1940,7 @@
             </div>
             <div class="doctrine-anim-box" onclick="openCustomLightbox('${d.gif}', '${d.title}')">
               <img src="${d.gif}" alt="${d.title}" loading="lazy">
+              <div class="doctrine-overlay-cue">⚡ ${d.tag}</div>
             </div>
             <div class="doctrine-steps-list">
               <strong>时序逻辑：</strong>${d.steps}
@@ -1911,8 +1976,12 @@
       if (!tabsContainer) return;
       let html = '';
       weaponCategories.forEach((cat, idx) => {
-        const isActive = cat.id === currentCategory;
-        html += `<button class="cat-tab-btn ${isActive ? 'active' : ''}" onclick="switchCategory(${cat.id})">${cat.name}</button>`;
+        const catNum = idx + 1;
+        html += `
+          <button class="cat-tab-btn ${catNum === currentCategory ? 'active' : ''}" onclick="switchCategory(${catNum})">
+            ${cat.name} (${cat.count})
+          </button>
+        `;
       });
       tabsContainer.innerHTML = html;
     }
@@ -1934,15 +2003,24 @@
       let cardsHtml = '';
       weapons.forEach((w, idx) => {
         const isActive = idx === currentWeaponIndex;
+        const catClass = `cat-theme-${currentCategory}`;
         cardsHtml += `
-          <div class="weapon-select-card ${isActive ? 'active' : ''}" onclick="selectWeapon(${idx})">
-            <div class="weapon-card-head">
-              <span class="weapon-badge">${w.num}</span>
-              <span class="weapon-en">${w.en}</span>
+          <div class="weapon-select-card ${catClass} ${isActive ? 'active' : ''}" onclick="selectWeapon(${idx})">
+            <div class="weapon-card-flex-wrapper">
+              <div class="weapon-thumb-box">
+                <img src="${w.gif}" alt="${w.name}" loading="lazy">
+                <span class="weapon-thumb-badge">${w.num}</span>
+              </div>
+              <div class="weapon-card-content">
+                <div class="weapon-card-head">
+                  <div class="weapon-name">${w.name}</div>
+                  <span class="weapon-en">${w.en}</span>
+                </div>
+                <div class="weapon-tag-pill">${w.tag}</div>
+                <div class="weapon-body">${w.desc}</div>
+                <div class="weapon-callout">${w.callout}</div>
+              </div>
             </div>
-            <div class="weapon-name">${w.name}</div>
-            <div class="weapon-body">${w.desc}</div>
-            <div class="weapon-callout">${w.callout}</div>
           </div>
         `;
       });
@@ -1979,9 +2057,15 @@
       document.querySelectorAll('.switcher-pill').forEach(p => p.classList.remove('active'));
       event.target.classList.add('active');
 
+      const pImg = document.getElementById('player-gif');
+      if (pImg) {
+        pImg.style.opacity = '0.35';
+        pImg.src = comboDatabase.gif;
+        setTimeout(() => { pImg.style.opacity = '1'; }, 180);
+      }
+
       document.getElementById('player-title').innerText = comboDatabase.title;
       document.getElementById('player-tag').innerText = comboDatabase.tag;
-      document.getElementById('player-gif').src = comboDatabase.gif;
       document.getElementById('player-details-title').innerText = comboDatabase.descTitle;
       document.getElementById('player-details-desc').innerText = comboDatabase.desc;
       document.getElementById('player-callout').innerText = comboDatabase.callout;
@@ -1990,9 +2074,16 @@
     function updatePlayerContent(w) {
       if (!w) return;
       if (isAnimPaused) toggleAnimPause();
+
+      const pImg = document.getElementById('player-gif');
+      if (pImg) {
+        pImg.style.opacity = '0.35';
+        pImg.src = w.gif;
+        setTimeout(() => { pImg.style.opacity = '1'; }, 180);
+      }
+
       document.getElementById('player-title').innerText = `${w.num} · ${w.name} (${w.en})`;
       document.getElementById('player-tag').innerText = w.tag;
-      document.getElementById('player-gif').src = w.gif;
       document.getElementById('player-details-title').innerText = "📌 技术要领与微观执行";
       document.getElementById('player-details-desc').innerText = w.desc;
       document.getElementById('player-callout').innerText = w.callout;
@@ -2045,364 +2136,380 @@
     }
 
     // ==========================================
-    // 3. Module 04: Formations, Chalkboard & Pitch
+    // Tactical GIF Player Enhancements (Freeze, Speed, Grid, 3-Phase)
     // ==========================================
-    let currentBoardMode = 'drag'; // 'drag' | 'pass' | 'run' | 'dribble' | 'press'
+    let isAnimPaused = false;
+    let isSpeedSlow = false;
+    let isGridVisible = false;
+
+    function toggleAnimPause(e) {
+      if (e) e.stopPropagation();
+      const img = document.getElementById('player-gif');
+      const canvas = document.getElementById('freeze-canvas');
+      const btn = document.getElementById('btn-anim-pause');
+      const badge = document.getElementById('anim-phase-badge');
+
+      if (!isAnimPaused) {
+        canvas.width = img.clientWidth || 640;
+        canvas.height = img.clientHeight || 480;
+        const ctx = canvas.getContext('2d');
+        try {
+          ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+          canvas.style.display = 'block';
+          img.style.visibility = 'hidden';
+          isAnimPaused = true;
+          btn.classList.add('active');
+          btn.innerHTML = '▶️ 继续演练';
+          badge.innerText = '⏸️ 画面已定格研判 (空间坐标锁定)';
+          badge.style.color = 'var(--accent-gold)';
+        } catch (err) {
+          console.warn("Freeze canvas unavailable:", err);
+        }
+      } else {
+        canvas.style.display = 'none';
+        img.style.visibility = 'visible';
+        isAnimPaused = false;
+        btn.classList.remove('active');
+        btn.innerHTML = '⏸️ 定格研判';
+        badge.innerText = '▶️ 动态演练中 · 循环播放';
+        badge.style.color = 'var(--pitch-green)';
+      }
+    }
+
+    function toggleAnimSpeed(e) {
+      if (e) e.stopPropagation();
+      const btn = document.getElementById('btn-anim-speed');
+      isSpeedSlow = !isSpeedSlow;
+      if (isSpeedSlow) {
+        btn.classList.add('active');
+        btn.innerHTML = '⏱️ 1.0x正常';
+        document.getElementById('anim-phase-badge').innerText = '⏳ 0.5x慢放微观观察中';
+      } else {
+        btn.classList.remove('active');
+        btn.innerHTML = '⏱️ 0.5x慢放';
+        document.getElementById('anim-phase-badge').innerText = '▶️ 动态演练中 · 循环播放';
+      }
+    }
+
+    function toggleAnimGrid(e) {
+      if (e) e.stopPropagation();
+      const svg = document.getElementById('anim-grid-overlay');
+      const btn = document.getElementById('btn-anim-grid');
+      isGridVisible = !isGridVisible;
+      if (isGridVisible) {
+        svg.style.display = 'block';
+        btn.classList.add('active');
+      } else {
+        svg.style.display = 'none';
+        btn.classList.remove('active');
+      }
+    }
+
+    function focusActionPhase(phaseIdx, e) {
+      if (e) e.stopPropagation();
+      document.querySelectorAll('.phase-step-btn').forEach((btn, idx) => {
+        btn.classList.toggle('active', idx === phaseIdx);
+      });
+      const badge = document.getElementById('anim-phase-badge');
+      const phases = [
+        '① 准备身位：45°半侧身盲区扫描锁定',
+        '② 触球主动作：支撑脚稳固与脚法发力',
+        '③ 动作衔接：出球后0.5秒二次跑动接应'
+      ];
+      badge.innerText = `🔍 重点研习：${phases[phaseIdx]}`;
+      badge.style.color = 'var(--accent-cyan)';
+
+      if (!isAnimPaused) {
+        toggleAnimPause();
+      }
+    }
+
+    // ==========================================
+    // 3. Module 04: Formations & Interactive Pitch Board
+    // ==========================================
+    const defaultFormationCoords = JSON.parse(JSON.stringify(formationDatabase));
     let chalkboardStrokes = [];
-    let isDrawingOnBoard = false;
-    let drawStartX = 0, drawStartY = 0;
+    let currentBoardMode = 'drag';
+    let isDrawing = false;
+    let currentStroke = null;
     let isPitchGridVisible = false;
     let activeScenario = 'standard';
 
-    // Deep clone initial coordinates for resetting
-    const defaultFormationCoords = JSON.parse(JSON.stringify(formationDatabase));
-
     function initFormationTabs() {
-      const navContainer = document.getElementById('formation-nav-container');
-      if (!navContainer) return;
+      const container = document.getElementById('formation-nav-container');
+      if (!container) return;
       let html = '';
-      const keys = Object.keys(formationDatabase);
-      keys.forEach((key, idx) => {
+      Object.keys(formationDatabase).forEach(key => {
         const form = formationDatabase[key];
         const isActive = key === currentFormationKey;
-        html += `<button class="formation-tab-btn ${isActive ? 'active' : ''}" onclick="switchFormation('${key}')">${form.name.split(' ')[0]} ${form.name.split(' ')[1]}</button>`;
+        html += `
+          <button class="formation-tab-btn ${isActive ? 'active' : ''}" onclick="switchFormation('${key}')">
+            ${form.name}
+          </button>
+        `;
       });
-      navContainer.innerHTML = html;
+      container.innerHTML = html;
     }
 
-    function switchFormation(formKey) {
-      currentFormationKey = formKey;
-      currentSelectedPlayerIdx = (formKey === '1331' ? 5 : 3);
+    function switchFormation(key) {
+      currentFormationKey = key;
+      currentSelectedPlayerIdx = 0;
       activeScenario = 'standard';
       updateScenarioPills('standard');
-      document.querySelectorAll('.formation-tab-btn').forEach((btn, idx) => {
-        const keys = Object.keys(formationDatabase);
-        btn.classList.toggle('active', keys[idx] === formKey);
-      });
       chalkboardStrokes = [];
-      redrawChalkboard();
+
+      document.querySelectorAll('.formation-tab-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.innerText.includes(formationDatabase[key].name));
+      });
+
       renderInteractivePitch();
+      redrawChalkboard();
     }
 
     function renderInteractivePitch() {
       const form = formationDatabase[currentFormationKey];
       if (!form) return;
-      document.getElementById('pitch-formation-title').innerText = form.name;
+
+      document.getElementById('pitch-formation-title').innerText = `${form.name} 战术落位`;
       document.getElementById('pitch-formation-tag').innerText = form.tag;
 
-      const layer = document.getElementById('pitch-players-layer');
-      let nodesHtml = '';
+      const layer = document.getElementById('player-nodes-layer');
+      layer.innerHTML = '';
+
       form.players.forEach((p, idx) => {
-        const isActive = idx === currentSelectedPlayerIdx;
-        nodesHtml += `
-          <div class="player-node ${isActive ? 'active' : ''}" id="player-node-${idx}" style="left: ${p.x}%; top: ${p.y}%;">
-            <span class="player-node-num">${p.num}</span>
-            <span class="player-node-label">${p.pos}</span>
-          </div>
+        const node = document.createElement('div');
+        node.className = `player-node ${idx === currentSelectedPlayerIdx ? 'active' : ''}`;
+        node.style.left = `${p.x}%`;
+        node.style.top = `${p.y}%`;
+        node.id = `player-node-${idx}`;
+        node.setAttribute('data-idx', idx);
+
+        node.innerHTML = `
+          <div class="player-node-num">${p.num}</div>
+          <div class="player-node-label">${p.name}</div>
         `;
-      });
-      layer.innerHTML = nodesHtml;
 
-      // Attach draggable handlers
-      form.players.forEach((p, idx) => {
-        const node = document.getElementById(`player-node-${idx}`);
-        if (node) makePlayerDraggable(node, idx);
+        node.addEventListener('click', (e) => {
+          if (currentBoardMode === 'drag') {
+            e.stopPropagation();
+            selectPitchPlayer(idx);
+          }
+        });
+
+        setupPlayerDraggable(node, idx);
+        layer.appendChild(node);
       });
 
-      renderPlayerRoleCard(form.players[currentSelectedPlayerIdx]);
+      updateRoleDetails(form.players[currentSelectedPlayerIdx]);
       initPitchChalkboard();
     }
 
-    function selectFormationPlayer(idx) {
+    function selectPitchPlayer(idx) {
       currentSelectedPlayerIdx = idx;
+      document.querySelectorAll('.player-node').forEach((n, i) => n.classList.toggle('active', i === idx));
       const form = formationDatabase[currentFormationKey];
-      document.querySelectorAll('.player-node').forEach((node, i) => node.classList.toggle('active', i === idx));
-      renderPlayerRoleCard(form.players[idx]);
+      if (form && form.players[idx]) {
+        updateRoleDetails(form.players[idx]);
+      }
     }
 
-    function renderPlayerRoleCard(p) {
-      if (!p) return;
-      document.getElementById('role-title').innerText = `${p.num}号 ${p.name}`;
-      document.getElementById('role-code').innerText = p.code;
-      document.getElementById('role-num-badge').innerText = `No. ${p.num}`;
-      document.getElementById('role-duty').innerText = p.duty;
-      document.getElementById('role-pre').innerText = p.pre;
-      document.getElementById('role-main').innerText = p.main;
-      document.getElementById('role-post').innerText = p.post;
-      document.getElementById('role-weapons').innerText = p.weapons;
-      document.getElementById('role-callout').innerText = p.callout;
+    function updateRoleDetails(player) {
+      if (!player) return;
+      document.getElementById('role-title').innerText = `${player.num}号 · ${player.name}`;
+      document.getElementById('role-en').innerText = player.en;
+      document.getElementById('role-number-badge').innerText = `#${player.num} ${player.pos.toUpperCase()}`;
+      document.getElementById('role-duty').innerText = player.duty;
+
+      const g = player.guide || {};
+      document.getElementById('role-step-pre').innerText = g.pre || '观察身后盲区，半侧身面向进攻方向。';
+      document.getElementById('role-step-main').innerText = g.main || '第一脚向前顺球，根据压迫快速决策。';
+      document.getElementById('role-step-post').innerText = g.post || '传球后立即二次前插或构建回敲保护三角。';
+
+      document.getElementById('role-weapons').innerText = (player.weapons || []).join(' · ') || 'W01直塞球, W06一脚出球';
+      document.getElementById('role-voice-cue').innerText = player.voiceCue ? `“${player.voiceCue}”` : '“给我身后！”';
     }
 
-    // --- Draggable Player Nodes ---
-    function makePlayerDraggable(node, playerIdx) {
-      let isDragging = false;
-      let startX = 0, startY = 0;
-      let origPctX = 0, origPctY = 0;
-      let movedDistance = 0;
+    // Drag-and-Drop for Player Nodes
+    function setupPlayerDraggable(el, playerIdx) {
+      let isDraggingNode = false;
+      let startX, startY;
+      let originalLeft, originalTop;
 
-      const onStart = (e) => {
+      const onPointerDown = (e) => {
         if (currentBoardMode !== 'drag') return;
-        isDragging = true;
-        movedDistance = 0;
-        node.classList.add('dragging');
-        const clientX = e.touches ? e.touches[0].clientX : e.clientX;
-        const clientY = e.touches ? e.touches[0].clientY : e.clientY;
-        startX = clientX;
-        startY = clientY;
-        const form = formationDatabase[currentFormationKey];
-        origPctX = form.players[playerIdx].x;
-        origPctY = form.players[playerIdx].y;
+        isDraggingNode = true;
+        el.classList.add('dragging');
+        el.setPointerCapture(e.pointerId);
+
+        const pitchRect = document.getElementById('tactical-pitch').getBoundingClientRect();
+        startX = e.clientX;
+        startY = e.clientY;
+        originalLeft = parseFloat(el.style.left);
+        originalTop = parseFloat(el.style.top);
         e.stopPropagation();
       };
 
-      const onMove = (e) => {
-        if (!isDragging) return;
-        const clientX = e.touches ? e.touches[0].clientX : e.clientX;
-        const clientY = e.touches ? e.touches[0].clientY : e.clientY;
-        const dx = clientX - startX;
-        const dy = clientY - startY;
-        movedDistance += Math.abs(dx) + Math.abs(dy);
+      const onPointerMove = (e) => {
+        if (!isDraggingNode) return;
+        const pitch = document.getElementById('tactical-pitch');
+        const pitchRect = pitch.getBoundingClientRect();
 
-        const pitch = document.getElementById('interactive-pitch');
-        const rect = pitch.getBoundingClientRect();
-        const dPctX = (dx / rect.width) * 100;
-        const dPctY = (dy / rect.height) * 100;
+        const deltaX = ((e.clientX - startX) / pitchRect.width) * 100;
+        const deltaY = ((e.clientY - startY) / pitchRect.height) * 100;
 
-        let newX = Math.max(4, Math.min(96, Math.round((origPctX + dPctX) * 10) / 10));
-        let newY = Math.max(4, Math.min(96, Math.round((origPctY + dPctY) * 10) / 10));
+        let newX = Math.max(5, Math.min(95, originalLeft + deltaX));
+        let newY = Math.max(5, Math.min(95, originalTop + deltaY));
+
+        el.style.left = `${newX.toFixed(1)}%`;
+        el.style.top = `${newY.toFixed(1)}%`;
 
         const form = formationDatabase[currentFormationKey];
-        form.players[playerIdx].x = newX;
-        form.players[playerIdx].y = newY;
-        node.style.left = newX + '%';
-        node.style.top = newY + '%';
-        if (e.cancelable) e.preventDefault();
-      };
-
-      const onEnd = () => {
-        if (!isDragging) return;
-        isDragging = false;
-        node.classList.remove('dragging');
-        if (movedDistance < 6) {
-          selectFormationPlayer(playerIdx);
+        if (form && form.players[playerIdx]) {
+          form.players[playerIdx].x = parseFloat(newX.toFixed(1));
+          form.players[playerIdx].y = parseFloat(newY.toFixed(1));
         }
       };
 
-      node.addEventListener('mousedown', onStart);
-      window.addEventListener('mousemove', onMove);
-      window.addEventListener('mouseup', onEnd);
+      const onPointerUp = (e) => {
+        if (!isDraggingNode) return;
+        isDraggingNode = false;
+        el.classList.remove('dragging');
+        try { el.releasePointerCapture(e.pointerId); } catch(err){}
+        selectPitchPlayer(playerIdx);
+      };
 
-      node.addEventListener('touchstart', onStart, { passive: false });
-      window.addEventListener('touchmove', onMove, { passive: false });
-      window.addEventListener('touchend', onEnd);
+      el.addEventListener('pointerdown', onPointerDown);
+      el.addEventListener('pointermove', onPointerMove);
+      el.addEventListener('pointerup', onPointerUp);
+      el.addEventListener('pointercancel', onPointerUp);
     }
 
-    // --- Chalkboard Mode & Tools ---
+    // Tactical Chalkboard Drawing System
+    function initPitchChalkboard() {
+      const canvas = document.getElementById('pitch-chalkboard');
+      const pitch = document.getElementById('tactical-pitch');
+      if (!canvas || !pitch) return;
+
+      canvas.width = pitch.clientWidth;
+      canvas.height = pitch.clientHeight;
+      redrawChalkboard();
+
+      canvas.onpointerdown = startStroke;
+      canvas.onpointermove = drawStroke;
+      canvas.onpointerup = endStroke;
+      canvas.onpointercancel = endStroke;
+    }
+
     function setBoardMode(mode) {
       currentBoardMode = mode;
-      document.querySelectorAll('.tool-btn').forEach(btn => btn.classList.remove('active'));
-      const activeBtn = document.getElementById(`tool-mode-${mode}`);
-      if (activeBtn) activeBtn.classList.add('active');
-
-      const pitch = document.getElementById('interactive-pitch');
+      const pitch = document.getElementById('tactical-pitch');
       pitch.classList.remove('mode-drag', 'mode-draw');
+
       if (mode === 'drag') {
         pitch.classList.add('mode-drag');
       } else {
         pitch.classList.add('mode-draw');
       }
+
+      document.querySelectorAll('.chalkboard-toolbar .tool-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.id === `tool-mode-${mode}`);
+      });
     }
 
-    function initPitchChalkboard() {
+    function getStrokeStyle(mode) {
+      switch(mode) {
+        case 'pass': return { color: '#fbbf24', width: 3, dashed: [6, 4] };     // 黄色虚线：传球
+        case 'run': return { color: '#22c55e', width: 3, dashed: [] };           // 荧光绿实线：跑位
+        case 'dribble': return { color: '#38bdf8', width: 3, dashed: [2, 3] };   // 蓝波浪：带球推进
+        case 'press': return { color: '#ef4444', width: 3.5, dashed: [] };       // 鲜红箭头：压迫
+        default: return { color: '#ffffff', width: 2, dashed: [] };
+      }
+    }
+
+    function startStroke(e) {
+      if (currentBoardMode === 'drag') return;
       const canvas = document.getElementById('pitch-chalkboard');
-      const pitch = document.getElementById('interactive-pitch');
-      if (!canvas || !pitch) return;
+      const rect = canvas.getBoundingClientRect();
+      isDrawing = true;
+      currentStroke = {
+        mode: currentBoardMode,
+        points: [{ x: e.clientX - rect.left, y: e.clientY - rect.top }]
+      };
+      canvas.setPointerCapture(e.pointerId);
+    }
 
-      const rect = pitch.getBoundingClientRect();
-      const dpr = window.devicePixelRatio || 1;
-      canvas.width = rect.width * dpr;
-      canvas.height = rect.height * dpr;
-      canvas.style.width = rect.width + 'px';
-      canvas.style.height = rect.height + 'px';
+    function drawStroke(e) {
+      if (!isDrawing || !currentStroke) return;
+      const canvas = document.getElementById('pitch-chalkboard');
+      const rect = canvas.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
 
-      const ctx = canvas.getContext('2d');
-      ctx.scale(dpr, dpr);
+      currentStroke.points.push({ x, y });
       redrawChalkboard();
 
-      if (canvas._hasEvents) return;
-      canvas._hasEvents = true;
+      const ctx = canvas.getContext('2d');
+      renderSingleStroke(ctx, currentStroke);
+    }
 
-      const getPos = (e) => {
-        const cRect = canvas.getBoundingClientRect();
-        const clientX = e.touches ? e.touches[0].clientX : e.clientX;
-        const clientY = e.touches ? e.touches[0].clientY : e.clientY;
-        return {
-          x: clientX - cRect.left,
-          y: clientY - cRect.top
-        };
-      };
+    function endStroke(e) {
+      if (!isDrawing) return;
+      isDrawing = false;
+      const canvas = document.getElementById('pitch-chalkboard');
+      try { canvas.releasePointerCapture(e.pointerId); } catch(err){}
 
-      const startDraw = (e) => {
-        if (currentBoardMode === 'drag') return;
-        isDrawingOnBoard = true;
-        const pos = getPos(e);
-        drawStartX = pos.x;
-        drawStartY = pos.y;
-        e.stopPropagation();
-        if (e.cancelable) e.preventDefault();
-      };
+      if (currentStroke && currentStroke.points.length > 2) {
+        chalkboardStrokes.push(currentStroke);
+      }
+      currentStroke = null;
+      redrawChalkboard();
+    }
 
-      const moveDraw = (e) => {
-        if (!isDrawingOnBoard || currentBoardMode === 'drag') return;
-        const pos = getPos(e);
-        redrawChalkboard();
-        // Preview active line
-        const ctx2 = canvas.getContext('2d');
-        drawTacticalArrow(ctx2, {
-          type: currentBoardMode,
-          x1: drawStartX,
-          y1: drawStartY,
-          x2: pos.x,
-          y2: pos.y
-        });
-        if (e.cancelable) e.preventDefault();
-      };
+    function renderSingleStroke(ctx, stroke) {
+      const pts = stroke.points;
+      if (!pts || pts.length < 2) return;
+      const style = getStrokeStyle(stroke.mode);
 
-      const endDraw = (e) => {
-        if (!isDrawingOnBoard || currentBoardMode === 'drag') return;
-        isDrawingOnBoard = false;
-        const clientX = e.changedTouches ? e.changedTouches[0].clientX : (e.touches ? e.touches[0].clientX : e.clientX);
-        const clientY = e.changedTouches ? e.changedTouches[0].clientY : (e.touches ? e.touches[0].clientY : e.clientY);
-        const cRect = canvas.getBoundingClientRect();
-        const endX = clientX - cRect.left;
-        const endY = clientY - cRect.top;
-        const dist = Math.hypot(endX - drawStartX, endY - drawStartY);
-        if (dist > 10) {
-          chalkboardStrokes.push({
-            type: currentBoardMode,
-            x1: drawStartX,
-            y1: drawStartY,
-            x2: endX,
-            y2: endY
-          });
-        }
-        redrawChalkboard();
-      };
+      ctx.save();
+      ctx.beginPath();
+      ctx.strokeStyle = style.color;
+      ctx.lineWidth = style.width;
+      ctx.lineCap = 'round';
+      ctx.lineJoin = 'round';
+      if (style.dashed.length) ctx.setLineDash(style.dashed);
 
-      canvas.addEventListener('mousedown', startDraw);
-      window.addEventListener('mousemove', moveDraw);
-      window.addEventListener('mouseup', endDraw);
+      ctx.moveTo(pts[0].x, pts[0].y);
+      for (let i = 1; i < pts.length; i++) {
+        ctx.lineTo(pts[i].x, pts[i].y);
+      }
+      ctx.stroke();
 
-      canvas.addEventListener('touchstart', startDraw, { passive: false });
-      window.addEventListener('touchmove', moveDraw, { passive: false });
-      window.addEventListener('touchend', endDraw);
+      // Draw Arrow Head at the end
+      const lastPt = pts[pts.length - 1];
+      const prevPt = pts[Math.max(0, pts.length - 4)];
+      const angle = Math.atan2(lastPt.y - prevPt.y, lastPt.x - prevPt.x);
+      const headLen = 12;
+
+      ctx.setLineDash([]);
+      ctx.fillStyle = style.color;
+      ctx.beginPath();
+      ctx.moveTo(lastPt.x, lastPt.y);
+      ctx.lineTo(lastPt.x - headLen * Math.cos(angle - Math.PI / 6), lastPt.y - headLen * Math.sin(angle - Math.PI / 6));
+      ctx.lineTo(lastPt.x - headLen * Math.cos(angle + Math.PI / 6), lastPt.y - headLen * Math.sin(angle + Math.PI / 6));
+      ctx.closePath();
+      ctx.fill();
+      ctx.restore();
     }
 
     function redrawChalkboard() {
       const canvas = document.getElementById('pitch-chalkboard');
       if (!canvas) return;
       const ctx = canvas.getContext('2d');
-      ctx.save();
-      ctx.setTransform(1, 0, 0, 1, 0, 0);
       ctx.clearRect(0, 0, canvas.width, canvas.height);
-      ctx.restore();
 
-      const dpr = window.devicePixelRatio || 1;
       chalkboardStrokes.forEach(stroke => {
-        drawTacticalArrow(ctx, stroke);
+        renderSingleStroke(ctx, stroke);
       });
-    }
-
-    function drawTacticalArrow(ctx, stroke) {
-      const { type, x1, y1, x2, y2 } = stroke;
-      const dx = x2 - x1;
-      const dy = y2 - y1;
-      const dist = Math.hypot(dx, dy);
-      if (dist < 4) return;
-      const angle = Math.atan2(dy, dx);
-      const headLen = 13;
-
-      ctx.save();
-      if (type === 'pass') {
-        // 🟡 传球虚线 (Passing Line)
-        ctx.strokeStyle = '#fbbf24';
-        ctx.fillStyle = '#fbbf24';
-        ctx.lineWidth = 3;
-        ctx.setLineDash([7, 5]);
-        ctx.beginPath();
-        ctx.moveTo(x1, y1);
-        ctx.lineTo(x2, y2);
-        ctx.stroke();
-        // Arrow Head
-        ctx.setLineDash([]);
-        ctx.beginPath();
-        ctx.moveTo(x2, y2);
-        ctx.lineTo(x2 - headLen * Math.cos(angle - Math.PI / 6), y2 - headLen * Math.sin(angle - Math.PI / 6));
-        ctx.lineTo(x2 - headLen * Math.cos(angle + Math.PI / 6), y2 - headLen * Math.sin(angle + Math.PI / 6));
-        ctx.closePath();
-        ctx.fill();
-      } else if (type === 'run') {
-        // 🟢 跑位实线 (Running Off the Ball)
-        ctx.strokeStyle = '#10b981';
-        ctx.fillStyle = '#10b981';
-        ctx.lineWidth = 3;
-        ctx.setLineDash([]);
-        ctx.beginPath();
-        ctx.moveTo(x1, y1);
-        ctx.lineTo(x2, y2);
-        ctx.stroke();
-        // Arrow Head
-        ctx.beginPath();
-        ctx.moveTo(x2, y2);
-        ctx.lineTo(x2 - headLen * Math.cos(angle - Math.PI / 6), y2 - headLen * Math.sin(angle - Math.PI / 6));
-        ctx.lineTo(x2 - headLen * Math.cos(angle + Math.PI / 6), y2 - headLen * Math.sin(angle + Math.PI / 6));
-        ctx.closePath();
-        ctx.fill();
-      } else if (type === 'dribble') {
-        // 🔵 盘带波浪曲线 (Dribbling Drive)
-        ctx.strokeStyle = '#38bdf8';
-        ctx.fillStyle = '#38bdf8';
-        ctx.lineWidth = 2.6;
-        ctx.setLineDash([]);
-        ctx.beginPath();
-        const steps = Math.max(10, Math.floor(dist / 6));
-        const perpX = -Math.sin(angle);
-        const perpY = Math.cos(angle);
-        for (let i = 0; i <= steps; i++) {
-          const t = i / steps;
-          const wave = Math.sin(t * Math.PI * 6) * 5;
-          const px = x1 + dx * t + perpX * wave;
-          const py = y1 + dy * t + perpY * wave;
-          if (i === 0) ctx.moveTo(px, py);
-          else ctx.lineTo(px, py);
-        }
-        ctx.stroke();
-        // Arrow Head
-        ctx.beginPath();
-        ctx.moveTo(x2, y2);
-        ctx.lineTo(x2 - headLen * Math.cos(angle - Math.PI / 6), y2 - headLen * Math.sin(angle - Math.PI / 6));
-        ctx.lineTo(x2 - headLen * Math.cos(angle + Math.PI / 6), y2 - headLen * Math.sin(angle + Math.PI / 6));
-        ctx.closePath();
-        ctx.fill();
-      } else if (type === 'press') {
-        // 🔴 逼抢压迫 (High Press)
-        ctx.strokeStyle = '#ef4444';
-        ctx.fillStyle = '#ef4444';
-        ctx.lineWidth = 3.5;
-        ctx.setLineDash([]);
-        ctx.beginPath();
-        ctx.moveTo(x1, y1);
-        ctx.lineTo(x2, y2);
-        ctx.stroke();
-        // Sharp Press Arrow
-        ctx.beginPath();
-        ctx.moveTo(x2, y2);
-        ctx.lineTo(x2 - headLen * Math.cos(angle - Math.PI / 5), y2 - headLen * Math.sin(angle - Math.PI / 5));
-        ctx.lineTo(x2 - headLen * Math.cos(angle + Math.PI / 5), y2 - headLen * Math.sin(angle + Math.PI / 5));
-        ctx.closePath();
-        ctx.fill();
-      }
-      ctx.restore();
     }
 
     function undoChalkboardStroke() {
@@ -2450,228 +2557,131 @@
       const form = formationDatabase[currentFormationKey];
       const defaults = defaultFormationCoords[currentFormationKey].players;
       const canvas = document.getElementById('pitch-chalkboard');
-      const rect = canvas ? canvas.getBoundingClientRect() : { width: 500, height: 480 };
-
-      // Helper to convert % to canvas px
-      const px = (pctX) => (pctX / 100) * rect.width;
-      const py = (pctY) => (pctY / 100) * rect.height;
+      const w = canvas ? canvas.width : 500;
+      const h = canvas ? canvas.height : 480;
 
       if (scenarioKey === 'standard') {
-        form.players = JSON.parse(JSON.stringify(defaults));
-      } else if (scenarioKey === 'high_press') {
-        // High Press (全队前压高位合围)
-        if (currentFormationKey === '1231') {
-          form.players[0].x = 50; form.players[0].y = 78; // GK 清道夫
-          form.players[1].x = 32; form.players[1].y = 50; // LCB
-          form.players[2].x = 68; form.players[2].y = 50; // RCB
-          form.players[3].x = 50; form.players[3].y = 32; // CM
-          form.players[4].x = 18; form.players[4].y = 20; // LM
-          form.players[5].x = 82; form.players[5].y = 20; // RM
-          form.players[6].x = 50; form.players[6].y = 11; // ST
-          // Add press arrows
-          chalkboardStrokes.push(
-            { type: 'press', x1: px(50), y1: py(20), x2: px(50), y2: py(8) },
-            { type: 'press', x1: px(25), y1: py(26), x2: px(35), y2: py(14) },
-            { type: 'press', x1: px(75), y1: py(26), x2: px(65), y2: py(14) }
-          );
-        } else if (currentFormationKey === '1321') {
-          form.players[0].x = 50; form.players[0].y = 80;
-          form.players[1].x = 16; form.players[1].y = 38;
-          form.players[2].x = 50; form.players[2].y = 56;
-          form.players[3].x = 84; form.players[3].y = 38;
-          form.players[4].x = 35; form.players[4].y = 26;
-          form.players[5].x = 65; form.players[5].y = 26;
-          form.players[6].x = 50; form.players[6].y = 12;
-          chalkboardStrokes.push(
-            { type: 'press', x1: px(40), y1: py(30), x2: px(48), y2: py(16) },
-            { type: 'press', x1: px(60), y1: py(30), x2: px(52), y2: py(16) }
-          );
-        }
-      } else if (scenarioKey === 'deep_buildup') {
-        // Deep Buildup (后场门将出球组织)
-        if (currentFormationKey === '1231') {
-          form.players[0].x = 50; form.players[0].y = 92; // GK
-          form.players[1].x = 22; form.players[1].y = 80; // LCB 拉大角度
-          form.players[2].x = 78; form.players[2].y = 80; // RCB 拉大角度
-          form.players[3].x = 50; form.players[3].y = 66; // CM 回撤要球
-          form.players[4].x = 12; form.players[4].y = 44; // LM 压边线
-          form.players[5].x = 88; form.players[5].y = 44; // RM 压边线
-          form.players[6].x = 50; form.players[6].y = 24; // ST
-          chalkboardStrokes.push(
-            { type: 'pass', x1: px(50), y1: py(90), x2: px(26), y2: py(80) },
-            { type: 'pass', x1: px(26), y1: py(78), x2: px(46), y2: py(67) },
-            { type: 'run', x1: px(50), y1: py(66), x2: px(50), y2: py(52) }
-          );
-        }
-      } else if (scenarioKey === 'flank_overload') {
-        // Flank Overload (右路强侧超载，左翼弱侧包抄)
-        if (currentFormationKey === '1231') {
-          form.players[0].x = 50; form.players[0].y = 86;
-          form.players[1].x = 35; form.players[1].y = 70;
-          form.players[2].x = 68; form.players[2].y = 66;
-          form.players[3].x = 62; form.players[3].y = 42; // CM 靠右
-          form.players[4].x = 14; form.players[4].y = 22; // LM 弱侧大空当
-          form.players[5].x = 86; form.players[5].y = 34; // RM 强侧
-          form.players[6].x = 68; form.players[6].y = 20; // ST 靠右做墙
-          chalkboardStrokes.push(
-            { type: 'pass', x1: px(68), y1: py(64), x2: px(84), y2: py(36) },
-            { type: 'pass', x1: px(84), y1: py(34), x2: px(66), y2: py(40) },
-            { type: 'pass', x1: px(64), y1: py(40), x2: px(18), y2: py(24) } // 大范围弱侧转移！
-          );
-        }
+        resetFormationPositions();
+        return;
+      }
+
+      if (scenarioKey === 'press') {
+        // 全体阵型前顶 15%~20%，前场形成围堵
+        form.players.forEach((p, idx) => {
+          const def = defaults[idx];
+          p.x = def.x;
+          p.y = Math.max(12, def.y - 18);
+        });
+        // 自动绘制压迫箭头
+        chalkboardStrokes.push({
+          mode: 'press',
+          points: [{ x: w * 0.5, y: h * 0.4 }, { x: w * 0.5, y: h * 0.2 }]
+        });
+        chalkboardStrokes.push({
+          mode: 'press',
+          points: [{ x: w * 0.25, y: h * 0.5 }, { x: w * 0.35, y: h * 0.35 }]
+        });
+        chalkboardStrokes.push({
+          mode: 'press',
+          points: [{ x: w * 0.75, y: h * 0.5 }, { x: w * 0.65, y: h * 0.35 }]
+        });
+      } else if (scenarioKey === 'lowblock') {
+        // 低位防守整体收缩回半场，间距紧凑
+        form.players.forEach((p, idx) => {
+          const def = defaults[idx];
+          p.x = 50 + (def.x - 50) * 0.7; // 横向压缩
+          p.y = Math.min(88, def.y + 16); // 纵向退守
+        });
+        chalkboardStrokes.push({
+          mode: 'run',
+          points: [{ x: w * 0.15, y: h * 0.75 }, { x: w * 0.85, y: h * 0.75 }]
+        });
+      } else if (scenarioKey === 'overload') {
+        // 强侧局部超载：全体向左侧(或右侧)倾斜聚集，制造 3v2
+        form.players.forEach((p, idx) => {
+          const def = defaults[idx];
+          if (def.x > 50) {
+            p.x = def.x - 22; // 弱侧适度内收
+          } else {
+            p.x = Math.max(10, def.x - 8); // 强侧超载
+          }
+          p.y = def.y;
+        });
+        // 弱侧转移大箭头
+        chalkboardStrokes.push({
+          mode: 'pass',
+          points: [{ x: w * 0.25, y: h * 0.5 }, { x: w * 0.5, y: h * 0.35 }, { x: w * 0.82, y: h * 0.38 }]
+        });
       }
 
       renderInteractivePitch();
       redrawChalkboard();
     }
 
-    function openFormationAnimLightbox() {
-      const form = formationDatabase[currentFormationKey];
-      openCustomLightbox(form.animGif, form.name + ' · 战术跑位沙盘');
-    }
-
-    // --- Tactical Animation Controller (Module 03 & Lightbox) ---
-    let isAnimPaused = false;
-    let isAnimGridVisible = false;
-    let isSlowMotion = false;
-
-    function toggleAnimPause(e) {
-      if (e) e.stopPropagation();
-      const gif = document.getElementById('player-gif');
-      const canvas = document.getElementById('freeze-canvas');
-      const btn = document.getElementById('btn-anim-pause');
-      const badge = document.getElementById('anim-phase-badge');
-      if (!gif || !canvas) return;
-
-      if (!isAnimPaused) {
-        canvas.width = gif.naturalWidth || gif.clientWidth || 400;
-        canvas.height = gif.naturalHeight || gif.clientHeight || 250;
-        const ctx = canvas.getContext('2d');
-        ctx.drawImage(gif, 0, 0, canvas.width, canvas.height);
-        gif.style.visibility = 'hidden';
-        canvas.style.display = 'block';
-        if (btn) {
-          btn.innerText = '▶️ 恢复播放';
-          btn.classList.add('active');
-        }
-        if (badge) {
-          badge.innerText = '⏸️ 已定格研判 · 观察微动作身位与出球提前量';
-          badge.style.color = 'var(--accent-gold)';
-        }
-        isAnimPaused = true;
-      } else {
-        canvas.style.display = 'none';
-        gif.style.visibility = 'visible';
-        if (btn) {
-          btn.innerText = '⏸️ 定格研判';
-          btn.classList.remove('active');
-        }
-        if (badge) {
-          badge.innerText = '▶️ 动态演练中 · 循环播放';
-          badge.style.color = 'var(--pitch-green)';
-        }
-        isAnimPaused = false;
-      }
-    }
-
-    function toggleAnimSpeed(e) {
-      if (e) e.stopPropagation();
-      isSlowMotion = !isSlowMotion;
-      const btn = document.getElementById('btn-anim-speed');
-      const badge = document.getElementById('anim-phase-badge');
-      if (btn) btn.classList.toggle('active', isSlowMotion);
-      if (badge) {
-        badge.innerText = isSlowMotion ? '⏱️ 0.5x 慢放观察模式 · 研判传球时机' : '▶️ 动态演练中 · 循环播放';
-      }
-    }
-
-    function toggleAnimGrid(e) {
-      if (e) e.stopPropagation();
-      isAnimGridVisible = !isAnimGridVisible;
-      const overlay = document.getElementById('anim-grid-overlay');
-      const btn = document.getElementById('btn-anim-grid');
-      if (overlay) overlay.style.display = isAnimGridVisible ? 'block' : 'none';
-      if (btn) btn.classList.toggle('active', isAnimGridVisible);
-    }
-
-    function focusActionPhase(phaseIdx, e) {
-      if (e) e.stopPropagation();
-      document.querySelectorAll('.phase-step-btn').forEach((btn, idx) => {
-        btn.classList.toggle('active', idx === phaseIdx);
-      });
-      if (!isAnimPaused) toggleAnimPause(e);
-      const badge = document.getElementById('anim-phase-badge');
-      const labels = [
-        '① 前动作：接球前 0.5 秒盲区扫描与半侧身',
-        '② 主动作：远离逼抢脚顺势外侧领球与精准低平出球',
-        '③ 后动作：传完即动二次启动，充当第三人'
-      ];
-      if (badge) {
-        badge.innerText = `🎯 聚焦：${labels[phaseIdx]}`;
-        badge.style.color = 'var(--accent-cyan)';
-      }
-    }
-
     // ==========================================
-    // 4. Module 05: Crisis Database & Callouts
+    // 4. Module 05: Crisis Solver & Matchday Callouts
     // ==========================================
     function initCrisisTabs() {
-      const container = document.getElementById('crisis-tabs-container');
-      if (!container) return;
+      const tabs = document.getElementById('crisis-tabs-container');
+      if (!tabs) return;
       let html = '';
-      const keys = Object.keys(crisisDatabase);
-      const iconMap = { 'press': '🚨', 'bus': '🧱', 'mid': '⚔️', 'late': '⏱️' };
-      keys.forEach((key, idx) => {
+      Object.keys(crisisDatabase).forEach(key => {
         const c = crisisDatabase[key];
         const isActive = key === currentCrisisKey;
-        html += `<button class="crisis-tab-btn ${isActive ? 'active' : ''}" onclick="switchCrisis('${key}')">${iconMap[key] || '⚡'} ${c.title.split('(')[0]}</button>`;
+        html += `
+          <button class="crisis-tab-btn ${isActive ? 'active' : ''}" onclick="switchCrisis('${key}')">
+            ${c.name}
+          </button>
+        `;
       });
-      container.innerHTML = html;
+      tabs.innerHTML = html;
     }
 
-    function switchCrisis(crisisKey) {
-      currentCrisisKey = crisisKey;
+    function switchCrisis(key) {
+      currentCrisisKey = key;
       document.querySelectorAll('.crisis-tab-btn').forEach(btn => {
-        btn.classList.toggle('active', btn.getAttribute('onclick').includes(crisisKey));
+        btn.classList.toggle('active', btn.innerText.includes(crisisDatabase[key].name));
       });
       renderCrisisDashboard();
     }
 
     function renderCrisisDashboard() {
       const c = crisisDatabase[currentCrisisKey];
-      if (!c) return;
-      const container = document.getElementById('crisis-dashboard-content');
+      const box = document.getElementById('crisis-content-box');
+      if (!c || !box) return;
+
       let weaponsHtml = '';
-      (c.weapons || []).forEach(w => {
-        weaponsHtml += `<span class="doctrine-weapon-pill" onclick="popWeaponModal('${w.id}')">${w.name}</span> `;
+      (c.recommendedWeapons || []).forEach(wId => {
+        const wObj = findWeaponById(wId);
+        const label = wObj ? `${wObj.num} ${wObj.name}` : wId.toUpperCase();
+        weaponsHtml += `<span class="doctrine-weapon-pill" onclick="popWeaponModal('${wId}')">${label}</span> `;
       });
 
-      container.innerHTML = `
+      box.innerHTML = `
         <div>
-          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
-            <div style="font-size: 18px; font-weight: 800; color: var(--text-main);">${c.title}</div>
-            <span class="doctrine-tag" style="background: rgba(248,113,113,0.15); color: var(--accent-red); border-color: rgba(248,113,113,0.3);">${c.tag}</span>
+          <div style="font-size: 17px; font-weight: 700; color: var(--accent-red); margin-bottom: 6px;">
+            ⚠️ 典型困局现象：${c.symptom}
           </div>
-          <div style="font-size: 13.5px; line-height: 1.6; color: var(--accent-red); font-weight: 600; margin-bottom: 14px; background: rgba(239,68,68,0.08); padding: 10px 14px; border-radius: 8px; border-left: 3px solid var(--accent-red);">
-            ${c.trap}
+          <p style="font-size: 13.5px; line-height: 1.6; color: var(--text-sub); margin-bottom: 14px;">
+            <strong>根本原因：</strong>${c.cause}
+          </p>
+          <div style="background: var(--bg-subsurface); border-left: 3px solid var(--accent-gold); padding: 12px 14px; border-radius: 0 8px 8px 0; margin-bottom: 14px;">
+            <div style="font-weight: 700; color: var(--accent-gold); font-size: 13.5px; margin-bottom: 4px;">🛠️ 立竿见影破解法：</div>
+            <div style="font-size: 13px; line-height: 1.6; color: var(--text-main);">${c.solution}</div>
           </div>
-          <div style="font-size: 13.5px; line-height: 1.7; color: var(--text-sub);">
-            ${c.antidote}
+          <div style="display: flex; align-items: center; gap: 6px; flex-wrap: wrap;">
+            <span style="font-size: 12px; font-weight: 600; color: var(--text-muted);">推荐激活武器库：</span>
+            ${weaponsHtml}
           </div>
         </div>
-        <div style="border-left: 1px solid var(--border-sub); padding-left: 20px; display: flex; flex-direction: column; justify-content: space-between;">
-          <div>
-            <div style="font-size: 13px; font-weight: 800; color: var(--accent-gold); margin-bottom: 10px;">
-              🛠️ 核心推荐破局武器 (点击查看要领):
-            </div>
-            <div style="display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 20px;">
-              ${weaponsHtml}
-            </div>
+
+        <div style="background: var(--bg-subsurface); border: 1px solid var(--border-subtle); border-radius: 10px; padding: 18px; display: flex; flex-direction: column; justify-content: center;">
+          <div style="font-size: 12px; color: var(--text-muted); font-weight: 700; text-transform: uppercase; margin-bottom: 6px;">现场教练与场上领袖高频口令</div>
+          <div style="font-size: 20px; font-weight: 800; color: var(--accent-cyan); line-height: 1.4; margin-bottom: 10px;">
+            “${c.calloutCue}”
           </div>
-          <div style="background: rgba(16,185,129,0.08); border: 1px solid rgba(16,185,129,0.25); border-radius: 8px; padding: 12px 14px;">
-            <div style="font-size: 13.5px; font-weight: 800; color: var(--pitch-green); line-height: 1.5;">
-              ${c.callout}
-            </div>
+          <div style="font-size: 12.5px; color: var(--text-sub); line-height: 1.5;">
+            口令意图：瞬间统一场上 7~8 人的传跑预期，避免持球队员在压力下犹豫出球酿成大祸。
           </div>
         </div>
       `;
@@ -2681,18 +2691,17 @@
       const container = document.getElementById('callouts-grid');
       if (!container) return;
       let html = '';
-      calloutsDatabase.forEach(co => {
+      calloutsDatabase.forEach(item => {
         html += `
           <div class="crisis-callout-card">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
-              <span style="font-size: 16px; font-weight: 900; color: var(--accent-cyan);">${co.code}</span>
-              <span style="font-size: 11px; color: var(--text-muted); font-weight: 600;">${co.en}</span>
+            <div style="font-size: 16px; font-weight: 800; color: var(--accent-gold); margin-bottom: 6px;">
+              “${item.cue}”
             </div>
-            <div style="font-size: 12px; color: var(--accent-gold); font-weight: 700; margin-bottom: 6px;">
-              🎯 触发：${co.scene}
+            <div style="font-size: 12px; color: var(--text-muted); font-weight: 600; margin-bottom: 6px;">
+              ${item.meaning}
             </div>
-            <div style="font-size: 12px; color: var(--text-sub); line-height: 1.5;">
-              ${co.act}
+            <div style="font-size: 12.5px; color: var(--text-sub); line-height: 1.5;">
+              ${item.action}
             </div>
           </div>
         `;
@@ -2701,45 +2710,74 @@
     }
 
     // ==========================================
-    // 5. Lightbox Controls
+    // Lightbox Modal Controls (Zoom, Pan, Fullscreen)
     // ==========================================
-    const lbModal = document.getElementById('lightbox-modal');
-    const lbImg = document.getElementById('lightbox-img');
-    const lbTitle = document.getElementById('lightbox-title');
-    const lbViewport = document.getElementById('lb-viewport');
-    let currentScale = 1;
+    let currentScale = 1.0;
     let isDragging = false;
-    let startX, startY, transX = 0, transY = 0;
+    let startX = 0, startY = 0;
+    let translateX = 0, translateY = 0;
+    const lbModal = document.getElementById('custom-lightbox');
+    const lbImg = document.getElementById('lightbox-img');
+    const lbViewport = document.getElementById('lb-viewport');
 
     function openPlayerLightbox() {
-      const currentGif = document.getElementById('player-gif').src;
-      const currentTitle = document.getElementById('player-title').innerText;
-      openCustomLightbox(currentGif, currentTitle);
+      const playerImg = document.getElementById('player-gif');
+      const title = document.getElementById('player-title').innerText;
+      openCustomLightbox(playerImg.src, title);
     }
+
     function openCustomLightbox(src, title) {
       lbImg.src = src;
-      lbTitle.innerText = `🔍 ${title || '战术动态沙盘'}`;
+      document.getElementById('lb-title').innerText = title || '战术研判沙盘';
+      currentScale = 1.0;
+      translateX = 0;
+      translateY = 0;
+      applyTransform();
       lbModal.classList.add('open');
-      resetZoom();
     }
-    function closeLightboxDirect() { lbModal.classList.remove('open'); }
-    function closeLightbox(e) { if (e.target === lbModal) closeLightboxDirect(); }
-    function applyTransform() { lbImg.style.transform = `scale(${currentScale}) translate(${transX}px, ${transY}px)`; }
-    function zoomIn() { currentScale = Math.min(3.8, currentScale + 0.3); applyTransform(); }
-    function zoomOut() { currentScale = Math.max(0.5, currentScale - 0.3); applyTransform(); }
-    function resetZoom() { currentScale = 1; transX = 0; transY = 0; applyTransform(); }
+
+    function closeLightboxDirect() {
+      lbModal.classList.remove('open');
+    }
+    function closeLightbox(e) {
+      if (e.target === lbModal || e.target === lbViewport) {
+        closeLightboxDirect();
+      }
+    }
+
+    function zoomIn() {
+      currentScale = Math.min(3.5, currentScale + 0.3);
+      applyTransform();
+    }
+    function zoomOut() {
+      currentScale = Math.max(0.6, currentScale - 0.3);
+      applyTransform();
+    }
+    function resetZoom() {
+      currentScale = 1.0;
+      translateX = 0;
+      translateY = 0;
+      applyTransform();
+    }
+    function applyTransform() {
+      lbImg.style.transform = `translate(${translateX}px, ${translateY}px) scale(${currentScale})`;
+    }
 
     lbViewport.addEventListener('wheel', (e) => {
       e.preventDefault();
-      if (e.deltaY < 0) currentScale = Math.min(3.8, currentScale + 0.18);
-      else currentScale = Math.max(0.5, currentScale - 0.18);
-      applyTransform();
+      if (e.deltaY < 0) zoomIn();
+      else zoomOut();
     });
+
     lbViewport.addEventListener('mousedown', (e) => {
-      isDragging = true; startX = e.clientX - transX; startY = e.clientY - transY;
+      if (currentScale > 1.05) {
+        isDragging = true;
+        startX = e.clientX - translateX;
+        startY = e.clientY - translateY;
+      }
     });
     window.addEventListener('mousemove', (e) => {
-      if (isDragging) { transX = e.clientX - startX; transY = e.clientY - startY; applyTransform(); }
+      if (isDragging) { translateX = e.clientX - startX; translateY = e.clientY - startY; applyTransform(); }
     });
     window.addEventListener('mouseup', () => { isDragging = false; });
     lbViewport.addEventListener('dblclick', () => {
