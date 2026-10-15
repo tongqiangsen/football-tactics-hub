@@ -1,0 +1,37 @@
+# Python virtual environments & packages (large binaries like ffmpeg, yt-dlp)
+.venv/
+venv/
+env/
+__pycache__/
+*.py
+*.pyc
+requirements.txt
+
+# External media & large videos
+assets/
+*.mp4
+*.mkv
+*.avi
+*.mov
+
+# Reference e-books & scanned documents
+*.pdf
+*.epub
+*.mobi
+*.azw3
+
+# Temporary debug inspection frames & high-res static cards
+inspect_gif_frames/
+inspect_pages/
+tactics_cards_hd/
+
+# WeChat Mini Program (deployed separately)
+miniprogram/
+
+# Git and OS metadata
+.git/
+.github/
+.vscode/
+.idea/
+*.log
+*.tmp
