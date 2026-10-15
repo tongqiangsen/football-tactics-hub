@@ -1,0 +1,38 @@
+# Cloudflare Workers Static Assets ignore list
+# Prevents large repository metadata, videos, python dependencies from being scanned as static assets
+
+# Git repository & dev configurations
+.git/
+.github/
+.vscode/
+.idea/
+
+# Python environments & build dependencies
+.venv/
+venv/
+env/
+__pycache__/
+*.py
+*.pyc
+requirements*.txt
+
+# Media & inspection data
+assets/
+inspect_gif_frames/
+inspect_pages/
+tactics_cards_hd/
+*.mp4
+*.mkv
+*.avi
+*.mov
+*.pdf
+*.epub
+*.mobi
+*.azw3
+
+# WeChat Mini Program (deployed separately)
+miniprogram/
+
+# Logs & temp
+*.log
+*.tmp

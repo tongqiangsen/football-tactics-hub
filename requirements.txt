@@ -1,2 +1,1 @@
-imageio-ffmpeg==0.6.0
-yt-dlp==2026.8.19
+# Static site deployment - no python runtime packages required for Cloudflare build
