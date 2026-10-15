@@ -360,7 +360,7 @@
       background: var(--bg-card);
       border: 1px solid var(--border-color);
       border-radius: 10px;
-      padding: 13px;
+      padding: 12px;
       display: flex;
       flex-direction: column;
       transition: all 0.2s;
@@ -368,6 +368,21 @@
     .weapon-card:hover {
       border-color: var(--accent-gold);
       transform: translateY(-2px);
+    }
+    .weapon-card-media {
+      width: 100%;
+      height: 96px;
+      background: #050d08;
+      border-radius: 6px;
+      overflow: hidden;
+      margin-bottom: 8px;
+      border: 1px solid var(--border-sub);
+    }
+    .weapon-card-media img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
     }
     .weapon-num {
       font-size: 10.5px;
@@ -805,6 +820,9 @@
       </div>
       <div class="slide-body grid-4">
         <div class="weapon-card">
+          <div class="weapon-card-media">
+            <img src="tactics_animations_gif/anim_w01_through_ball.gif" alt="W01 直塞穿透球" loading="lazy">
+          </div>
           <span class="weapon-num">WEAPON 01</span>
           <div class="weapon-name">直塞穿透球<br><small style="color: var(--text-muted);">Through Ball</small></div>
           <div class="weapon-desc">
@@ -814,29 +832,38 @@
           </div>
         </div>
         <div class="weapon-card">
+          <div class="weapon-card-media">
+            <img src="tactics_animations_gif/anim_w02_chipped_through.gif" alt="W02 肋部挑传空当" loading="lazy">
+          </div>
           <span class="weapon-num">WEAPON 02</span>
           <div class="weapon-name">肋部挑传空当<br><small style="color: var(--text-muted);">Chipped Through</small></div>
           <div class="weapon-desc">
-            <strong>要领：</strong>脚尖搓挑切削皮球底部制造回旋，过顶后迅速停稳。<br>
-            <strong>场景：</strong>破铁桶阵、破平齐越位线。<br>
-            <strong style="color: var(--accent-gold);">口令：</strong>“挑肋部！”
+            <strong>要领：</strong>正脚背底部切削，皮球带强力回旋，过顶后迅速减速停球。<br>
+            <strong>场景：</strong>破铁桶阵、破越位密集平齐防线。<br>
+            <strong style="color: var(--accent-gold);">口令：</strong>“挑！”
           </div>
         </div>
         <div class="weapon-card">
+          <div class="weapon-card-media">
+            <img src="tactics_animations_gif/anim_04_cut_back.gif" alt="W03 底线倒三角回传" loading="lazy">
+          </div>
           <span class="weapon-num">WEAPON 03</span>
           <div class="weapon-name">底线倒三角回传<br><small style="color: var(--text-muted);">Cut-Back</small></div>
           <div class="weapon-desc">
-            <strong>要领：</strong>下底后发力贴地推向点球点真空区，避开回缩门线防线。<br>
-            <strong>场景：</strong>套边下底后最高进球率传球。<br>
+            <strong>要领：</strong>下底后发力贴地推向点球点真空区，避开回缩门线的门将与后卫。<br>
+            <strong>场景：</strong>套边下底后的最高进球转化率传球。<br>
             <strong style="color: var(--accent-gold);">口令：</strong>“倒三角！”
           </div>
         </div>
         <div class="weapon-card">
+          <div class="weapon-card-media">
+            <img src="tactics_animations_gif/anim_w04_driven_cross.gif" alt="W04 贴地横扫门前" loading="lazy">
+          </div>
           <span class="weapon-num">WEAPON 04</span>
           <div class="weapon-name">贴地横扫门前<br><small style="color: var(--text-muted);">Low Whipped Cross</small></div>
           <div class="weapon-desc">
-            <strong>要领：</strong>正脚背贴地平抽危险走廊，球速极快，抢前点垫射或乌龙。<br>
-            <strong>场景：</strong>反击边路推进横敲。<br>
+            <strong>要领：</strong>正脚背贴地平抽小禁区前沿，球速极快，制造前点推射或乌龙球。<br>
+            <strong>场景：</strong>反击中边路高速推进横敲。<br>
             <strong style="color: var(--accent-gold);">口令：</strong>“前点抽！”
           </div>
         </div>
@@ -851,33 +878,45 @@
       </div>
       <div class="slide-body grid-4">
         <div class="weapon-card">
+          <div class="weapon-card-media">
+            <img src="tactics_animations_gif/anim_03_wall_pass.gif" alt="W05 二过一撞墙配合" loading="lazy">
+          </div>
           <span class="weapon-num">WEAPON 05</span>
           <div class="weapon-name">二过一撞墙配合<br><small style="color: var(--text-muted);">Wall Pass / One-Two</small></div>
           <div class="weapon-desc">
-            <strong>要领：</strong>A 传球后全速插上，B 不停球一脚斜推防守盲区超车。<br>
-            <strong>场景：</strong>破边路 1v1 单防、大禁区正面突围。<br>
+            <strong>要领：</strong>A 传球后立即全速斜向插上，B 不停球一脚斜推防守盲区。<br>
+            <strong>场景：</strong>破边路 1v1 单防、大禁区弧顶正面突围。<br>
             <strong style="color: var(--accent-gold);">口令：</strong>“撞墙！”
           </div>
         </div>
         <div class="weapon-card">
+          <div class="weapon-card-media">
+            <img src="tactics_animations_gif/anim_w06_layoff_pass.gif" alt="W06 迎前回敲做球" loading="lazy">
+          </div>
           <span class="weapon-num">WEAPON 06</span>
           <div class="weapon-name">迎前回敲做球<br><small style="color: var(--text-muted);">Lay-off Return</small></div>
           <div class="weapon-desc">
-            <strong>要领：</strong>前锋迎球一脚回敲软球，便于插上中场不停球爆射。<br>
-            <strong>场景：</strong>破中路密集、激活后排重炮手。<br>
+            <strong>要领：</strong>前锋迎球一脚回敲软球，力量适中，便于插上后腰不停球重炮轰门。<br>
+            <strong>场景：</strong>破中路密集防守、激活后排重炮手。<br>
             <strong style="color: var(--accent-gold);">口令：</strong>“回做！”
           </div>
         </div>
         <div class="weapon-card">
+          <div class="weapon-card-media">
+            <img src="tactics_animations_gif/anim_w07_line_breaking.gif" alt="W07 刺穿线形传球" loading="lazy">
+          </div>
           <span class="weapon-num">WEAPON 07</span>
           <div class="weapon-name">刺穿线形传球<br><small style="color: var(--text-muted);">Line-Breaking Pass</small></div>
           <div class="weapon-desc">
-            <strong>要领：</strong>后卫贴地重炮低平快，直接刺穿锋线与中场两条逼抢线。<br>
-            <strong>场景：</strong>后场由守转攻一脚打穿中圈逼抢。<br>
+            <strong>要领：</strong>后卫发力推低平快球，直接刺穿对方前锋与中场两条逼抢线。<br>
+            <strong>场景：</strong>后场由守转攻一脚打穿对方逼抢中圈。<br>
             <strong style="color: var(--accent-gold);">口令：</strong>“刺穿！”
           </div>
         </div>
         <div class="weapon-card">
+          <div class="weapon-card-media">
+            <img src="tactics_animations_gif/anim_01_third_man.gif" alt="W08 第三人导向球" loading="lazy">
+          </div>
           <span class="weapon-num">WEAPON 08</span>
           <div class="weapon-name">第三人导向球<br><small style="color: var(--text-muted);">Third-Man Runner</small></div>
           <div class="weapon-desc">
@@ -897,6 +936,9 @@
       </div>
       <div class="slide-body grid-4">
         <div class="weapon-card">
+          <div class="weapon-card-media">
+            <img src="tactics_animations_gif/anim_02_switch_play.gif" alt="W09 大范围弱侧长传" loading="lazy">
+          </div>
           <span class="weapon-num">WEAPON 09</span>
           <div class="weapon-name">大范围弱侧长传<br><small style="color: var(--text-muted);">Diagonal Switch</small></div>
           <div class="weapon-desc">
@@ -906,24 +948,33 @@
           </div>
         </div>
         <div class="weapon-card">
+          <div class="weapon-card-media">
+            <img src="tactics_animations_gif/anim_w10_channel_pass.gif" alt="W10 边线推进球" loading="lazy">
+          </div>
           <span class="weapon-num">WEAPON 10</span>
           <div class="weapon-name">边线推进球<br><small style="color: var(--text-muted);">Down-the-Line Pass</small></div>
           <div class="weapon-desc">
-            <strong>要领：</strong>边后卫贴边线直线推球，速度适中，边锋护球抹过防守。<br>
+            <strong>要领：</strong>边后卫贴边线直线推球，速度适中，边锋利用身体护球抹过防守。<br>
             <strong>场景：</strong>后场出球破边路高位紧逼。<br>
             <strong style="color: var(--accent-gold);">口令：</strong>“走边线！”
           </div>
         </div>
         <div class="weapon-card">
+          <div class="weapon-card-media">
+            <img src="tactics_animations_gif/anim_w_cat3_curled.gif" alt="W11 弧线绕顶传球" loading="lazy">
+          </div>
           <span class="weapon-num">WEAPON 11</span>
-          <div class="weapon-name">横向安全转移球<br><small style="color: var(--text-muted);">Lateral Re-cycle</small></div>
+          <div class="weapon-name">弧线绕顶传球<br><small style="color: var(--text-muted);">Curled Around Block</small></div>
           <div class="weapon-desc">
-            <strong>要领：</strong>双中卫或双后腰横向传导，严禁正对球门盲传，半侧身交接控制。<br>
-            <strong>场景：</strong>中场调动对手整体重心横移防守。<br>
-            <strong style="color: var(--accent-gold);">口令：</strong>“倒脚！”
+            <strong>要领：</strong>脚内侧带强侧旋踢出弧线，球绕过防守队员身体外侧进入肋部空当。<br>
+            <strong>场景：</strong>中路通道被封死时绕开封锁。<br>
+            <strong style="color: var(--accent-gold);">口令：</strong>“绕外侧！”
           </div>
         </div>
         <div class="weapon-card">
+          <div class="weapon-card-media">
+            <img src="tactics_animations_gif/anim_w12_recycling.gif" alt="W12 回传重新组织" loading="lazy">
+          </div>
           <span class="weapon-num">WEAPON 12</span>
           <div class="weapon-name">回传重新组织<br><small style="color: var(--text-muted);">Drop-Back Reset</small></div>
           <div class="weapon-desc">
@@ -943,6 +994,9 @@
       </div>
       <div class="slide-body grid-4">
         <div class="weapon-card">
+          <div class="weapon-card-media">
+            <img src="tactics_animations_gif/anim_w13_no_look.gif" alt="W13 不看人隐蔽传球" loading="lazy">
+          </div>
           <span class="weapon-num">WEAPON 13</span>
           <div class="weapon-name">不看人隐蔽传球<br><small style="color: var(--text-muted);">No-Look Pass</small></div>
           <div class="weapon-desc">
@@ -952,6 +1006,9 @@
           </div>
         </div>
         <div class="weapon-card">
+          <div class="weapon-card-media">
+            <img src="tactics_animations_gif/anim_w_cat4_fake_shot.gif" alt="W14 假射真传/节奏差" loading="lazy">
+          </div>
           <span class="weapon-num">WEAPON 14</span>
           <div class="weapon-name">假射真传/节奏差<br><small style="color: var(--text-muted);">Fake Shot & Slide</small></div>
           <div class="weapon-desc">
@@ -961,6 +1018,9 @@
           </div>
         </div>
         <div class="weapon-card">
+          <div class="weapon-card-media">
+            <img src="tactics_animations_gif/anim_w15_reverse_diagonal.gif" alt="W15 反向对角塞球" loading="lazy">
+          </div>
           <span class="weapon-num">WEAPON 15</span>
           <div class="weapon-name">反向对角塞球<br><small style="color: var(--text-muted);">Reverse Ball</small></div>
           <div class="weapon-desc">
@@ -970,6 +1030,9 @@
           </div>
         </div>
         <div class="weapon-card">
+          <div class="weapon-card-media">
+            <img src="tactics_animations_gif/anim_11_dummy_let_through.gif" alt="W16 漏球顺势配合" loading="lazy">
+          </div>
           <span class="weapon-num">WEAPON 16</span>
           <div class="weapon-name">漏球顺势配合<br><small style="color: var(--text-muted);">Dummy / Let-Through</small></div>
           <div class="weapon-desc">
@@ -989,6 +1052,9 @@
       </div>
       <div class="slide-body grid-4">
         <div class="weapon-card">
+          <div class="weapon-card-media">
+            <img src="tactics_animations_gif/anim_w_cat5_gk_laser.gif" alt="W17 门将穿透低平球" loading="lazy">
+          </div>
           <span class="weapon-num">WEAPON 17</span>
           <div class="weapon-name">门将穿透低平球<br><small style="color: var(--text-muted);">GK Driven Ground Ball</small></div>
           <div class="weapon-desc">
@@ -998,6 +1064,9 @@
           </div>
         </div>
         <div class="weapon-card">
+          <div class="weapon-card-media">
+            <img src="tactics_animations_gif/anim_08_over_the_top.gif" alt="W18 越顶反击长传" loading="lazy">
+          </div>
           <span class="weapon-num">WEAPON 18</span>
           <div class="weapon-name">越顶反击长传<br><small style="color: var(--text-muted);">Over-the-Top Blitz</small></div>
           <div class="weapon-desc">
@@ -1007,6 +1076,9 @@
           </div>
         </div>
         <div class="weapon-card">
+          <div class="weapon-card-media">
+            <img src="tactics_animations_gif/anim_w19_setpiece_cutback.gif" alt="W19 定位球低平倒三角" loading="lazy">
+          </div>
           <span class="weapon-num">WEAPON 19</span>
           <div class="weapon-name">定位球低平倒三角<br><small style="color: var(--text-muted);">Set-Piece Cut-Back</small></div>
           <div class="weapon-desc">
@@ -1016,6 +1088,9 @@
           </div>
         </div>
         <div class="weapon-card">
+          <div class="weapon-card-media">
+            <img src="tactics_animations_gif/anim_12_tactical_throwin.gif" alt="W20 战术手抛界外球" loading="lazy">
+          </div>
           <span class="weapon-num">WEAPON 20</span>
           <div class="weapon-name">战术手抛界外球<br><small style="color: var(--text-muted);">Throw-in Routine</small></div>
           <div class="weapon-desc">
